@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #ifndef TC_HEADER_Volume_VolumeLayout
@@ -34,7 +38,7 @@ namespace VeraCrypt
 		virtual uint32 GetHeaderSize () const { return HeaderSize; }
 		virtual uint64 GetMaxDataSize (uint64 volumeSize) const = 0;
 		virtual EncryptionAlgorithmList GetSupportedEncryptionAlgorithms () const { return SupportedEncryptionAlgorithms; }
-		virtual Pkcs5KdfList GetSupportedKeyDerivationFunctions () const { return Pkcs5Kdf::GetAvailableAlgorithms(); }
+		virtual Pkcs5KdfList GetSupportedKeyDerivationFunctions (bool truecryptMode) const { return Pkcs5Kdf::GetAvailableAlgorithms(truecryptMode); }
 		virtual EncryptionModeList GetSupportedEncryptionModes () const { return SupportedEncryptionModes; }
 		virtual VolumeType::Enum GetType () const { return Type; }
 		virtual bool HasBackupHeader () const = 0;
@@ -75,24 +79,6 @@ namespace VeraCrypt
 	private:
 		VolumeLayoutV1Normal (const VolumeLayoutV1Normal &);
 		VolumeLayoutV1Normal &operator= (const VolumeLayoutV1Normal &);
-	};
-
-
-	class VolumeLayoutV1Hidden : public VolumeLayout
-	{
-	public:
-		VolumeLayoutV1Hidden ();
-		virtual ~VolumeLayoutV1Hidden () { }
-
-		virtual int GetBackupHeaderOffset () const { throw NotApplicable (SRC_POS); }
-		virtual uint64 GetDataOffset (uint64 volumeHostSize) const;
-		virtual uint64 GetDataSize (uint64 volumeHostSize) const;
-		virtual uint64 GetMaxDataSize (uint64 volumeSize) const { throw NotApplicable (SRC_POS); }
-		virtual bool HasBackupHeader () const { return false; }
-
-	private:
-		VolumeLayoutV1Hidden (const VolumeLayoutV1Hidden &);
-		VolumeLayoutV1Hidden &operator= (const VolumeLayoutV1Hidden &);
 	};
 
 
@@ -140,7 +126,7 @@ namespace VeraCrypt
 		virtual uint64 GetDataOffset (uint64 volumeHostSize) const;
 		virtual uint64 GetDataSize (uint64 volumeHostSize) const;
 		virtual uint64 GetMaxDataSize (uint64 volumeSize) const { throw NotApplicable (SRC_POS); }
-		virtual Pkcs5KdfList GetSupportedKeyDerivationFunctions () const;
+		virtual Pkcs5KdfList GetSupportedKeyDerivationFunctions (bool truecryptMode) const;
 		virtual bool HasBackupHeader () const { return false; }
 		virtual bool HasDriveHeader () const { return true; }
 

@@ -1,15 +1,20 @@
 /*
- Copyright (c) 2008-2009 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "System.h"
 #include "Main/Main.h"
 #include "Main/GraphicUserInterface.h"
 #include "ChangePasswordDialog.h"
+#include "WaitDialog.h"
 
 namespace VeraCrypt
 {
@@ -47,11 +52,11 @@ namespace VeraCrypt
 			throw ParameterIncorrect (SRC_POS);
 		}
 
-		CurrentPasswordPanel = new VolumePasswordPanel (this, password, keyfiles);
+		CurrentPasswordPanel = new VolumePasswordPanel (this, NULL, password, false, keyfiles, false, true, true, false, true, true);
 		CurrentPasswordPanel->UpdateEvent.Connect (EventConnector <ChangePasswordDialog> (this, &ChangePasswordDialog::OnPasswordPanelUpdate));
 		CurrentPasswordPanelSizer->Add (CurrentPasswordPanel, 1, wxALL | wxEXPAND);
 
-		NewPasswordPanel = new VolumePasswordPanel (this, newPassword, newKeyfiles, false, enableNewPassword, enableNewKeyfiles, enableNewPassword, enablePkcs5Prf);
+		NewPasswordPanel = new VolumePasswordPanel (this, NULL, newPassword, true, newKeyfiles, false, enableNewPassword, enableNewKeyfiles, enableNewPassword, enablePkcs5Prf);
 		NewPasswordPanel->UpdateEvent.Connect (EventConnector <ChangePasswordDialog> (this, &ChangePasswordDialog::OnPasswordPanelUpdate));
 		NewPasswordPanelSizer->Add (NewPasswordPanel, 1, wxALL | wxEXPAND);
 		
@@ -80,21 +85,53 @@ namespace VeraCrypt
 
 		try
 		{
+			shared_ptr <Pkcs5Kdf> currentKdf = CurrentPasswordPanel->GetPkcs5Kdf();
+			if (currentKdf && CurrentPasswordPanel->GetTrueCryptMode() && (currentKdf->GetName() == L"HMAC-SHA-256"))
+			{
+				Gui->ShowWarning (LangString ["ALGO_NOT_SUPPORTED_FOR_TRUECRYPT_MODE"]);
+				event.Skip();
+				return;
+			}
+			
 			shared_ptr <VolumePassword> newPassword;
+			int newPim = 0;
 			if (DialogMode == Mode::ChangePasswordAndKeyfiles)
 			{
 				newPassword = NewPasswordPanel->GetPassword();
+				newPim = NewPasswordPanel->GetVolumePim();
 				newPassword->CheckPortability();
 
-				if (newPassword->Size() > 0 && newPassword->Size() < VolumePassword::WarningSizeThreshold
-					&& !Gui->AskYesNo (LangString ["PASSWORD_LENGTH_WARNING"], false, true))
+				if (newPassword->Size() > 0)
 				{
-					NewPasswordPanel->SetFocusToPasswordTextCtrl();
-					return;
+					if (newPassword->Size() < VolumePassword::WarningSizeThreshold)
+					{
+						if (newPim < 485)
+						{
+							Gui->ShowError ("PIM_REQUIRE_LONG_PASSWORD");						
+							return;
+						}
+
+						if (!Gui->AskYesNo (LangString ["PASSWORD_LENGTH_WARNING"], false, true))
+						{
+							NewPasswordPanel->SetFocusToPasswordTextCtrl();
+							return;
+						}
+					}
+					else if (newPim < 485)
+					{
+						if (!Gui->AskYesNo (LangString ["PIM_SMALL_WARNING"], false, true))
+						{
+							NewPasswordPanel->SetFocusToPimTextCtrl();
+							return;
+						}
+					}
 				}
 			}
 			else
+			{
 				newPassword = CurrentPasswordPanel->GetPassword();
+				newPim = CurrentPasswordPanel->GetVolumePim();
+			}
 
 			shared_ptr <KeyfileList> newKeyfiles;
 			if (DialogMode == Mode::ChangePasswordAndKeyfiles || DialogMode == Mode::ChangeKeyfiles)
@@ -102,6 +139,8 @@ namespace VeraCrypt
 			else if (DialogMode != Mode::RemoveAllKeyfiles)
 				newKeyfiles = CurrentPasswordPanel->GetKeyfiles();
 
+			/* force the display of the random enriching interface */
+			RandomNumberGenerator::SetEnrichedByUserStatus (false);
 			Gui->UserEnrichRandomPool (this, NewPasswordPanel->GetPkcs5Kdf() ? NewPasswordPanel->GetPkcs5Kdf()->GetHash() : shared_ptr <Hash>());
 
 			{
@@ -122,9 +161,10 @@ namespace VeraCrypt
 				});
 #endif
 				wxBusyCursor busy;
-				Core->ChangePassword (Path,	Gui->GetPreferences().DefaultMountOptions.PreserveTimestamps,
-					CurrentPasswordPanel->GetPassword(), CurrentPasswordPanel->GetKeyfiles(),
-					newPassword, newKeyfiles, NewPasswordPanel->GetPkcs5Kdf(), NewPasswordPanel->GetHeaderWipeCount());
+				ChangePasswordThreadRoutine routine(Path,	Gui->GetPreferences().DefaultMountOptions.PreserveTimestamps,
+					CurrentPasswordPanel->GetPassword(), CurrentPasswordPanel->GetVolumePim(), CurrentPasswordPanel->GetPkcs5Kdf(), CurrentPasswordPanel->GetTrueCryptMode(),CurrentPasswordPanel->GetKeyfiles(),
+					newPassword, newPim, newKeyfiles, NewPasswordPanel->GetPkcs5Kdf(), NewPasswordPanel->GetHeaderWipeCount());
+				Gui->ExecuteWaitThreadRoutine (this, &routine);
 			}
 
 			switch (DialogMode)
@@ -191,5 +231,12 @@ namespace VeraCrypt
 		}
 
 		OKButton->Enable (ok);
+		
+		if (DialogMode == Mode::ChangePasswordAndKeyfiles)
+		{
+			bool pimChanged = (CurrentPasswordPanel->GetVolumePim() != NewPasswordPanel->GetVolumePim());
+			NewPasswordPanel->UpdatePimHelpText(pimChanged);
+		}
+		
 	}
 }

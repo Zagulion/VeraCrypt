@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #ifndef TC_HEADER_Encryption_EncryptionAlgorithm
@@ -37,7 +41,7 @@ namespace VeraCrypt
 		static size_t GetLargestKeySize (const EncryptionAlgorithmList &algorithms);
 		virtual size_t GetKeySize () const;
 		virtual shared_ptr <EncryptionMode> GetMode () const;
-		virtual wstring GetName () const;
+		virtual wstring GetName (bool forGuiDisplay = false) const;
 		bool IsDeprecated () const { return Deprecated; }
 		virtual bool IsModeSupported (const EncryptionMode &mode) const;
 		virtual bool IsModeSupported (const shared_ptr <EncryptionMode> mode) const;

@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #ifdef __cplusplus
@@ -48,6 +50,13 @@ typedef struct
 	BOOL bHidVolDamagePrevReported[26];
 } VOLUME_NOTIFICATIONS_LIST;
 
+typedef struct
+{
+	Password *password;
+	int* pkcs5;
+	int* pim;
+	BOOL* truecryptMode;
+} PasswordDlgParam;
 
 extern VOLUME_NOTIFICATIONS_LIST VolumeNotificationsList;
 
@@ -64,11 +73,11 @@ BOOL VolumeSelected (HWND hwndDlg );
 void LoadSettings ( HWND hwndDlg );
 void SaveSettings ( HWND hwndDlg );
 BOOL SelectItem ( HWND hTree , char nLetter );
-void LoadDriveLetters ( HWND hTree, int drive );
+void LoadDriveLetters ( HWND hwndDlg, HWND hTree, int drive );
 BOOL CALLBACK PasswordChangeDlgProc ( HWND hwndDlg , UINT msg , WPARAM wParam , LPARAM lParam );
 BOOL CALLBACK PasswordDlgProc ( HWND hwndDlg , UINT msg , WPARAM wParam , LPARAM lParam );
 BOOL CALLBACK MountOptionsDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
-void BuildTree ( HWND hTree );
+void BuildTree ( HWND hwndDlg, HWND hTree );
 LPARAM GetSelectedLong ( HWND hTree );
 LPARAM GetItemLong ( HWND hTree, int itemNo );
 BOOL CALLBACK CommandHelpDlgProc ( HWND hwndDlg , UINT msg , WPARAM wParam , LPARAM lParam );
@@ -80,20 +89,20 @@ BOOL TaskBarIconAdd (HWND hwnd);
 BOOL TaskBarIconRemove (HWND hwnd);
 BOOL TaskBarIconChange (HWND hwnd, int iconId);
 void DismountIdleVolumes ();
-static void SaveDefaultKeyFilesParam (void);
+static void SaveDefaultKeyFilesParam (HWND hwnd);
 static BOOL Dismount (HWND hwndDlg, int nDosDriveNo);
 static BOOL DismountAll (HWND hwndDlg, BOOL forceUnmount, BOOL interact, int dismountMaxRetries, int dismountAutoRetryDelay);
 static void KeyfileDefaultsDlg (HWND hwndDlg);
 static void HandleHotKey (HWND hwndDlg, WPARAM wParam);
-static BOOL CheckMountList (BOOL bForceTaskBarUpdate);
+static BOOL CheckMountList (HWND hwndDlg, BOOL bForceTaskBarUpdate);
 int GetCipherBlockSizeByDriveNo (int nDosDriveNo);
 int GetModeOfOperationByDriveNo (int nDosDriveNo);
 void ChangeMainWindowVisibility ();
 void LaunchVolCreationWizard (HWND hwndDlg);
 BOOL WholeSysDriveEncryption (BOOL bSilent);
-BOOL CheckSysEncMountWithoutPBA (const char *devicePath, BOOL quiet);
-BOOL TCBootLoaderOnInactiveSysEncDrive (void);
-void CreateRescueDisk (void);
+BOOL CheckSysEncMountWithoutPBA (HWND hwndDlg, const char *devicePath, BOOL quiet);
+BOOL TCBootLoaderOnInactiveSysEncDrive (char *szDevicePath);
+void CreateRescueDisk (HWND hwndDlg);
 int BackupVolumeHeader (HWND hwndDlg, BOOL bRequireConfirmation, const char *lpszVolume);
 int RestoreVolumeHeader (HWND hwndDlg, const char *lpszVolume);
 void SecurityTokenPreferencesDialog (HWND hwndDlg);
@@ -101,15 +110,23 @@ static BOOL CALLBACK PerformanceSettingsDlgProc (HWND hwndDlg, UINT msg, WPARAM 
 static BOOL CALLBACK BootLoaderPreferencesDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 void MountSelectedVolume (HWND hwndDlg, BOOL mountWithOptions);
 uint32 ReadDriverConfigurationFlags ();
-void AnalyzeKernelMiniDump (HWND hwndDlg);
 void HookMouseWheel (HWND hwndDlg, UINT ctrlId);
 static BOOL HandleDriveListMouseWheelEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL bListMustBePointed);
+static BOOL CALLBACK DefaultMountParametersDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #ifdef __cplusplus
 }
 
+typedef struct
+{
+	BOOL systemFavorites;
+	BOOL logOnMount;
+	BOOL hotKeyMount;
+	VeraCrypt::FavoriteVolume* favoriteVolumeToMount;
+} mountFavoriteVolumeThreadParam;
+
 void SetDriverConfigurationFlag (uint32 flag, BOOL state);
-BOOL MountFavoriteVolumes (BOOL systemFavorites = FALSE, BOOL logOnMount = FALSE, BOOL hotKeyMount = FALSE, const VeraCrypt::FavoriteVolume &favoriteVolumeToMount = VeraCrypt::FavoriteVolume());
-BOOL GetExecutableImageInformation (const string &path, string &version, string &description, string &companyName, string &productName);
+BOOL MountFavoriteVolumes (HWND hwnd, BOOL systemFavorites = FALSE, BOOL logOnMount = FALSE, BOOL hotKeyMount = FALSE, const VeraCrypt::FavoriteVolume &favoriteVolumeToMount = VeraCrypt::FavoriteVolume());
+void __cdecl mountFavoriteVolumeThreadFunction (void *pArg);
 
 #endif

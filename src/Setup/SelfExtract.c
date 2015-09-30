@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2009 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "Tcdefs.h"
@@ -19,6 +23,10 @@
 #include "Language.h"
 #include "Resource.h"
 #include <Strsafe.h>
+
+#ifndef SRC_POS
+#define SRC_POS (__FUNCTION__ ":" TC_TO_STRING(__LINE__))
+#endif
 
 #define OutputPackageFile "VeraCrypt Setup " VERSION_STRING ".exe"
 
@@ -252,7 +260,7 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 
 	if (!TCCopyFile (inputFile, outputFile))
 	{
-		handleWin32Error (hwndDlg);
+		handleWin32Error (hwndDlg, SRC_POS);
 		PkgError ("Cannot copy 'VeraCrypt Setup.exe' to the package");
 		goto err;
 	}
@@ -270,7 +278,8 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 			char tmpstr [1000];
 
 			StringCbPrintfA (tmpstr, sizeof(tmpstr), "File not found:\n\n'%s'", szTmpFilePath);
-			remove (outputFile);
+			if (remove (outputFile))
+				StringCbCatA (tmpstr, sizeof(tmpstr), "\nFailed also to delete package file");
 			PkgError (tmpstr);
 			goto err;
 		}
@@ -287,16 +296,21 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 	if (buffer == NULL)
 	{
 		PkgError ("Cannot allocate memory for uncompressed data");
-		remove (outputFile);
+		if (remove (outputFile))
+			PkgError ("Cannot allocate memory for uncompressed data.\nFailed also to delete package file");
+		else
+			PkgError ("Cannot allocate memory for uncompressed data");
 		goto err;
 	}
 
 
 	// Write the start marker
-	if (!SaveBufferToFile (MAG_START_MARKER, outputFile, strlen (MAG_START_MARKER), TRUE))
-	{
-		PkgError ("Cannot write the start marker");
-		remove (outputFile);
+	if (!SaveBufferToFile (MAG_START_MARKER, outputFile, strlen (MAG_START_MARKER), TRUE, FALSE))
+	{		
+		if (remove (outputFile))
+			PkgError ("Cannot write the start marker\nFailed also to delete package file");
+		else
+			PkgError ("Cannot write the start marker");
 		goto err;
 	}
 
@@ -319,7 +333,8 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 
 			free (tmpBuffer);
 			StringCbPrintfA (tmpstr, sizeof(tmpstr), "Cannot load file \n'%s'", szTmpFilePath);
-			remove (outputFile);
+			if (remove (outputFile))
+				StringCbCatA (tmpstr, sizeof(tmpstr), "\nFailed also to delete package file");
 			PkgError (tmpstr);
 			goto err;
 		}
@@ -350,10 +365,12 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 	// Write total size of the uncompressed data
 	szTmp32bitPtr = szTmp32bit;
 	mputLong (szTmp32bitPtr, (unsigned __int32) uncompressedDataLen);
-	if (!SaveBufferToFile (szTmp32bit, outputFile, sizeof (szTmp32bit), TRUE))
+	if (!SaveBufferToFile (szTmp32bit, outputFile, sizeof (szTmp32bit), TRUE, FALSE))
 	{
-		remove (outputFile);
-		PkgError ("Cannot write the total size of the uncompressed data");
+		if (remove (outputFile))
+			PkgError ("Cannot write the total size of the uncompressed data.\nFailed also to delete package file");
+		else
+			PkgError ("Cannot write the total size of the uncompressed data");
 		goto err;
 	}
 
@@ -362,16 +379,20 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 	compressedBuffer = malloc (uncompressedDataLen + 524288);	// + 512K reserve
 	if (compressedBuffer == NULL)
 	{
-		remove (outputFile);
-		PkgError ("Cannot allocate memory for compressed data");
+		if (remove (outputFile))
+			PkgError ("Cannot allocate memory for compressed data.\nFailed also to delete package file");
+		else
+			PkgError ("Cannot allocate memory for compressed data");
 		goto err;
 	}
 
 	compressedDataLen = CompressBuffer (compressedBuffer, buffer, uncompressedDataLen);
 	if (compressedDataLen <= 0)
 	{
-		remove (outputFile);
-		PkgError ("Failed to compress the data");
+		if (remove (outputFile))
+			PkgError ("Failed to compress the data.\nFailed also to delete package file");
+		else
+			PkgError ("Failed to compress the data");
 		goto err;
 	}
 
@@ -381,26 +402,32 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 	// Write the total size of the compressed data
 	szTmp32bitPtr = szTmp32bit;
 	mputLong (szTmp32bitPtr, (unsigned __int32) compressedDataLen);
-	if (!SaveBufferToFile (szTmp32bit, outputFile, sizeof (szTmp32bit), TRUE))
+	if (!SaveBufferToFile (szTmp32bit, outputFile, sizeof (szTmp32bit), TRUE, FALSE))
 	{
-		remove (outputFile);
-		PkgError ("Cannot write the total size of the compressed data");
+		if (remove (outputFile))
+			PkgError ("Cannot write the total size of the compressed data.\nFailed also to delete package file");
+		else
+			PkgError ("Cannot write the total size of the compressed data");
 		goto err;
 	}
 
 	// Write the compressed data
-	if (!SaveBufferToFile (compressedBuffer, outputFile, compressedDataLen, TRUE))
+	if (!SaveBufferToFile (compressedBuffer, outputFile, compressedDataLen, TRUE, FALSE))
 	{
-		remove (outputFile);
-		PkgError ("Cannot write compressed data to the package");
+		if (remove (outputFile))
+			PkgError ("Cannot write compressed data to the package.\nFailed also to delete package file");
+		else
+			PkgError ("Cannot write compressed data to the package");
 		goto err;
 	}
 
 	// Write the end marker
-	if (!SaveBufferToFile (MagEndMarker, outputFile, strlen (MagEndMarker), TRUE))
+	if (!SaveBufferToFile (MagEndMarker, outputFile, strlen (MagEndMarker), TRUE, FALSE))
 	{
-		remove (outputFile);
-		PkgError ("Cannot write the end marker");
+		if (remove (outputFile))
+			PkgError ("Cannot write the end marker.\nFailed also to delete package file");
+		else
+			PkgError ("Cannot write the end marker");
 		goto err;
 	}
 
@@ -416,9 +443,11 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 
 		if (tmpBuffer == NULL)
 		{
-			handleWin32Error (hwndDlg);
-			remove (outputFile);
-			PkgError ("Cannot load the package to compute CRC");
+			handleWin32Error (hwndDlg, SRC_POS);
+			if (remove (outputFile))
+				PkgError ("Cannot load the package to compute CRC.\nFailed also to delete package file");
+			else
+				PkgError ("Cannot load the package to compute CRC");
 			goto err;
 		}
 
@@ -429,10 +458,12 @@ BOOL MakeSelfExtractingPackage (HWND hwndDlg, char *szDestDir)
 		mputLong (szTmp32bitPtr, GetCrc32 (tmpBuffer, tmpFileSize));
 		free (tmpBuffer);
 
-		if (!SaveBufferToFile (szTmp32bit, outputFile, sizeof (szTmp32bit), TRUE))
+		if (!SaveBufferToFile (szTmp32bit, outputFile, sizeof (szTmp32bit), TRUE, FALSE))
 		{
-			remove (outputFile);
-			PkgError ("Cannot write the total size of the compressed data");
+			if (remove (outputFile))
+				PkgError ("Cannot write the total size of the compressed data.\nFailed also to delete package file");
+			else
+				PkgError ("Cannot write the total size of the compressed data");
 			goto err;
 		}
 	}
@@ -466,7 +497,7 @@ BOOL VerifyPackageIntegrity (void)
 	fileDataEndPos = (int) FindStringInFile (path, MagEndMarker, strlen (MagEndMarker));
 	if (fileDataEndPos < 0)
 	{
-		Error ("DIST_PACKAGE_CORRUPTED");
+		Error ("DIST_PACKAGE_CORRUPTED", NULL);
 		return FALSE;
 	}
 	fileDataEndPos--;
@@ -474,7 +505,7 @@ BOOL VerifyPackageIntegrity (void)
 	fileDataStartPos = (int) FindStringInFile (path, MAG_START_MARKER, strlen (MAG_START_MARKER));
 	if (fileDataStartPos < 0)
 	{
-		Error ("DIST_PACKAGE_CORRUPTED");
+		Error ("DIST_PACKAGE_CORRUPTED", NULL);
 		return FALSE;
 	}
 	fileDataStartPos += strlen (MAG_START_MARKER);
@@ -482,7 +513,7 @@ BOOL VerifyPackageIntegrity (void)
 
 	if (!LoadInt32 (path, &crc, fileDataEndPos + strlen (MagEndMarker) + 1))
 	{
-		Error ("CANT_VERIFY_PACKAGE_INTEGRITY");
+		Error ("CANT_VERIFY_PACKAGE_INTEGRITY", NULL);
 		return FALSE;
 	}
 
@@ -491,7 +522,7 @@ BOOL VerifyPackageIntegrity (void)
 
 	if (tmpBuffer == NULL)
 	{
-		Error ("CANT_VERIFY_PACKAGE_INTEGRITY");
+		Error ("CANT_VERIFY_PACKAGE_INTEGRITY", NULL);
 		return FALSE;
 	}
 
@@ -501,7 +532,7 @@ BOOL VerifyPackageIntegrity (void)
 	if (crc != GetCrc32 (tmpBuffer, fileDataEndPos + 1 + strlen (MagEndMarker)))
 	{
 		free (tmpBuffer);
-		Error ("DIST_PACKAGE_CORRUPTED");
+		Error ("DIST_PACKAGE_CORRUPTED", NULL);
 		return FALSE;
 	}
 
@@ -562,7 +593,7 @@ BOOL SelfExtractInMemory (char *path)
 	fileDataEndPos = (int) FindStringInFile (path, MagEndMarker, strlen (MagEndMarker));
 	if (fileDataEndPos < 0)
 	{
-		Error ("CANNOT_READ_FROM_PACKAGE");
+		Error ("CANNOT_READ_FROM_PACKAGE", NULL);
 		return FALSE;
 	}
 
@@ -571,7 +602,7 @@ BOOL SelfExtractInMemory (char *path)
 	fileDataStartPos = (int) FindStringInFile (path, MAG_START_MARKER, strlen (MAG_START_MARKER));
 	if (fileDataStartPos < 0)
 	{
-		Error ("CANNOT_READ_FROM_PACKAGE");
+		Error ("CANNOT_READ_FROM_PACKAGE", NULL);
 		return FALSE;
 	}
 
@@ -582,7 +613,7 @@ BOOL SelfExtractInMemory (char *path)
 	// Read the stored total size of the uncompressed data
 	if (!LoadInt32 (path, &uncompressedLen, filePos))
 	{
-		Error ("CANNOT_READ_FROM_PACKAGE");
+		Error ("CANNOT_READ_FROM_PACKAGE", NULL);
 		return FALSE;
 	}
 
@@ -591,7 +622,7 @@ BOOL SelfExtractInMemory (char *path)
 	// Read the stored total size of the compressed data
 	if (!LoadInt32 (path, &compressedLen, filePos))
 	{
-		Error ("CANNOT_READ_FROM_PACKAGE");
+		Error ("CANNOT_READ_FROM_PACKAGE", NULL);
 		return FALSE;
 	}
 
@@ -599,13 +630,13 @@ BOOL SelfExtractInMemory (char *path)
 
 	if (compressedLen != fileDataEndPos - fileDataStartPos - 8 + 1)
 	{
-		Error ("DIST_PACKAGE_CORRUPTED");
+		Error ("DIST_PACKAGE_CORRUPTED", NULL);
 	}
 
 	DecompressedData = malloc (uncompressedLen + 524288);	// + 512K reserve 
 	if (DecompressedData == NULL)
 	{
-		Error ("ERR_MEM_ALLOC");
+		Error ("ERR_MEM_ALLOC", NULL);
 		return FALSE;
 	}
 
@@ -619,14 +650,14 @@ BOOL SelfExtractInMemory (char *path)
 		free (DecompressedData);
 		DecompressedData = NULL;
 
-		Error ("CANNOT_READ_FROM_PACKAGE");
+		Error ("CANNOT_READ_FROM_PACKAGE", NULL);
 		return FALSE;
 	}
 
 	// Decompress the data
 	if (DecompressBuffer (DecompressedData, compressedData, compressedLen) != uncompressedLen)
 	{
-		Error ("DIST_PACKAGE_CORRUPTED");
+		Error ("DIST_PACKAGE_CORRUPTED", NULL);
 		goto sem_end;
 	}
 
@@ -653,7 +684,7 @@ BOOL SelfExtractInMemory (char *path)
 		if (Decompressed_Files[fileNo].crc 
 			!= GetCrc32 (Decompressed_Files[fileNo].fileContent, Decompressed_Files[fileNo].fileLength))
 		{
-			Error ("DIST_PACKAGE_CORRUPTED");
+			Error ("DIST_PACKAGE_CORRUPTED", NULL);
 			goto sem_end;
 		}
 
@@ -662,7 +693,7 @@ BOOL SelfExtractInMemory (char *path)
 
 	if (fileNo < NBR_COMPRESSED_FILES)
 	{
-		Error ("DIST_PACKAGE_CORRUPTED");
+		Error ("DIST_PACKAGE_CORRUPTED", NULL);
 		goto sem_end;
 	}
 
@@ -697,7 +728,7 @@ void __cdecl ExtractAllFilesThread (void *hwndDlg)
 		{
 			wchar_t szTmp[TC_MAX_PATH];
 
-			handleWin32Error (hwndDlg);
+			handleWin32Error (hwndDlg, SRC_POS);
 			StringCbPrintfW (szTmp, sizeof(szTmp), GetString ("CANT_CREATE_FOLDER"), DestExtractPath);
 			MessageBoxW (hwndDlg, szTmp, lpszTitle, MB_ICONHAND);
 			bSuccess = FALSE;
@@ -722,7 +753,7 @@ void __cdecl ExtractAllFilesThread (void *hwndDlg)
 			Decompressed_Files[fileNo].fileContent,
 			filePath,
 			Decompressed_Files[fileNo].fileLength,
-			FALSE))
+			FALSE, FALSE))
 		{
 			wchar_t szTmp[512];
 

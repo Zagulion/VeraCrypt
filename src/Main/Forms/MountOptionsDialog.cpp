@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "System.h"
@@ -30,7 +34,7 @@ namespace VeraCrypt
 		if (disableMountOptions)
 			OptionsButton->Show (false);
 
-		PasswordPanel = new VolumePasswordPanel (this, options.Password, options.Keyfiles, !disableMountOptions);
+		PasswordPanel = new VolumePasswordPanel (this, &options, options.Password, disableMountOptions, options.Keyfiles, !disableMountOptions, true, true, false, true, true);
 		PasswordPanel->SetCacheCheckBoxValidator (wxGenericValidator (&Options.CachePassword));
 
 		PasswordSizer->Add (PasswordPanel, 1, wxALL | wxEXPAND);
@@ -61,7 +65,7 @@ namespace VeraCrypt
 		OptionsButton->SetLabel (OptionsButtonLabel + L" >");
 		OptionsPanel->Show (false);
 
-		ProtectionPasswordPanel = new VolumePasswordPanel (OptionsPanel, options.ProtectionPassword, options.ProtectionKeyfiles, false, true, true, false, false, _("P&assword to hidden volume:"));
+		ProtectionPasswordPanel = new VolumePasswordPanel (OptionsPanel, &options, options.ProtectionPassword, true, options.ProtectionKeyfiles, false, true, true, false, true, true, _("P&assword to hidden volume:"));
 		ProtectionPasswordSizer->Add (ProtectionPasswordPanel, 1, wxALL | wxEXPAND);
 
 		UpdateDialog();
@@ -85,6 +89,9 @@ namespace VeraCrypt
 		TransferDataFromWindow();
 
 		Options.Password = PasswordPanel->GetPassword();
+		Options.Pim = PasswordPanel->GetVolumePim();
+		Options.Kdf = PasswordPanel->GetPkcs5Kdf();
+		Options.TrueCryptMode = PasswordPanel->GetTrueCryptMode();
 		Options.Keyfiles = PasswordPanel->GetKeyfiles();
 
 		if (ReadOnlyCheckBox->IsChecked())
@@ -95,6 +102,8 @@ namespace VeraCrypt
 		{
 			Options.Protection = VolumeProtection::HiddenVolumeReadOnly;
 			Options.ProtectionPassword = ProtectionPasswordPanel->GetPassword();
+			Options.ProtectionPim = ProtectionPasswordPanel->GetVolumePim();
+			Options.ProtectionKdf = ProtectionPasswordPanel->GetPkcs5Kdf();
 			Options.ProtectionKeyfiles = ProtectionPasswordPanel->GetKeyfiles();
 		}
 		else
@@ -116,6 +125,13 @@ namespace VeraCrypt
 		catch (UnportablePassword &)
 		{
 			Gui->ShowWarning (LangString ["UNSUPPORTED_CHARS_IN_PWD_RECOM"]);
+		}
+		
+		if (Options.TrueCryptMode && Options.Kdf && (Options.Kdf->GetName() == L"HMAC-SHA-256"))
+		{
+			Gui->ShowWarning (LangString ["ALGO_NOT_SUPPORTED_FOR_TRUECRYPT_MODE"]);
+			event.Skip();
+			return;
 		}
 
 		EndModal (wxID_OK);
@@ -170,5 +186,6 @@ namespace VeraCrypt
 
 		Fit();
 		Layout();
+		MainSizer->Fit( this );
 	}
 }

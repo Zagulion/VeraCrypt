@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VeraCrypt>
-  <localization prog-version="1.0e">
+  <localization prog-version="1.15">
     <!-- Languages -->
     <language langid="vi" name="Tiếng Việt" en-name="Vietnamese" version="0.1.0" translators="Nguyễn Kim Huy" />
     <!-- Fonts -->
@@ -37,6 +37,7 @@
     <control lang="vi" key="IDC_DOWNLOAD_CD_BURN_SOFTWARE">Tải nhu liệu thâu CD/DVD xuống</control>
     <control lang="vi" key="IDC_FILE_CONTAINER">Cấu tạo một bộ chứa tập tin được mã hóa</control>
     <control lang="vi" key="IDC_GB">&amp;GB</control>
+    <control lang="vi" key="IDC_TB">&amp;TB</control>
     <control lang="vi" key="IDC_HIDDEN_SYSENC_INFO_LINK">Thêm thông tin</control>
     <control lang="vi" key="IDC_HIDDEN_VOL">Tập đĩa VeraCrypt được &amp;ẩn</control>
     <control lang="vi" key="IDC_HIDDEN_VOL_HELP">Thêm thông tin về tập đĩa được ẩn</control>
@@ -44,9 +45,11 @@
     <control lang="vi" key="IDC_HIDVOL_WIZ_MODE_FULL">Phương thức thông thường</control>
     <control lang="vi" key="IDC_KB">&amp;KB</control>
     <control lang="vi" key="IDC_KEYFILES_ENABLE">X&amp;ử dụng tập tin khóa</control>
+    <control lang="en" key="IDC_KEYFILES_RANDOM_SIZE">Random size ( 64 &lt;-&gt; 1048576 )</control>
     <control lang="vi" key="IDC_KEY_FILES">&amp;Tập tin khóa..</control>
     <control lang="vi" key="IDC_LINK_HASH_INFO">Thông tin về các thuật toán ước tính</control>
     <control lang="vi" key="IDC_LINK_MORE_INFO_ABOUT_CIPHER">Thêm thông tin về mật mã</control>
+    <control lang="en" key="IDC_LINK_PIM_INFO">Information on PIM</control>
     <control lang="vi" key="IDC_MB">&amp;MB</control>
     <control lang="vi" key="IDC_MORE_INFO_ON_CONTAINERS">Thêm thông tin về bộ chứa</control>
     <control lang="vi" key="IDC_MORE_INFO_ON_SYS_ENCRYPTION">Thêm thông tin về hệ thống mã hóa</control>
@@ -56,9 +59,11 @@
     <control lang="vi" key="IDC_NO_HISTORY">Đừng bao giờ &amp;lưu lược sử</control>
     <control lang="vi" key="IDC_OPEN_OUTER_VOLUME">Mở tập đĩa bên ngoài</control>
     <control lang="vi" key="IDC_PAUSE">&amp;Tạm dừng</control>
+    <control lang="en" key="IDC_PIM_ENABLE">Use PIM</control>
     <control lang="vi" key="IDC_QUICKFORMAT">Định dạng nhanh</control>
     <control lang="vi" key="IDC_SHOW_PASSWORD">&amp;Hiển thị mật mã</control>
     <control lang="vi" key="IDC_SHOW_PASSWORD_SINGLE">&amp;Hiển thị mật mã</control>
+    <control lang="en" key="IDC_SHOW_PIM">&amp;Display PIM</control>
     <control lang="vi" key="IDC_SINGLE_BOOT">Khởi động đơn hệ</control>
     <control lang="vi" key="IDC_STD_VOL">Tập đĩa VeraCrypt chuẩn</control>
     <control lang="vi" key="IDC_SYSENC_HIDDEN">Ẩ&amp;n</control>
@@ -71,6 +76,7 @@
     <control lang="vi" key="IDT_COLLECTING_RANDOM_DATA_NOTE">QUAN TRỌNG: Di chuyển con chuột của bạn càng ngẫu nhiên càng tốt trong cửa sổ này. Bạn di chuyển nó càng lâu càng tốt. Việc này gia tăng cường độ mật mã của các khóa mã hóa. Sau đó nhấn Kế tiếp để tiếp tục.</control>
     <control lang="vi" key="IDT_CONFIRM">&amp;Xác nhận:</control>
     <control lang="vi" key="IDT_DONE">Hoàn tất</control>
+    <control lang="en" key="IDT_DRIVE_LETTER">Drive letter:</control>
     <control lang="vi" key="IDT_ENCRYPTION_ALGO">Giải thuật mã hóa</control>
     <control lang="vi" key="IDT_FILESYSTEM">Hệ thống tập tin</control>
     <control lang="vi" key="IDT_FILE_CONTAINER">Cấu tạo một đĩa được mã hóa ảo bên trong một tập tin. Thích hợp cho người dùng không kinh nghiệm.</control>
@@ -84,6 +90,8 @@
     <control lang="vi" key="IDT_PARTIAL_POOL_CONTENTS">Nội dung gộp chung hiện tại (một phần)</control>
     <control lang="vi" key="IDT_PASS">Mật</control>
     <control lang="vi" key="IDT_PASSWORD">Mật mã:</control>
+    <control lang="en" key="IDT_PIM">Volume PIM:</control>
+    <control lang="en" key="IDT_OLD_PIM">Volume PIM:</control>
     <control lang="vi" key="IDT_PROGRESS">Tiến triển:</control>
     <control lang="vi" key="IDT_RANDOM_POOL">Gộp chung Ngẫu nhiên:</control>
     <control lang="vi" key="IDT_SINGLE_BOOT">Chọn tùy chọn này nếu chỉ có một hệ điều hành được cài đặt trong máy điện toán này (ngay cả nếu nó được dùng bởi nhiều người).</control>
@@ -92,6 +100,7 @@
     <control lang="vi" key="IDT_SYSENC_KEYS_GEN_INFO">Các khóa, muối, và những dữ liệu khác đã được tạo ra. Nếu bạn muốn tạo ra khóa mới thì nhấn Ngược lại và sau đó nhấn Kế tiếp. Không thôi thì nhấn Kế tiếp để tiếp tục.</control>
     <control lang="vi" key="IDT_SYS_DEVICE">Mã hóa phân vùng/ổ đĩa nơi mà Windows được cài đặt. Bất cứ ai muốn đưọc truy cập và sử dụng hệ thống, đọc và viết tập tin, v.v. sẽ cần nhập đúng mật mã mỗi lần trước khi Windows khởi động. Cũng có thể cấu tạo một hệ thống dấu được.</control>
     <control lang="vi" key="IDT_SYS_PARTITION">Chọn tùy chọn này để mã hóa phân vùng nơi mà hệ điều hành Windows đang chạy hiện tại được cài đặt.</control>
+    <control lang="en" key="IDT_VOLUME_LABEL">Volume Label in Windows:</control>
     <control lang="vi" key="IDT_WIPE_MODE">Phương thức tẩy:</control>
     <control lang="vi" key="IDCLOSE">Đóng</control>
     <control lang="vi" key="IDC_ALLOW_ESC_PBA_BYPASS">Cho phép bỏ qua &amp;chứng thực tiền khởi động bằng cách bấm phím Esc (bật quản lý khởi động lên)</control>
@@ -105,6 +114,7 @@
     <control lang="vi" key="IDC_CACHE">Tạm trữ các mật mã và tập &amp;tin khóa trong bộ nhớ</control>
     <control lang="vi" key="IDC_CLOSE_BKG_TASK_WHEN_NOVOL">Thoát ra khi không có tập đĩa nào được nạp lên</control>
     <control lang="vi" key="IDC_CLOSE_TOKEN_SESSION_AFTER_MOUNT">&amp;Đóng phiên chạy của hiệu bài (đăng xuất) sau khi một tập đĩa được nạp lên thành công</control>
+    <control lang="en" key="IDC_COPY_EXPANDER">Include VeraCrypt Volume Expander</control>
     <control lang="vi" key="IDC_COPY_WIZARD">Thêm Trợ lý Cấu tạo Tập đĩa VeraCrypt vào</control>
     <control lang="vi" key="IDC_CREATE">Cấu tạo</control>
     <control lang="vi" key="IDC_CREATE_VOLUME">Cấu tạo Tập đĩa</control>
@@ -141,10 +151,13 @@
     <control lang="vi" key="IDC_MOUNT_OPTIONS">Nạp Tùy &amp;chọn lên...</control>
     <control lang="vi" key="IDC_MOUNT_READONLY">Nạp tập đĩa kiểu chỉ-đọc lên</control>
     <control lang="vi" key="IDC_NEW_KEYFILES">Tập tin khóa...</control>
+    <control lang="en" key="IDC_OLD_PIM_HELP">(Empty or 0 for default iterations)</control>
+    <control lang="en" key="IDC_PIM_HELP">(Empty or 0 for default iterations)</control>	
     <control lang="vi" key="IDC_PREF_BKG_TASK_ENABLE">Được bật lên</control>
     <control lang="vi" key="IDC_PREF_CACHE_PASSWORDS">Tạm trữ mật mã trong bộ nhớ của trình điều khiển</control>
     <control lang="vi" key="IDC_PREF_DISMOUNT_INACTIVE">Tự-tháo tập đĩa xuống sau khi không có dữ liệu nào được đọc/viết vào nó trong</control>
     <control lang="vi" key="IDC_PREF_DISMOUNT_LOGOFF">Người dùng đăng xuất</control>
+    <control lang="en" key="IDC_PREF_DISMOUNT_SESSION_LOCKED">User session locked</control>
     <control lang="vi" key="IDC_PREF_DISMOUNT_POWERSAVING">Đang vào phương thức tiết kiệm năng lượng</control>
     <control lang="vi" key="IDC_PREF_DISMOUNT_SCREENSAVER">Bảo vệ màn hình được khởi chạy</control>
     <control lang="vi" key="IDC_PREF_FORCE_AUTO_DISMOUNT">Bắt buộc tự-tháo xuống ngay cả nếu tập đĩa có chứa tập tin hay thư mục còn mở</control>
@@ -153,6 +166,7 @@
     <control lang="vi" key="IDC_PREF_MOUNT_READONLY">Nạp các tập đĩa kiểu chỉ-đọc lên</control>
     <control lang="vi" key="IDC_PREF_MOUNT_REMOVABLE">Nạp các tập đĩa kiểu môi trường chứa rời được lên</control>
     <control lang="vi" key="IDC_PREF_OPEN_EXPLORER">Mở cửa sổ Explorer của tập đĩa được nạp lên thành công</control>
+    <control lang="en" key="IDC_PREF_TEMP_CACHE_ON_MULTIPLE_MOUNT">Temporary Cache password during "Mount Favorite Volumes" operations</control>
     <control lang="en" key="IDC_PREF_USE_DIFF_TRAY_ICON_IF_VOL_MOUNTED">Use a different taskbar icon when there are mounted volumes</control>
     <control lang="vi" key="IDC_PREF_WIPE_CACHE_ON_AUTODISMOUNT">Xóa mật mã được tạm trữ khi tự-tháo xuống</control>
     <control lang="vi" key="IDC_PREF_WIPE_CACHE_ON_EXIT">Xóa mật mã được tạm trữ khi ra khỏi</control>
@@ -165,16 +179,18 @@
     <control lang="vi" key="IDC_SHOW_PASSWORD_CHPWD_ORI">Hiển thị mật mã</control>
     <control lang="vi" key="IDC_TRAVEL_OPEN_EXPLORER">Mở cửa sổ &amp;Explorer cho tập đĩa được nạp lên</control>
     <control lang="vi" key="IDC_TRAV_CACHE_PASSWORDS">&amp;Tạm trữ mật mã trong bộ nhớ của trình điều khiển</control>
+    <control lang="en" key="IDC_TRUECRYPT_MODE">TrueCrypt Mode</control>
     <control lang="vi" key="IDC_UNMOUNTALL">Th&amp;áo Tất cả xuống</control>
     <control lang="vi" key="IDC_VOLUME_PROPERTIES">Đặc tính của Tập đĩa...</control>
     <control lang="vi" key="IDC_VOLUME_TOOLS">Công cụ của Tập đĩa...</control>
     <control lang="vi" key="IDC_WIPE_CACHE">&amp;Tẩy Bộ tạm trữ</control>
+    <control lang="en" key="IDD_DEFAULT_MOUNT_PARAMETERS">VeraCrypt - Mount Parameters</control>
     <control lang="en" key="IDD_FAVORITE_VOLUMES">VeraCrypt - Favorite Volumes</control>
     <control lang="vi" key="IDD_HOTKEYS_DLG">VeraCrypt - Các khóa kích hoạt cho Nguyên cả Hệ thống</control>
     <control lang="vi" key="IDD_MOUNT_DLG">VeraCrypt</control>
     <control lang="vi" key="IDD_PASSWORDCHANGE_DLG">Thay đổi Mật mã hoặc Tập tin khóa</control>
     <control lang="vi" key="IDD_PASSWORD_DLG">Nhập vào Mật mã của Tập đĩa VeraCrypt</control>
-    <control lang="en" key="IDD_PERFORMANCE_SETTINGS">VeraCrypt - Performance Options</control>
+    <control lang="en" key="IDD_PERFORMANCE_SETTINGS">VeraCrypt - Performance and Driver Options</control>
     <control lang="vi" key="IDD_PREFERENCES_DLG">VeraCrypt - Tùy thích</control>
     <control lang="vi" key="IDD_SYSENC_SETTINGS">VeraCrypt - Thiết lập Mã hóa Hệ thống</control>
     <control lang="vi" key="IDD_TOKEN_PREFERENCES">VeraCrypt - Các tùy thích của Hiệu bài Bảo mật</control>
@@ -197,7 +213,10 @@
     <control lang="vi" key="IDM_CREATE_HIDDEN_OS">Cấu tạo Hệ điều hành Ẩn...</control>
     <control lang="vi" key="IDM_CREATE_RESCUE_DISK">Cấu tạo Đĩa Cứu hộ...</control>
     <control lang="vi" key="IDM_CREATE_VOLUME">Cấu tạo Tập đĩa mới...</control>
+    <control lang="en" key="IDM_DECRYPT_NONSYS_VOL">Permanently Decrypt...</control>
     <control lang="vi" key="IDM_DEFAULT_KEYFILES">Tập tin khóa Mặc định...</control>
+    <control lang="en" key="IDM_DEFAULT_MOUNT_PARAMETERS">Default Mount Parameters...</control>
+    <control lang="en" key="IDM_DONATE">Donate now...</control>
     <control lang="vi" key="IDM_ENCRYPT_SYSTEM_DEVICE">Mã hóa Phân vùng Hệ thống/Ổ đĩa...</control>
     <control lang="vi" key="IDM_FAQ">Câu hỏi thông dụng</control>
     <control lang="vi" key="IDM_HELP">Hướng dẫn</control>
@@ -217,7 +236,7 @@
     <control lang="vi" key="IDM_ONLINE_TUTORIAL">Bài học cho người bắt đầu</control>
     <control lang="en" key="IDM_ORGANIZE_FAVORITES">Organize Favorite Volumes...</control>
     <control lang="en" key="IDM_ORGANIZE_SYSTEM_FAVORITES">Organize System Favorite Volumes...</control>
-    <control lang="en" key="IDM_PERFORMANCE_SETTINGS">Performance...</control>
+    <control lang="en" key="IDM_PERFORMANCE_SETTINGS">Performance/Driver Configuration</control>
     <control lang="vi" key="IDM_PERMANENTLY_DECRYPT_SYS">Giải mã vĩnh viễn Phân vùng Hệ thống/Ổ đĩa</control>
     <control lang="vi" key="IDM_PREFERENCES">Sở thích...</control>
     <control lang="vi" key="IDM_REFRESH_DRIVE_LETTERS">Cập nhật các Chữ hiệu Ổ đĩa</control>
@@ -239,6 +258,7 @@
     <control lang="vi" key="IDM_UNMOUNT_VOLUME">Tháo Tập đĩa xuống</control>
     <control lang="vi" key="IDM_VERIFY_RESCUE_DISK">Kiểm tra Đĩa Cứu hộ</control>
     <control lang="vi" key="IDM_VERSION_HISTORY">Lịch sử phiên bản</control>
+    <control lang="en" key="IDM_VOLUME_EXPANDER">Volume Expander</control>
     <control lang="vi" key="IDM_VOLUME_PROPERTIES">Đặc tính của Tập đĩa</control>
     <control lang="vi" key="IDM_VOLUME_WIZARD">Trợ giúp Cấu tạo Tập đĩa</control>
     <control lang="vi" key="IDM_WEBSITE">Trang Web của VeraCrypt</control>
@@ -255,6 +275,8 @@
     <control lang="vi" key="IDT_CUSTOM_BOOT_LOADER_MESSAGE">Hiển thị thông điệp riêng này trong màn hình chứng thực tiền khởi động (tối đa 24 ký tự):</control>
     <control lang="vi" key="IDT_DEFAULT_MOUNT_OPTIONS">Tùy chọn của Nạp mặc định</control>
     <control lang="vi" key="IDT_DISMOUNT_ACTION">Tùy chọn phím nóng</control>
+    <control lang="en" key="IDT_DRIVER_OPTIONS">Driver Configuration</control>
+    <control lang="en" key="IDC_ENABLE_EXTENDED_IOCTL_SUPPORT">Enable extended disk control codes support</control>
     <control lang="en" key="IDT_FAVORITE_LABEL">Label of selected favorite volume:</control>
     <control lang="vi" key="IDT_FILE_SETTINGS">Thiếp lập tập tin</control>
     <control lang="vi" key="IDT_HOTKEY_KEY">Khóa để giao cho:</control>
@@ -268,6 +290,7 @@
     <control lang="en" key="IDT_PARALLELIZATION_OPTIONS">Thread-Based Parallelization</control>
     <control lang="vi" key="IDT_PKCS11_LIB_PATH">Đường dẫn Thư viện của PKCS #11</control>
     <control lang="vi" key="IDT_PKCS5_PRF">PKCS-5 PRF:</control>
+    <control lang="en" key="IDT_NEW_PKCS5_PRF">PKCS-5 PRF:</control>
     <control lang="vi" key="IDT_PW_CACHE_OPTIONS">Tạm trữ Mật mã</control>
     <control lang="vi" key="IDT_SECURITY_OPTIONS">Tùy chọn bảo mật</control>
     <control lang="vi" key="IDT_TASKBAR_ICON">Tác vụ Phụ của VeraCrypt</control>
@@ -330,6 +353,9 @@
     <control lang="vi" key="IDT_KEYFILE_GENERATOR_NOTE">QUAN TRỌNG: Di chuyển con chuột của bạn càng nhiều trong cửa sổ này càng tốt. Bạn làm càng lâu càng tốt. Chuyện này gia tăng rất nhiều sức mã hóa của tập tin khóa.</control>
     <control lang="vi" key="IDT_KEYFILE_WARNING">CẢNH BÁO: Nếu bạn mất một tập tin khóa hoặc nếu bất cứ phần nào trong 1024 kilobytes đầu của nó thay đổi thì sẽ không thể nào nạp lên các tập đĩa nào dùng tập tin khóa được!</control>
     <control lang="vi" key="IDT_KEY_UNIT">bits</control>
+    <control lang="en" key="IDT_NUMBER_KEYFILES">Number of keyfiles:</control>
+    <control lang="en" key="IDT_KEYFILES_SIZE">Keyfiles size (in Bytes):</control>
+    <control lang="en" key="IDT_KEYFILES_BASE_NAME">Keyfiles base name:</control>
     <control lang="vi" key="IDT_LANGPACK_AUTHORS">Dịch bởi:</control>
     <control lang="vi" key="IDT_PLAINTEXT">Kích cỡ chữ thường:</control>
     <control lang="vi" key="IDT_PLAINTEXT_SIZE_UNIT">bits</control>
@@ -340,6 +366,7 @@
     <control lang="vi" key="IDT_SECURITY_TOKEN">Hiệu bài bảo mật:</control>
     <control lang="vi" key="IDT_SORT_METHOD">Phương pháp sắp xếp:</control>
     <control lang="en" key="IDT_STATIC_MODELESS_WAIT_DLG_INFO">Please wait. This process may take a long time...</control>
+    <control lang="en" key="IDT_STATIC_MODAL_WAIT_DLG_INFO">Please wait...\nThis process may take a long time and VeraCrypt may become unresponsive.</control>
     <control lang="vi" key="IDT_TEST_BLOCK_NUMBER">Số khối:</control>
     <control lang="vi" key="IDT_TEST_CIPHERTEXT">Chữ mã hóa (hexadecimal)</control>
     <control lang="vi" key="IDT_TEST_DATA_UNIT_NUMBER">Số đơn vị dữ liệu (64-bit hexadecimal, kích cỡ đơn vị dữ liệu là 512 bytes)</control>
@@ -360,7 +387,7 @@
     <string lang="vi" key="ACCESS_DENIED">Lỗi: Truy cập bị từ khước.\n\nPhân vùng mà bạn đang truy cập có chiều dài 0 khu vực, hoặc nó là thiết bị khởi động.</string>
     <string lang="vi" key="ADMINISTRATOR">Quản lý</string>
     <string lang="vi" key="ADMIN_PRIVILEGES_DRIVER">Để nạp trình điều khiển của VeraCrypt lên, bạn cần đăng nhập vào một trương mục có quyền quản lý.</string>
-    <string lang="vi" key="ADMIN_PRIVILEGES_WARN_DEVICES">Xin lưu ý là để mã hóa/định dạng một phân vùng/thiết bị thì bạn cần đăng nhập vào một trương mục có quyền quản lý.\n\nChuyện này không áp dụng với các tập đĩa có tập tin làm chủ.</string>
+    <string lang="vi" key="ADMIN_PRIVILEGES_WARN_DEVICES">Xin lưu ý là để mã hóa/Giải/định dạng một phân vùng/thiết bị thì bạn cần đăng nhập vào một trương mục có quyền quản lý.\n\nChuyện này không áp dụng với các tập đĩa có tập tin làm chủ.</string>
     <string lang="vi" key="ADMIN_PRIVILEGES_WARN_HIDVOL">Để cấu tạo một tập đĩa ẩn bạn cần đăng nhập vào một trương mục có quyền quản lý.\n\nTiếp tục không?</string>
     <string lang="vi" key="ADMIN_PRIVILEGES_WARN_NTFS">Xin lưu ý là để định dạng tập đĩa theo dạng NTFS bạn cần đăng nhập vào một trương mục có quyền quản lý.\n\nKhông thôi có quyền quản lý, bạn có thể định dạng tập đĩa theo dạng FAT.</string>
     <string lang="vi" key="AES_HELP">Mã hóa được chấp thuận bởi FIPS (Rijndael, phát hành năm 1998) có thể được sử dụng bởi các bộ và cơ quan Hoa Kỳ để bảo vệ những tin tức mật cho đến mức tối mật. 256-bit key, 128-bit block, 14 rounds (AES-256). Phương thức của thao tác là XTS.</string>
@@ -431,7 +458,7 @@
     <string lang="en" key="ASK_DEBUGGER_INSTALL">In order to analyze the system crash, VeraCrypt needs to install Microsoft Debugging Tools for Windows first.\n\nAfter you click OK, the Windows installer will download the Microsoft Debugging Tools installation package (16 MB) from a Microsoft server and install it (the Windows installer will be forwarded to the Microsoft server URL from the veracrypt.org server, which ensures that this feature works even if Microsoft changes the location of the installation package).</string>
     <string lang="en" key="SYSTEM_CRASH_ANALYSIS_INFO">After you click OK, VeraCrypt will analyze the system crash. This may take up to several minutes.</string>
     <string lang="en" key="DEBUGGER_NOT_FOUND">Please make sure the environment variable 'PATH' includes the path to 'kd.exe' (Kernel Debugger).</string>
-    <string lang="en" key="SYSTEM_CRASH_NO_TRUECRYPT">It appears that VeraCrypt most likely did not cause the system crash. There are many potential reasons why the system could have crashed (for example, a failing hardware component, a bug in a device driver, etc.)</string>
+    <string lang="en" key="SYSTEM_CRASH_NO_VERACRYPT">It appears that VeraCrypt most likely did not cause the system crash. There are many potential reasons why the system could have crashed (for example, a failing hardware component, a bug in a device driver, etc.)</string>
     <string lang="en" key="SYSTEM_CRASH_UPDATE_DRIVER">Results of the analysis indicate that updating the following driver might solve this issue: </string>
     <string lang="en" key="SYSTEM_CRASH_REPORT">To help us determine whether there is a bug in VeraCrypt, you can send us an automatically generated error report containing the following items:\n- Program version\n- Operating system version\n- Type of CPU\n- Error category\n- Driver name and version\n- System call stack\n\nIf you select 'Yes', the following URL (which contains the entire error report) will be opened in your default Internet browser.</string>
     <string lang="en" key="ASK_SEND_ERROR_REPORT">Do you want to send us the above error report?</string>
@@ -476,7 +503,11 @@
     <string lang="vi" key="FORMAT_FINISHED_HELP">\n\nTập đĩa VeraCrypt đã được cấu tạo và sẵn sàng để dùng. Nếu bạn muốn cấu tạo một tập đĩa VeraCrypt khác thì nhấn Kế tiếp. Không thôi thì nhấn Thoát ra.</string>
     <string lang="vi" key="SYSENC_HIDDEN_VOL_FORMAT_FINISHED_HELP">\n\nTập đĩa ẩn VeraCrypt đã được cấu tạo thành công (hệ điều hành ẩn sẽ nằm bên trong tập đĩa ẩn này).\n\nNhấn Kế tiếp để tiếp tục.</string>
     <string lang="vi" key="NONSYS_INPLACE_ENC_FINISHED_TITLE">Tập đĩa được Hoàn toàn Mã hóa</string>
-    <string lang="vi" key="NONSYS_INPLACE_ENC_FINISHED_INFO">QUAN TRỌNG: ĐỂ NẠP TẬP ĐĨA TRUECRYPT MỚI ĐƯỢC CẤU TẠO NÀY LÊN VÀ ĐỂ TRUY CẬP DỮ LIỆU LƯU TRỮ TRONG NÓ, NHẤN 'Auto-Mount Devices' TRONF CỬA SỔ CHÍNH CỦA TRUECRYPT. Sau khi bạn nhập đúng mật mã vào (và/hay cung cấp đúng các tập tin khóa), tập đĩa sẽ được nạp lên chữ hiệu ổ đĩa mà bạn chọn từ danh sách trong cửa sổ chính của VeraCrypt (và bạn sẽ có thể truy cập dữ liệu được mã hóa data qua chữ hiệu ổ đĩa được chọn).\n\nXIN NHỚ HOẶC GHI XUỐNG NHỮNG BƯỚC TRÊN. BẠN PHẢI THEO CHÚNG BẤT CỨ KHI NÀO BẠN MUỐN NẠP TẬP ĐĨA LÊN VÀ TRUY CẬP DỮ LIỆU LƯU GIỮ TRONG NÓ. Một cách khác, trong cửa sổ chính của VeraCrypt, nhấn 'Chọn Thiết bị', sau đó chọn phân vùng/tập đĩa này, và nhấn 'Mount'.\n\nPhân vùng/tập đĩa đã được mã hóa thành công (nó có chứa một tập đĩa VeraCrypt đã được mã hóa toàn bộ bây giờ) và sẵn sàng để dùng.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_TITLE">Volume Fully Decrypted</string>
+    <string lang="vi" key="NONSYS_INPLACE_ENC_FINISHED_INFO">QUAN TRỌNG: ĐỂ NẠP TẬP ĐĨA VERACRYPT MỚI ĐƯỢC CẤU TẠO NÀY LÊN VÀ ĐỂ TRUY CẬP DỮ LIỆU LƯU TRỮ TRONG NÓ, NHẤN 'Auto-Mount Devices' TRONF CỬA SỔ CHÍNH CỦA VERACRYPT. Sau khi bạn nhập đúng mật mã vào (và/hay cung cấp đúng các tập tin khóa), tập đĩa sẽ được nạp lên chữ hiệu ổ đĩa mà bạn chọn từ danh sách trong cửa sổ chính của VeraCrypt (và bạn sẽ có thể truy cập dữ liệu được mã hóa data qua chữ hiệu ổ đĩa được chọn).\n\nXIN NHỚ HOẶC GHI XUỐNG NHỮNG BƯỚC TRÊN. BẠN PHẢI THEO CHÚNG BẤT CỨ KHI NÀO BẠN MUỐN NẠP TẬP ĐĨA LÊN VÀ TRUY CẬP DỮ LIỆU LƯU GIỮ TRONG NÓ. Một cách khác, trong cửa sổ chính của VeraCrypt, nhấn 'Chọn Thiết bị', sau đó chọn phân vùng/tập đĩa này, và nhấn 'Mount'.\n\nPhân vùng/tập đĩa đã được mã hóa thành công (nó có chứa một tập đĩa VeraCrypt đã được mã hóa toàn bộ bây giờ) và sẵn sàng để dùng.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_INFO">The VeraCrypt volume has been successfully decrypted.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_DRIVE_LETTER_SEL_INFO">The VeraCrypt volume has been successfully decrypted.\n\nPlease select a drive letter that you wish to assign to the decrypted volume and then click Finish.\n\nIMPORTANT: Until a drive letter is assigned to the decrypted volume, you will not be able to access data stored on the volume.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_NO_DRIVE_LETTER_AVAILABLE">Warning: To be able to access the decrypted data, a drive letter needs to be assigned to the decrypted volume. However, no drive letter is currently available.\n\nPlease vacate a drive letter (for example, by disconnecting a USB flash drive or external hard drive, etc.) and then click OK.</string>
     <string lang="vi" key="FORMAT_FINISHED_INFO">Tập đĩa VeraCrypt đã được cấu tạo thành công.</string>
     <string lang="vi" key="FORMAT_FINISHED_TITLE">Tập đĩa được Cấu tạo</string>
     <string lang="vi" key="FORMAT_HELP">QUAN TRỌNG: Di chuyển con chuột của bạn càng nhiều trong cửa sổ này càng tốt. Bạn làm càng lâu càng tốt. Chuyện này sẽ gia tăng sức mạnh mã hóa của các khóa mã hóa. Sau đó nhấn Định dạng để cấu tạo tập đĩa.</string>
@@ -489,7 +520,7 @@
     <string lang="vi" key="HIDDEN_VOL_WIZARD_MODE_DIRECT_HELP">Nếu bạn chọn tùy chọn này, bạn sẽ cấu tạo một tập đĩa ẩn bên trong một tập đĩa VeraCrypt có sẵn. Sẽ cho rằng bạn đã cấu tạo một tập đĩa VeraCrypt thích hợp để chứa tập đĩa ẩn rồi.</string>
     <string lang="vi" key="HIDDEN_VOL_WIZARD_MODE_TITLE">Phương thức Cấu tạo Tập đĩa</string>
     <string lang="vi" key="HIDVOL_FORMAT_FINISHED_TITLE">Tập đĩa Ẩn đã được Cấu tạo</string>
-    <string lang="en" key="HIDVOL_FORMAT_FINISHED_HELP">The hidden VeraCrypt volume has been successfully created and is ready for use. If all the instructions have been followed and if the precautions and requirements listed in the section "Security Requirements and Precautions Pertaining to Hidden Volumes" in the VeraCrypt User's Guide are followed, it should be impossible to prove that the hidden volume exists, even when the outer volume is mounted.\n\nWARNING: IF YOU DO NOT PROTECT THE HIDDEN VOLUME (FOR INFORMATION ON HOW TO DO SO, REFER TO THE SECTION "PROTECTION OF HIDDEN VOLUMES AGAINST DAMAGE" IN THE TRUECRYPT USER'S GUIDE), DO NOT WRITE TO THE OUTER VOLUME. OTHERWISE, YOU MAY OVERWRITE AND DAMAGE THE HIDDEN VOLUME!</string>
+    <string lang="en" key="HIDVOL_FORMAT_FINISHED_HELP">The hidden VeraCrypt volume has been successfully created and is ready for use. If all the instructions have been followed and if the precautions and requirements listed in the section "Security Requirements and Precautions Pertaining to Hidden Volumes" in the VeraCrypt User's Guide are followed, it should be impossible to prove that the hidden volume exists, even when the outer volume is mounted.\n\nWARNING: IF YOU DO NOT PROTECT THE HIDDEN VOLUME (FOR INFORMATION ON HOW TO DO SO, REFER TO THE SECTION "PROTECTION OF HIDDEN VOLUMES AGAINST DAMAGE" IN THE VERACRYPT USER'S GUIDE), DO NOT WRITE TO THE OUTER VOLUME. OTHERWISE, YOU MAY OVERWRITE AND DAMAGE THE HIDDEN VOLUME!</string>
     <string lang="vi" key="FIRST_HIDDEN_OS_BOOT_INFO">Bạn đã bắt đầu hệ điều hành ẩn. Như bạn có thể để ý, hệ điều hành ẩn hình như được cài đặt trong cùng phân vùng với hệ điều hành ban đầu. Tuy nhiên, trên thực tế, nó được cài đặt bên trong phân vùng đằng sau nó (trong tập đĩa ẩn). Tất cả các thao tác đọc và viết đang được vô hình chuyển từ phân vùng hệ thống ban đầu đến tập đĩa ẩn.\n\nCả hệ điều hành lẫn các ứng dụng sẽ không biết là dữ liệu viết vào và đọc từ phân vùng hệ thống thực ra được viết vào và đọc từ phân vùng đằng sau nó (từ/vào một tập đĩa ẩn). Bất cứ dữ liệu nào như thế được mã hóa và giải mã ngay khi cần như thông thường (với một khóa mã hóa khác với cái sẽ được dùng cho hệ điều hành nghi trang).\n\n\nXin nhấn Kế tiếp để tiếp tục.</string>
     <string lang="vi" key="HIDVOL_HOST_FILLING_HELP_SYSENC">Tập đĩa bên ngoài đã được cấu tạo và nạp vào ổ đĩa %hc:. Bây giờ bạn nên chép một vài tập tin nhìn có vẻ nhạy cảm mà thật ra bạn KHÔNG muốn dấu vào tập đĩa bên ngoài này. Chúng nó sẽ nằm ở đó cho bất cứ ai buộc bạn phải tiết lộ mật mã của phân vùng đầu tiên sau phân vùng hệ thống, nơi mà cả hai tập đĩa bên ngoài và tập đĩa ẩn (có chứa hệ điều hành ẩn) sẽ nằm đó. Bạn sẽ có thể tiết lộ mật mã của tập đĩa bên ngoài này, và sự hiện diện của tập đĩa ẩn (và của hệ điều hành ẩn) sẽ vẫn được giữ bí mật .\n\nQUAN TRỌNG: Những tập tin bạn chép vào tập đĩa bên ngoài không nên chiếm hơn %s. Không thôi, có thể không đủ chỗ trống trong tập đĩa bên ngoài cho tập đĩa ẩn (và bạn sẽ không thể tiếp tục được). Sau khi bạn chép xong, nhấn Kế tiếp (đừng tháo tập đĩa xuống).</string>
     <string lang="vi" key="HIDVOL_HOST_FILLING_HELP">Tập đĩa bên ngoài đã được cấu tạo và nạp vào ổ đĩa %hc:. Bây giờ bạn nên chép một vài tập tin nhìn có vẻ nhạy cảm mà thật ra bạn KHÔNG muốn dấu. Những tập tin sẽ nằm ở đó cho bất cứ ai buộc bạn phải tiết lộ mật mã. Bạn sẽ chỉ tiết lộ mật mã của tập đĩa bên ngoài này thôi, không phải của cái ẩn. Những tập tin mà bạn thật sự lo cho sẽ được lưu trữ trong tập đĩa ẩn, mà sẽ được cấu tạo sau này. Khi bạn chép xong, nhấn Kế tiếp. Đừng tháo tập đĩa xuống.\n\nLưu ý: Sau khi nhấn Kế tiếp, cụm ảnh mảng của tập đĩa bên ngoài sẽ được quét để xác định kích cỡ của khu vực chỗ trống không gián đoạn mà phần cuối của nó trùng với phần cuối của tập đĩa. Khu vực này sẽ chứa tập đĩa ẩn, vì thế nó sẽ giới hạn kích cỡ tối đa có thể được của nó. Quét cụm ảnh mảng đảm bảo là không có dữ liệu nào trong tập đĩa bên ngoài bị viết chòng lên bởi tập đĩa ẩn.</string>
@@ -512,8 +543,18 @@
     <string lang="vi" key="DECOY_TO_HIDDEN_OS_DATA_TRANSFER_HOWTO">Lưu ý: Nếu bạn cần chuyển các tập tin một cách an toàn từ hệ thống nghi trang sang hệ thống ẩn, theo những bước sau đây:\n1) Bắt đầu hệ thống nghi trang.\n2) Lưu những tập tin vào một tập đĩa được giải mã hoặc vào một tập đĩa VeraCrypt bên ngoài/thông thường.\n3) Bắt đầu hệ ẩn.\n4) Nếu bạn đã lưu những tập tin vào một tập đĩa VeraCrypt, nạp nó lên (nó sẽ được tự động nạp lên kiểu chỉ-đọc).\n5) Chép những tập tin vào phân vùng hệ thống ẩn phân vùng hoặc vào một tập đĩa ẩn khác.</string>
     <string lang="vi" key="CONFIRM_RESTART">Máy của bạn phải được bắt đầu lại.\n\nBạn có muốn bắt đầu nó lại bây giờ không?</string>
     <string lang="vi" key="ERR_GETTING_SYSTEM_ENCRYPTION_STATUS">Có lỗi xảy ra khi đang lấy tình trạng mã hóa hệ thống.</string>
+    <string lang="en" key="ERR_PASSWORD_MISSING">No password specified in the command line. The volume can't be created.</string>
+    <string lang="en" key="ERR_SIZE_MISSING">No volume size specified in the command line. The volume can't be created.</string>
+    <string lang="en" key="ERR_NTFS_INVALID_VOLUME_SIZE">The volume file size specified in the command line is incompatible with selected NTFS filesystem.</string>
+    <string lang="en" key="ERR_FAT_INVALID_VOLUME_SIZE">The volume file size specified in the command line is incompatible with selected FAT32 filesystem.</string>
+    <string lang="en" key="ERR_DYNAMIC_NOT_SUPPORTED">The filesystem on the target drive doesn't support creating sparse files which is required for dynamic volumes.</string>
+    <string lang="en" key="ERR_DEVICE_CLI_CREATE_NOT_SUPPORTED">Only container files can be created through the command line.</string>
+    <string lang="en" key="ERR_CONTAINER_SIZE_TOO_BIG">The container file size specified in the command line is greater than the available disk free space. Volume can't be created.</string>
+    <string lang="en" key="ERR_VOLUME_SIZE_TOO_SMALL">The volume size specified in the command line is too small. The volume can't be created.</string>
+    <string lang="en" key="ERR_VOLUME_SIZE_TOO_BIG">The volume size specified in the command line is too big. The volume can't be created.</string>
     <string lang="vi" key="INIT_SYS_ENC">Không thể sơ khởi các bộ phận của ứng dụng cho việc mã hóa hệ thống.</string>
     <string lang="vi" key="INIT_RAND">Không sơ khởi hàm tạo ra các số ngẫu nhiên được!</string>
+    <string lang="en" key="CAPI_RAND">Windows Crypto API failed!\n\n\n(If you report a bug in connection with this, please include the following technical information in the bug report:\n%hs, Last Error = 0x%.8X)</string>
     <string lang="vi" key="INIT_REGISTER">Không thể sơ khởi ứng dụng được. Không đăng ký hạng Hộp thoại được.</string>
     <string lang="vi" key="INIT_RICHEDIT">Lỗi: Không nạp thư viện hệ thống Rich Edit được.</string>
     <string lang="vi" key="INTRO_TITLE">Trợ lý Cấu tạo Tập đĩa VeraCrypt</string>
@@ -521,11 +562,13 @@
     <string lang="vi" key="MAX_HIDVOL_SIZE_KB">Kích cỡ tối đa có thể xài được cho tập đĩa ẩn trong tập đĩa này là %.2f KB.</string>
     <string lang="vi" key="MAX_HIDVOL_SIZE_MB">Kích cỡ tối đa có thể xài được cho tập đĩa ẩn trong tập đĩa này là %.2f MB.</string>
     <string lang="vi" key="MAX_HIDVOL_SIZE_GB">Kích cỡ tối đa có thể xài được cho tập đĩa ẩn trong tập đĩa này là %.2f GB.</string>
+    <string lang="vi" key="MAX_HIDVOL_SIZE_TB">Kích cỡ tối đa có thể xài được cho tập đĩa ẩn trong tập đĩa này là %.2f TB.</string>
     <string lang="vi" key="MOUNTED_NOPWCHANGE">Mật mã/tập tin khóa không thể được thay đổi trong lúc tập đĩa đang được nạp lên. Xin tháo tập đĩa xuống trước.</string>
     <string lang="vi" key="MOUNTED_NO_PKCS5_PRF_CHANGE">Khóa đầu của thuật toán chuyển hóa không thể được thay đổi trong lúc tập đĩa đang được nạp lên. Xin tháo tập đĩa xuống trước.</string>
     <string lang="vi" key="MOUNT_BUTTON">&amp;Nạp lên</string>
     <string lang="vi" key="NEW_VERSION_REQUIRED">Cần có một phiên bản mới của VeraCrypt để nạp tập đĩa này lên.</string>
     <string lang="vi" key="VOL_CREATION_WIZARD_NOT_FOUND">Lỗi: Không tìm được Trợ lý Cấu tạo Tập đĩa.\n\nXin đảm bảo là tập tin 'VeraCrypt Format.exe' có trong thư mục nơi mà 'VeraCrypt.exe' được khởi chạy. Không thôi có thì xin cài đặt VeraCrypt lại, hoặc tìm 'VeraCrypt Format.exe' trong đĩa của bạn và cho nó chạy.</string>
+    <string lang="en" key="VOL_EXPANDER_NOT_FOUND">Error: Volume Expander not found.\n\nPlease make sure that the file 'VeraCryptExpander.exe' is in the folder from which 'VeraCrypt.exe' was launched. If it is not, please reinstall VeraCrypt, or locate 'VeraCryptExpander.exe' on your disk and run it.</string>
     <string lang="vi" key="NEXT">&amp;Kế tiếp &gt;</string>
     <string lang="vi" key="FINALIZE">&amp;Kết thúc</string>
     <string lang="vi" key="INSTALL">&amp;Cài đặt</string>
@@ -533,6 +576,7 @@
     <string lang="vi" key="NODRIVER">Không thể nối vào trình điều khiển thiết bị của VeraCrypt. VeraCrypt không thể làm việc được nếu trình điều khiển thiết bị không đang chạy.\n\nXin lưu ý là vì một vấn đề của Windows, có thể cần phải đăng xuất hoặc bắt đầu hệ thống lại trước khi trình điều khiển cí thể được nạp lên.</string>
     <string lang="vi" key="NOFONT">Có lỗi xảy ra khi đang nạp/chuẩn bị các kiểu chữ.</string>
     <string lang="vi" key="NOT_FOUND">Không tìm được chữ hiệu ổ đĩa hoặc không có chữ hiệu ổ đĩa nào được xác định.</string>
+    <string lang="en" key="ERR_CANNOT_ASSIGN_DRIVE_LETTER_NONSYS_DEC">Error: Cannot assign drive letter.\n\nUntil a drive letter is assigned to the decrypted volume, you will not be able to access data stored on the volume.\n\nRetry?</string>
     <string lang="vi" key="DRIVE_LETTER_UNAVAILABLE">Chữ hiệu ổ đĩa không có sẵn.</string>
     <string lang="vi" key="NO_FILE_SELECTED">Không có tập tin nào được chọn!</string>
     <string lang="vi" key="NO_FREE_DRIVES">Không có chữ hiệu ổ đĩa nào có sẵn.</string>
@@ -549,18 +593,21 @@
     <string lang="vi" key="SELECT_PKCS11_MODULE">Chọn Thư viện PKCS #11</string>
     <string lang="vi" key="OUTOFMEMORY">Hết bộ nhớ</string>
     <string lang="vi" key="FORMAT_DEVICE_FOR_ADVANCED_ONLY">QUAN TRỌNG: Chúng tôi cực lực khuyên rằng những người sử dụng ít kinh nghiệm nên cấu tạo một bộ chứa tập tin VeraCrypt trong thiết bị/phân vùng được chọn, thay vì thử mã hóa toàn bộ thiết bị/phân vùng.\n\nKhi bạn cấu tạo một bộ chứa tập tin VeraCrypt (thay vì mã hóa một thiết bị hoặc phân vùng) thì sẽ không có rủi ro hủy bỏ một số lượng lớn tập tin. Lưu ý là một bộ nhớ tập tin VeraCrypt (ngay cả khi nó có chứa một đĩa mã hóa ảo) thật ra giống như bất cứ tập tin thông thường khác. Để có thêm tin tức, xem chương Bài tập cho Người bắt đầu trong Hướng dẫn cho Người dùng của VeraCrypt.\n\nBạn có chắc là bạn muốn mã hóa toàn bộ thiết bị/phân vùng không?</string>
-    <string lang="vi" key="OVERWRITEPROMPT">CẢNH BÁO: Tập tin '%hs' đã có sẵn!\n\nQUAN TRỌNG: TRUECRYPT SẼ KHÔNG MÃ HÓA TẬP TIN, NHƯNG NÓ SẼ XÓA BỎ NÓ. Bạn có chắc là bạn muốn xóa bỏ tập tin và thay thế nó với một bộ nhớ VeraCrypt mới không?</string>
+    <string lang="vi" key="OVERWRITEPROMPT">CẢNH BÁO: Tập tin '%hs' đã có sẵn!\n\nQUAN TRỌNG: VERACRYPT SẼ KHÔNG MÃ HÓA TẬP TIN, NHƯNG NÓ SẼ XÓA BỎ NÓ. Bạn có chắc là bạn muốn xóa bỏ tập tin và thay thế nó với một bộ nhớ VeraCrypt mới không?</string>
     <string lang="vi" key="OVERWRITEPROMPT_DEVICE">CHÚ Ý: TẤT CẢ CÁC TẬP TIN ĐANG ĐƯỢC GIỮ TRONG %s '%hs'%s ĐƯỢC CHỌN SẼ BỊ XÓA BỎ VÀ MẤT ĐI (CHÚNG SẼ KHÔNG ĐƯỢC MÃ HÓA)!\n\nBạn có chắc là bạn muốn tiến hành với định dạng không?</string>
     <string lang="vi" key="NONSYS_INPLACE_ENC_CONFIRM">CẢNH BÁO: Bạn sẽ không thể nạp tập đĩa lên hoặc truy cập bất cứ tập tin nào được giữ trong nó cho đến khi nó được hoàn toàn mã hóa.\n\nBạn có chắc là bạn muốn bắt đầu mã hóa %s '%hs'%s được chọn không?</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_CONFIRM">WARNING: You will not be able to mount the volume or access any files stored on it until it has been fully decrypted.\n\nAre you sure you want to start decrypting the selected %s '%hs'%s?</string>
     <string lang="vi" key="NONSYS_INPLACE_ENC_CONFIRM_BACKUP">CẢNH BÁO: Xin lưu ý là nếu nguồn điện bị gián đoạn đột ngột trong lúc mã hóa dữ liệu tại chỗ, hoặc khi hệ điều hành sụp đổ vì một lỗi của nhu liệu hoặc cương liệu bị trục trặc trong lúc VeraCrypt đang mã hóa dữ liệu tại chỗ, vài phần của dữ liệu sẽ bị hỏng hay mất. Vì vậy, trước khi bạn bắt đầu mã hóa, xin đảm bảo là bạn có bản sao của các tập tin bạn muốn mã hóa.\n\nBạn có một bản sao như thế không?</string>
     <string lang="vi" key="OVERWRITEPROMPT_DEVICE_HIDDEN_OS_PARTITION">CHÚ Ý: BẤT CỨ TẬP TIN NÀO ĐANG ĐƯỢC GIỮ TRONG PHÂN VÙNG '%hs'%s (NGHĨA LÀ TRONG PHÂN VÙNG ĐẦU TIÊN ĐẰNG SAU PHÂN VÙNG HỆ THỐNG) SẼ BỊ XÓA BỎ VÀ MẤT ĐI (CHÚNG SẼ KHÔNG ĐƯỢC MÃ HÓA)!\n\nBạn có chắc là bạn muốn tiến hành với định dạng không?</string>
     <string lang="vi" key="OVERWRITEPROMPT_DEVICE_SECOND_WARNING_LOTS_OF_DATA">CẢNH BÁO: PHÂN VÙNG ĐƯỢC CHỌN CÓ CHỨA MỘT SỐ LƯỢNG DỮ LIỆU LỚN! Bất cứ tập tin nào được giữ trong phân vùng sẽ bị xóa bỏ và mất đi (chúng sẽ KHÔNG được mã hóa)!</string>
     <string lang="vi" key="ERASE_FILES_BY_CREATING_VOLUME">Xóa bỏ bất cứ tập tin nào được giữ trong phân vùng bằng cách cấu tạo một tập đĩa VeraCrypt bên trong nó</string>
     <string lang="vi" key="PASSWORD">Mật mã</string>
+    <string lang="en" key="PIM">PIM</string>
     <string lang="vi" key="IDD_PCDM_CHANGE_PKCS5_PRF">Đặt Khóa Đầu của Thuật toán Chuyển hóa</string>
     <string lang="vi" key="IDD_PCDM_ADD_REMOVE_VOL_KEYFILES">Thêm/Bỏ các Tập tin khóa vào/ra khỏi Tập đĩa</string>
     <string lang="vi" key="IDD_PCDM_REMOVE_ALL_KEYFILES_FROM_VOL">Bỏ Tất cả các Tập tin khóa ra khỏi Tập đĩa</string>
     <string lang="vi" key="PASSWORD_CHANGED">Mật mã và/hay tập tin khóa được thay đổi thành công.\n\nQUAN TRỌNG: Xin đảm bảo bạn có đọc phần 'Thay đổi Mật mã và Tập tin khóa' trong chương 'Yêu cầu và Đề phòng Bảo mật' trong Hướng dẫn cho Người dùng của VeraCrypt.</string>
+    <string lang="en" key="FAVORITE_PIM_CHANGED">This volume is registered as a System Favorite and its PIM was changed.\nDo you want VeraCrypt to automatically update the System Favorite configuration (administrator privileges required)?\n\nPlease note that if you answer no, you'll have to update the System Favorite manually.</string>
     <string lang="vi" key="SYS_PASSWORD_CHANGED_ASK_RESCUE_DISK">QUAN TRỌNG: Nếu bạn đã không hủy bỏ Đĩa Cứu hộ VeraCrypt của bạn, hệ thống phân vùng/ổ đĩa của bạn vẫn có thể được giải mã khi dùng mật mã cũ (bằng cách khởi động Đĩa Cứu hộ VeraCrypt và nhập vào mật mã cũ). Bạn nên cấu tạo một Đĩa Cứu hộ VeraCrypt mới và sau đó hủy bỏ cái cũ.\n\nBạn có muốn cấu tạo một Đĩa Cứu hộ VeraCrypt mới không?</string>
     <string lang="vi" key="SYS_HKD_ALGO_CHANGED_ASK_RESCUE_DISK">Lưu ý là Đĩa Cứu hộ VeraCrypt của bạn vẫn còn dùng thuật toán trước đó. Nếu bạn cho là thuật toán trước đó không an toàn thì bạn nên cấu tạo một Đĩa Cứu hộ VeraCrypt mới và sau đó hủy bỏ cái cũ.\n\nBạn có muốn cấu tạo một Đĩa Cứu hộ VeraCrypt mới không?</string>
     <string lang="en" key="KEYFILES_NOTE">Any kind of file (for example, .mp3, .jpg, .zip, .avi) may be used as a VeraCrypt keyfile. Note that VeraCrypt never modifies the keyfile contents. You can select more than one keyfile (the order does not matter). If you add a folder, all non-hidden files found in it will be used as keyfiles. Click 'Add Token Files' to select keyfiles stored on security tokens or smart cards (or to import keyfiles to security tokens or smart cards).</string>
@@ -569,6 +616,7 @@
     <string lang="vi" key="PKCS5_PRF_CHANGED">Khóa đầu của thuật toán chuyển hóa được đặt thành công.</string>
     <string lang="vi" key="NONSYS_INPLACE_ENC_RESUME_PASSWORD_PAGE_HELP">Xin nhập mật mã và/hay (các) tập tin khóa vào cho tập đĩa vô hệ nơi mà bạn muốn tiếp tục lại quá trình mã hóa tại chỗ.\n\n\nGhi chú: Sau khi bạn nhấn Kế tiếp, VeraCrypt sẽ thử tìm tất cả các tập đĩa vô hệ nơi mà quá trình mã hóa đã bị gián đoạn và nơi mà phần đầu tập đĩa VeraCrypt có thể được giải mã khi dùng mật mã và/hay (các) tập tin khóa được cung cấp. Nếu nhiều hơn một tập đĩa như thế được tìm, bạn sẽ cần chọn một trong những cái đó trong bước kế tiếp.</string>
     <string lang="vi" key="NONSYS_INPLACE_ENC_RESUME_VOL_SELECT_HELP">Xin chọn một trong các tập đĩa được liệt kê. Danh sách có chứa mọi tập đĩa vô hệ có thể truy cập được nơi mà quá trình mã hóa đã bị gián đoạn và phần đầu của chúng có thể được giải mã khi dùng mật mã và/hay (các) tập tin khóa được cung cấp.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_PASSWORD_PAGE_HELP">Please enter the password and/or keyfile(s) for the non-system VeraCrypt volume that you want to decrypt.</string>
     <string lang="vi" key="PASSWORD_HELP">Chọn một mật mã tốt là điều rất quan trọng. Bạn nên tránh chọn cái mà chỉ có chứa một chữ đơn độc mà có thể tìm trong tự điển (hoặc là một kết hợp của 2, 3, or 4 chữ như thế). Nó không nên chứa bất cứ tên hoặc ngày sinh nào cả. Nó không dễ đoán được. Một mật mã tốt là một kết hợp ngẫu nhiên của chữ hoa và chữ thường, số, và những ký tự đặc biệt như @ ^ = $ * + v.v. Chúng tôi khuyên nên chọn một mật mã có chứa nhiều hơn 20 ký tự (càng dài càng tốt). Chiều dài tối đa có thể được là 64 ký tự.</string>
     <string lang="vi" key="PASSWORD_HIDDENVOL_HELP">Xin chọn một mật mã cho tập đĩa ẩn.</string>
     <string lang="vi" key="PASSWORD_HIDDEN_OS_HELP">Xin chọn một mật mã cho hệ điều hành ẩn (nghĩa là cho tập đĩa ẩn).</string>
@@ -588,17 +636,34 @@
     <string lang="vi" key="PASSWORD_WRONG_AUTOMOUNT">Mật mã không đúng hoặc không tìm được tập đĩa VeraCrypt nào cả.</string>
     <string lang="vi" key="PASSWORD_OR_KEYFILE_WRONG_AUTOMOUNT">Tập tin khóa/mật mã không đúng hoặc không tìm được tập đĩa VeraCrypt nào cả.</string>
     <string lang="vi" key="PASSWORD_WRONG_CAPSLOCK_ON">\n\nCảnh báo: Caps Lock đang bật. Chuyện này có thể làm cho bạn nhập mật mã của bạn không đúng.</string>
+    <string lang="en" key="PIM_CHANGE_WARNING">Remember Number to Mount Volume</string>
+    <string lang="en" key="PIM_HIDVOL_HOST_TITLE">Outer Volume PIM</string>
+    <string lang="en" key="PIM_HIDVOL_TITLE">Hidden Volume PIM</string>
+    <string lang="en" key="PIM_HIDDEN_OS_TITLE">PIM for Hidden Operating System</string>
+    <string lang="en" key="PIM_HELP">PIM (Personal Iterations Multiplier) is a value that controls the number of iterations used by the header key derivation as follows:\n      Iterations = 15000 + (PIM x 1000).\n\nWhen left empty or set to 0, VeraCrypt will use a default value (485) that ensures a high security.\n\nWhen the password is less than 20 characters, PIM can't be smaller than 485 in order to maintain a minimal security level.\nWhen the password is 20 characters or more, PIM can be set to any value.\n\nA PIM value larger than 485 will lead to slower mount. A small PIM value (less than 485) will lead to a quicker mount but it can reduce security if the password is not strong enough.</string>
+    <string lang="en" key="PIM_SYSENC_HELP">PIM (Personal Iterations Multiplier) is a value that controls the number of iterations used by the header key derivation as follows:\n      Iterations = PIM x 2048.\n\nWhen left empty or set to 0, VeraCrypt will use a default value that ensures a high security.\n\nWhen the password is less than 20 characters, PIM can't be smaller than 98 in order to maintain a minimal security level.\nWhen the password is 20 characters or more, PIM can be set to any value.\n\nA PIM value larger than 98 will lead to slower boot. A small PIM value (less than 98) will lead to a quicker boot but it can reduce security if the password is not strong enough.</string>
+    <string lang="en" key="PIM_SYSENC_CHANGE_WARNING">Remember Number to Boot System</string>
+    <string lang="en" key="PIM_LARGE_WARNING">You have chosen a PIM value that is larger than VeraCrypt default value.\nPlease note that this will lead to much slower mount/boot.</string>
+    <string lang="en" key="PIM_SMALL_WARNING">You have chosen a Personal Iterations Multiplier (PIM) that is smaller than the default VeraCrypt value. Please note that if your password is not strong enough, this could lead to a weaker security.\n\nDo you confirm that you are using a strong password?</string>
+    <string lang="en" key="PIM_SYSENC_TOO_BIG">Personal Iterations Multiplier (PIM) maximum value for system encryption is 65535.</string>
+    <string lang="en" key="PIM_TITLE">Volume PIM</string>
     <string lang="en" key="HIDDEN_FILES_PRESENT_IN_KEYFILE_PATH">\n\nWARNING: Hidden file(s) have been found in a keyfile search path. Such hidden files cannot be used as keyfiles. If you need to use them as keyfiles, remove their 'Hidden' attribute (right-click each of them, select 'Properties', uncheck 'Hidden' and click OK). Note: Hidden files are visible only if the corresponding option is enabled (Computer &gt; Organize &gt; 'Folder and search options' &gt; View).</string>
     <string lang="vi" key="HIDDEN_VOL_PROT_PASSWORD_US_KEYB_LAYOUT">Nếu bạn thử bảo vệ một tập đĩa ẩn có chứa một hệ ẩn thì xin đảm bảo là bạn đang dùng bố trí bàn phím căn bản của Mỹ khi nhập mật mã vào cho tập đĩa ẩn. Việc này cần thiết vì trên thực tế mật mã cần được đánh vào trong môi trường tiền khởi động (trước khi Windows bắt đầu) lúc mà bố trí bàn phím Windows không phải của Mỹ không có sẵn.</string>
     <string lang="vi" key="FOUND_NO_PARTITION_W_DEFERRED_INPLACE_ENC">VeraCrypt không tìm được bất cứ tập đĩa nào mà sự mã hóa vô hệ đã bị gián đoạn và nơi mà phần đầu tập đĩa có thể được giải mã khi dùng mật mã và/hay (các) tập tin khóa được cung cấp.\n\nXin đảm bảo là mật mã và/hay (các) tập tin đúng và phân vùng/tập đĩa không đang được dùng bởi hệ thống hoặc các ứng dụng (kể luôn cả nhu liệu chống vi rút).</string>
+    <string lang="en" key="SELECTED_PARTITION_ALREADY_INPLACE_ENC">The selected partition/device is already fully encrypted.\nHeader Flags = 0x%.8X</string>
+    <string lang="en" key="SELECTED_PARTITION_NOT_INPLACE_ENC">The selected partition/device is not using in-place encryption.\nHeader Flags = 0x%.8X</string>
     <string lang="vi" key="SYSENC_MOUNT_WITHOUT_PBA_NOTE">\n\nLưu ý: Nếu bạn thử nạp một phân vùng nằm trong một ổ đĩa hệ thống được mã hóa mà không có chứng thực tiền khởi động hoặc nạp một phân vùng hệ thống được mã hóa của hệ điều hành không đang chạy, bạn có thể làm vậy bằng cách chọn 'Hệ thống' &gt; 'Nạp lên mà Không có Chứng thực Tiền Khởi động'.</string>
     <string lang="vi" key="MOUNT_WITHOUT_PBA_VOL_ON_ACTIVE_SYSENC_DRIVE">Trong phương thức này, bạn không thể nạp lên một phân vùng nằm trong một ổ đĩa mà một phần của nó nằm trong phạm vi chính của việc mã hóa hệ thống hoạt động.\n\nTrước khi bạn có thể nạp phân vùng này trong phương thức này lên, bạn cần khởi động một hệ điều hành được cài đặt trong một ổ đĩa khác (được mã hóa hay không) hoặc khởi động một hệ điều hành không được mã hóa.</string>
+    <string lang="en" key="CANT_DECRYPT_PARTITION_ON_ENTIRELY_ENCRYPTED_SYS_DRIVE">VeraCrypt cannot decrypt an individual partition on an entirely encrypted system drive (you can decrypt only the entire system drive).</string>
+    <string lang="en" key="CANT_DECRYPT_PARTITION_ON_ENTIRELY_ENCRYPTED_SYS_DRIVE_UNSURE">Warning: As the drive contains the VeraCrypt Boot Loader, it may be an entirely encrypted system drive. If it is, please note that VeraCrypt cannot decrypt an individual partition on an entirely encrypted system drive (you can decrypt only the entire system drive). If that is the case, you will be able to continue now but you will receive the 'Incorrect password' error message later.</string>
     <string lang="vi" key="PREV">&lt;&amp;Trở lại</string>
     <string lang="vi" key="RAWDEVICES">Không thể liệt kê những thiết bị thô được cài đặt trong hệ thống của bạn!</string>
     <string lang="vi" key="READONLYPROMPT">Tập đĩa '%hs' hiện có, và chỉ-đọc được. Bạn có chắc là bạn muốn thay thế nó không?</string>
     <string lang="vi" key="SELECT_DEST_DIR">Chọn thư mục đích</string>
     <string lang="vi" key="SELECT_KEYFILE">Chọn Tập tin khóa</string>
     <string lang="vi" key="SELECT_KEYFILE_PATH">Chọn một đường dẫn kiếm của tập tin. CẢNH BÁO: Lưu ý là chỉ có đường dẫn sẽ được nhớ chứ tên tập tin thì không!</string>
+    <string lang="en" key="SELECT_KEYFILE_GENERATION_DIRECTORY">Select a directory where to store the keyfiles.</string>
+    <string lang="en" key="SELECTED_KEYFILE_IS_CONTAINER_FILE">The current container file was selected as a keyfile. It will be skipped.</string>
     <string lang="vi" key="SERPENT_HELP">Thiết kế bởi Ross Anderson, Eli Biham, và Lars Knudsen. Phát hành năm 1998. 256-bit key, 128-bit block. Phương thức của thao tác là XTS. Serpent đã vào các vòng kết của AES.</string>
     <string lang="en" key="SIZE_HELP">Please specify the size of the container you want to create.\n\nIf you create a dynamic (sparse-file) container, this parameter will specify its maximum possible size.\n\nNote that the minimum possible size of a FAT volume is 292 KB. The minimum possible size of an NTFS volume is 3792 KB.</string>
     <string lang="en" key="SIZE_HELP_HIDDEN_HOST_VOL">Please specify the size of the outer volume to be created (you will first create the outer volume and then a hidden volume within it). The minimum possible size of a volume within which a hidden volume is intended to be created is 340 KB.</string>
@@ -691,11 +756,18 @@
     <string lang="vi" key="FOR_MORE_INFO_ON_PARTITIONS">Để có thêm hướng dẫn làm sao cấu tạo và quản lý các phân vùng, xin tham khảo tài liệu được cung cấp với hệ điều hành của bạn hoặc liên lạc ban hỗ trợ kỹ thuật từ nhà cung cấp máy điện toán của bạn để xin giúp đỡ.</string>
     <string lang="vi" key="SYSTEM_PARTITION_NOT_ACTIVE">Lỗi: Hệ điều hành đang chạy không được cài đặt trong phân vùng khởi động (phân vùng hoạt động đầu tiên). Chuyện này không được hỗ trợ.</string>
     <string lang="en" key="CONFIRM_FAT_FOR_FILES_OVER_4GB">You indicated that you intend to store files larger than 4 GB in this VeraCrypt volume. However, you chose the FAT file system, on which files larger than 4 GB cannot be stored.\n\nAre you sure you want to format the volume as FAT?</string>
+    <string lang="en" key="NONSYS_INPLACE_DECRYPTION_BAD_VOL_FORMAT">Error: VeraCrypt does not support in-place decryption of legacy non-system volumes created by VeraCrypt 1.0b or earlier.\n\nNote: You can still decrypt files stored on the volume by copying/moving them to any unencrypted volume.</string>
+    <string lang="en" key="NONSYS_INPLACE_DECRYPTION_CANT_DECRYPT_HID_VOL">Error: VeraCrypt cannot in-place decrypt a hidden VeraCrypt volume.\n\nNote: You can still decrypt files stored on the volume by copying/moving them to any unencrypted volume.</string>
+    <string lang="en" key="CONFIRM_VOL_CONTAINS_NO_HIDDEN_VOL">Warning: Note that VeraCrypt cannot in-place decrypt a volume that contains a hidden VeraCrypt volume (the hidden volume would be overwritten with pseudorandom data).\n\nPlease confirm that the volume you are about to decrypt contains no hidden volume.\n\nNote: If the volume contains a hidden volume but you do not mind losing the hidden volume, you can select Proceed (the outer volume will be safely decrypted).</string>
+    <string lang="en" key="VOL_CONTAINS_NO_HIDDEN_VOL">The volume does not contain any hidden volume. Proceed.</string>
+    <string lang="en" key="VOL_CONTAINS_A_HIDDEN_VOL">The volume contains a hidden volume. Cancel.</string>
     <string lang="vi" key="CANT_ACCESS_VOL">Lỗi: Không thể truy cập tập đĩa được!\n\nĐảm bảo là tập đĩa được chọn đã có, và nó không được nạp hoặc đang được dùng bởi hệ thống hoặc một ứng dụng, và bạn có quyền đọc/viết cho tập đĩa, và nó không được bảo vệ viết.</string>
+    <string lang="en" key="CANT_GET_VOL_INFO">Error: Cannot obtain volume properties.</string>
     <string lang="vi" key="INPLACE_ENC_CANT_ACCESS_OR_GET_INFO_ON_VOL">Lỗi: Không thể truy cập tập đĩa và/hay thu thập tin tức về tập đĩa được.\n\nĐảm bảo là tập đĩa được chọn đã có, và nó không đang được dùng bởi hệ thống hoặc các ứng dụng, và bạn có quyền đọc/viết cho tập đĩa, và nó không được bảo vệ viết.</string>
     <string lang="vi" key="INPLACE_ENC_CANT_ACCESS_OR_GET_INFO_ON_VOL_ALT">Lỗi: Không thể truy cập tập đĩa và/hay thu thập tin tức về tập đĩa được. Đảm bảo là tập đĩa được chọn đã có, và nó không đang được dùng bởi hệ thống hoặc các ứng dụng, và bạn có quyền đọc/viết cho tập đĩa, và nó không được bảo vệ viết.\n\nNếu vấn đề vẫn còn, theo những bước bên dưới có thể giúp được.</string>
     <string lang="vi" key="INPLACE_ENC_GENERIC_ERR_ALT_STEPS">Một lỗi đã ngăn cản VeraCrypt mã hóa phân vùng. Xin giải quyết bất cứ vấn đề nào đã được báo trước và sau đó thử lại. Nếu vấn đề vẫn còn, theo những bước bên dưới có thể giúp được.</string>
     <string lang="vi" key="INPLACE_ENC_GENERIC_ERR_RESUME">Một lỗi đã ngăn cản VeraCrypt bắt đầu lại quá trình mã hóa phân vùng.\n\nXin giải quyết bất cứ vấn đề nào đã được báo trước và sau đó thử bắt đầu quá trình lại lần nữa. Lưu ý là tập đĩa không thể được nạp cho đến khi nó mã hóa hoàn toàn.</string>
+    <string lang="en" key="INPLACE_DEC_GENERIC_ERR">An error prevented VeraCrypt from decrypting the volume. Please try fixing any previously reported problems and then try again if possible.</string>
     <string lang="vi" key="CANT_DISMOUNT_OUTER_VOL">Lỗi: Không thể tháo tập đĩa bên ngoài xuống được!\n\nTập đĩa không thể được tháo xuống nếu nó có chứa những tập tin hoặc thư mục đang được dùng bởi một chương trình hay hệ thống.\n\nXin chọn bất cứ chương trình nào có thể đang dùng những tập tin hoặc thư mục trong tập đĩa và nhấn Thử lại.</string>
     <string lang="vi" key="CANT_GET_OUTER_VOL_INFO">Lỗi: Không thể thu thập tin tức về tập đĩa bên ngoài được!\nCấu tạo tập đĩa không thể tiếp tục.</string>
     <string lang="vi" key="CANT_ACCESS_OUTER_VOL">Lỗi: Không thể truy cập tập đĩa bên ngoài được! Cấu tạo tập đĩa không thể tiếp tục.</string>
@@ -750,6 +822,7 @@
     <string lang="vi" key="REMOVABLE_DISK">Ổ đĩa Rời được</string>
     <string lang="vi" key="HARDDISK">Ổ đĩa cứng</string>
     <string lang="vi" key="UNCHANGED">Không thay đổi</string>
+    <string lang="en" key="AUTODETECTION">Autodetection</string>
     <string lang="vi" key="SETUP_MODE_TITLE">Phương thức Trợ lý</string>
     <string lang="vi" key="SETUP_MODE_INFO">Chọn một trong các phương thức. Nếu bạn không chắc nên chọn cái nào thì sử dụng phương thức mặc định.</string>
     <string lang="vi" key="SETUP_MODE_HELP_INSTALL">Chọn tùy chọn này nếu bạn muốn cài đặt VeraCrypt vào hệ thống này.</string>
@@ -779,7 +852,7 @@
     <string lang="vi" key="TC_INSTALLER_IS_RUNNING">Bộ cài đặt của VeraCrypt hiện đang chạy trong hệ thống này và đang thi hành hay chuẩn bị việc cài đặt hay cập nhật VeraCrypt. Trước khi bạn tiến hành, xin chờ cho nó chấm dứt hoặc đóng nó lại. Nếu bạn không đóng nó được thì xin bắt đầu máy điện toán của bạn lại trước khi tiến hành.</string>
     <string lang="vi" key="INSTALL_FAILED">Không cài đặt được.</string>
     <string lang="vi" key="UNINSTALL_FAILED">Không hủy cài đặt được.</string>
-    <string lang="vi" key="DIST_PACKAGE_CORRUPTED">Kiện đồ phân phối này bị tổn hại. Xin tải nó xuống lại (tốt hơn là từ trang web chính thức của VeraCrypt tại www.veracrypt.org).</string>
+    <string lang="vi" key="DIST_PACKAGE_CORRUPTED">Kiện đồ phân phối này bị tổn hại. Xin tải nó xuống lại (tốt hơn là từ trang web chính thức của VeraCrypt tại https://veracrypt.codeplex.com).</string>
     <string lang="vi" key="CANNOT_WRITE_FILE_X">Không thể viết vào tập tin %hs</string>
     <string lang="vi" key="EXTRACTING_VERB">Đang rút ra</string>
     <string lang="vi" key="CANNOT_READ_FROM_PACKAGE">Không thể đọc dữ liệu từ kiện đồ được.</string>
@@ -863,6 +936,11 @@
     <string lang="vi" key="ENTER_HIDDEN_VOL_PASSWORD">Nhập mật mã cho tập đĩa ẩn</string>
     <string lang="vi" key="ENTER_HEADER_BACKUP_PASSWORD">Nhập khẩu cho phần đầu giữ trong tập tin sao lưu</string>
     <string lang="vi" key="KEYFILE_CREATED">Keytập tin has been successfully cấu tạod.</string>
+    <string lang="en" key="KEYFILE_INCORRECT_NUMBER">The number of keyfiles you supplied is invalid.</string>
+    <string lang="en" key="KEYFILE_INCORRECT_SIZE">The keyfile size must be comprized between 64 and 1048576 bytes.</string>
+    <string lang="en" key="KEYFILE_EMPTY_BASE_NAME">Please enter a name for the keyfile(s) to be generated</string>
+    <string lang="en" key="KEYFILE_INVALID_BASE_NAME">The base name of the keyfile(s) is invalid</string>
+    <string lang="en" key="KEYFILE_ALREADY_EXISTS">The keyfile '%s' already exists.\nDo you want to overwrite it? The generation process will be stopped if you answer No.</string>
     <string lang="vi" key="HEADER_DAMAGED_AUTO_USED_HEADER_BAK">CẢNH BÁO: Phần đầu của tập đĩa này bị tổn hại! VeraCrypt tự động xử dụng sao lưu của phần đầu tập đĩa được gắn vào trong tập đĩa.\n\nBạn nên sửa phần đầu tập đĩa bằng cách chọn 'Tools' &gt; 'Phục hồi Phần đầu Tập đĩa'.</string>
     <string lang="vi" key="VOL_HEADER_BACKED_UP">Bản sao phần đầu tập đĩa phần đầu đã được cấu tạo thành công.\n\nQUAN TRỌNG: Hồi phục phần đầu tập đĩa bằng cách dùng bản sao này cũng sẽ hồi phục mật mã hiện tại của tập đĩa. Hơn nữa, nếu (những) tập tin khóa cần có để nạp tập đĩa lên thì (những) tập tin khóa đó sẽ cần lại để nạp tập đĩa khi phần đầu tập đĩa được hồi phục.\n\nCẢNH BÁO: Bản sao phần đầu tập đĩa này có thể được dùng để hồi phục phần đầu của RIÊNG tập đĩa này thôi. Nếu bạn dùng bản sao phần đầu này để hồi phục một phần đầu của một tập đĩa khác thì bạn sẽ có thể nạp tập đĩa lên, nhưng bạn sẽ KHÔNG thể giải mã bất cứ dữ liệu nào được lưu trữ trong tập đĩa (bởi vì bạn sẽ thay đổi khóa chính của nó).</string>
     <string lang="vi" key="VOL_HEADER_RESTORED">Phần đầu tập đĩa đã được hồi phục thành công.\n\nQUAN TRỌNG: Xin lưu ý là một mật mã cũ cũng có thể được hồi phục luôn. Hơn nữ, nếu (những) tập tin khóa cần có để nạp tập đĩa lên khi bản sao được cấu tạo thì (những) tập tin khóa đó bây giờ cần có để nạp tập đĩa lần nữa.</string>
@@ -911,8 +989,8 @@
     <string lang="vi" key="SIZE_ITEM">Kích cỡ:</string>
     <string lang="vi" key="PATH_ITEM">Đường dẫn:</string>
     <string lang="vi" key="DRIVE_LETTER_ITEM">Chữ của Ổ đĩa:</string>
-    <string lang="vi" key="UNSUPPORTED_CHARS_IN_PWD">Lỗi: Mật mã phải chỉ chứa ký tự ASCII.\n\nKý tự không phải ASCII trong mật mã có thể làm cho tập đĩa không thể nào nạp được khi cấu hình hệ thống của bạn thay đổi.\n\nNhững ký tự sau đây được phép dùng:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w k y z { | } ~</string>
-    <string lang="vi" key="UNSUPPORTED_CHARS_IN_PWD_RECOM">Cảnh báo: Mật mã có chứa những ký tự không phải ASCII. Việc này có thể làm cho tập đĩa không thể nào nạp được khi cấu hình hệ thống của bạn thay đổi.\n\nBạn nên thay thế tất cả những ký tự không phải ASCII trong mật mã với những ký tự ASCII. Để làm thế, nhấn 'Tập đĩa' -&gt; 'Thay đổi Mật mã của Tập đĩa'.\n\nSau đây là những ký tự ASCII:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z  ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w k y z { | } ~</string>
+    <string lang="vi" key="UNSUPPORTED_CHARS_IN_PWD">Lỗi: Mật mã phải chỉ chứa ký tự ASCII.\n\nKý tự không phải ASCII trong mật mã có thể làm cho tập đĩa không thể nào nạp được khi cấu hình hệ thống của bạn thay đổi.\n\nNhững ký tự sau đây được phép dùng:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~</string>
+    <string lang="vi" key="UNSUPPORTED_CHARS_IN_PWD_RECOM">Cảnh báo: Mật mã có chứa những ký tự không phải ASCII. Việc này có thể làm cho tập đĩa không thể nào nạp được khi cấu hình hệ thống của bạn thay đổi.\n\nBạn nên thay thế tất cả những ký tự không phải ASCII trong mật mã với những ký tự ASCII. Để làm thế, nhấn 'Tập đĩa' -&gt; 'Thay đổi Mật mã của Tập đĩa'.\n\nSau đây là những ký tự ASCII:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z  ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~</string>
     <string lang="vi" key="EXE_FILE_EXTENSION_CONFIRM">CẢNH BÁO: Chúng tôi cực lực khuyên bạn nên tránh những tập tin có đuôi được dùng cho những tập tin thực hiện (như .exe, .sys, hay .dll) và những tập tin có đuôi với những vấn đề tương tự. Dùng những tập tin có đuôi như thế làm cho Windows và nhu liệu chống vi-rút gây trở ngại cho bộ nhớ, mà có ảnh hưởng bất lợi đến hiệu suất của tập đĩa và có thể gây ra những vấn đề nghiêm trọng khác.\n\nChúng tôi cực lực khuyên bạn gỡ bỏ tập tin có đuôi hoặc thay đổi nó (ví dụ thành '.tc').\n\nBạn có chắc là bạn muốn sử dụng tập tin có đuôi có vấn đề không?</string>
     <string lang="vi" key="EXE_FILE_EXTENSION_MOUNT_WARNING">CẢNH BÁO: Bộ nhớ này có một tập tin có đuôi mà được dùng cho những tập tin thực hiện (such as .exe, .sys, or .dll) hoặc những tập tin có đuôi khác với những vấn đề tương tự. Nó sẽ rất có thể làm cho Windows và nhu liệu chống vi-rút gây trở ngại cho bộ nhớ, mà có ảnh hưởng bất lợi đến hiệu suất của tập đĩa và có thể gây ra những vấn đề nghiêm trọng khác.\n\nChúng tôi cực lực khuyên bạn gỡ bỏ tập tin có đuôi của bộ nhớ hoặc thay đổi nó (ví dụ thành '.tc') sau khi bạn tháo tập đĩa xuống.</string>
     <string lang="vi" key="HOMEPAGE">Trang chủ</string>
@@ -961,6 +1039,7 @@
     <string lang="vi" key="CONFIRM_EXIT_UNIVERSAL">Thoát ra không?</string>
     <string lang="vi" key="CHOOSE_ENCRYPT_OR_DECRYPT">VeraCrypt không có đủ tin tức để xác định là nên mã hóa hay giải mã.</string>
     <string lang="vi" key="CHOOSE_ENCRYPT_OR_DECRYPT_FINALIZE_DECRYPT_NOTE">VeraCrypt không có đủ tin tức để xác định là nên mã hóa hay giải mã.\n\nLưu ý: Nếu bạn giải mã phân vùng/ổ đĩa hệ thống trong môi trường tiền-khởi động thì bạn có thể cần phải kết thúc quá trình bằng cách nhấn Giải mã.</string>
+    <string lang="en" key="NONSYS_INPLACE_ENC_REVERSE_INFO">Note: When you are encrypting a non-system partition/volume in place and an error persistently prevents you from finishing the process, you will not be able to mount the volume (and access data stored on it) until you entirely DECRYPT the volume (i.e. reverse the process).\n\nIf you need to do so, follow these steps:\n1) Exit this wizard.\n2) In the main VeraCrypt window, select 'Volumes' &gt; 'Resume Interrupted Process'.\n3) Select 'Decrypt'.</string>
     <string lang="vi" key="NONSYS_INPLACE_ENC_DEFER_CONFIRM">Bạn có muốn gián đoạn và dời lại quá trình mã hóa của phân vùng/tập đĩa không?\n\nLưu ý: Nhớ là tập đĩa không thể được nạp lên cho đến khi nó được mã hóa hoàn toàn. Bạn sẽ có thể tiếp tục lại quá trình mã hóa và nó sẽ tiếp tục từ điểm mà nó bị ngừng. Bạn có thể làm thế, ví dụ như bằng cách chọn 'Tập đĩa' &gt; 'Tiếp tục lại Quá trình bị Gián đoạn' từ thanh trình đơn của cửa sổ chính của VeraCrypt.</string>
     <string lang="vi" key="SYSTEM_ENCRYPTION_DEFER_CONFIRM">Bạn có muốn gián đoạn và dời lại quá trình mã hóa của phân vùng/tập đĩa không?\n\nLưu ý: Bạn sẽ có thể tiếp tục lại quá trình mã hóa và nó sẽ tiếp tục từ điểm mà nó bị ngừng. Bạn có thể làm thế, ví dụ như bằng cách chọn 'Tập đĩa' &gt; 'Tiếp tục lại Quá trình bị Gián đoạn' từ thanh trình đơn của cửa sổ chính của VeraCrypt. Nếu bạn muốn vĩnh viễn chấm dứt hoặc đảo ngược quá trình mã hóa, chọn 'Hệ thống' &gt; 'Vĩnh viễn Giải mã Phân vùng/Ổ đĩa Hệ thống'.</string>
     <string lang="vi" key="SYSTEM_DECRYPTION_DEFER_CONFIRM">Bạn có muốn gián đoạn và dời lại quá trình giải mã của phân vùng/ổ đĩa hệ thống không?\n\nLưu ý: Bạn sẽ có thể tiếp tục lại quá trình và nó sẽ tiếp tục từ điểm mà nó bị ngừng. Bạn có thể làm thế, ví dụ như bằng cách chọn 'Hệ thống' &gt; 'Tiếp tục lại Quá trình bị Gián đoạn' từ thanh trình đơn của cửa sổ chính của VeraCrypt. Nếu bạn muốn đảo ngược quá trình giải mã (và bắt đầu mã hóa), chọn 'Hệ thống' &gt; ' Mã hóa Phân vùng/Ổ đĩa Hệ thống'.</string>
@@ -970,7 +1049,7 @@
     <string lang="vi" key="FAILED_TO_START_WIPING">Lỗi: Không bắt đầu quá trình tẩy được.</string>
     <string lang="vi" key="INCONSISTENCY_RESOLVED">Mâu thuẫn đã được giải quyết.\n\n\n(Nếu bạn báo một lỗi liên quan đến chuyện này, xin bao gồm tin tức kỹ thuật sau đây trong phần báo lỗi:\n%hs)</string>
     <string lang="vi" key="UNEXPECTED_STATE">Lỗi: Trạng thái bất thường.\n\n\n(Nếu bạn báo một lỗi liên quan đến chuyện này, xin bao gồm tin tức kỹ thuật sau đây trong phần báo lỗi:\n%hs)</string>
-    <string lang="vi" key="NOTHING_TO_RESUME">Không có quá trình/tác vụ nào để tiếp tục lại.</string>
+    <string lang="en" key="NO_SYS_ENC_PROCESS_TO_RESUME">There is no interrupted process of encryption/decryption of the system partition/drive to resume.\n\nNote: If you want to resume an interrupted process of encryption/decryption of a non-system partition/volume, select 'Volumes' &gt; 'Resume Interrupted Process'.</string>
     <string lang="vi" key="HIDVOL_PROT_BKG_TASK_WARNING">CẢNH BÁO: Tác vụ Phụ của VeraCrypt bị tắt. Sau khi bạn ra khỏi VeraCrypt, bạn sẽ không được thông báo nếu tổn hại cho tập đĩa ẩn được ngăn cản.\n\nLưu ý: Bạn có thể tắt Tác vụ Phụ bất cứ lúc nào bằng cách nhấn phải biểu tượng khay và chọn 'Thoát ra'.\n\nBật Tác vụ Phụ của VeraCrypt lên không?</string>
     <string lang="vi" key="LANG_PACK_VERSION">Phiên bản của bộ ngôn ngữ:  %s</string>
     <string lang="vi" key="CHECKING_FS">Đang kiểm soát hệ thống tập tin trong tập đĩa VeraCrypt được nạp như %hs...</string>
@@ -997,6 +1076,7 @@
     <string lang="vi" key="SYS_LOADER_RESTORE_FAILED">Không thể phục hồi bộ tải hệ thống nguyên thủy.\n\nXin sử dụng Đĩa Cứu hộ VeraCrypt ('Tùy chọn Sửa chửa' &gt; 'Phục hồi bộ tải hệ thống nguyên thủy') hoặc môi trường cài đặt Windows để thay thế Bộ tải Khởi nạp VeraCrypt với bộ tải hệ thống Windows.</string>
     <string lang="vi" key="SYS_LOADER_UNAVAILABLE_FOR_RESCUE_DISK">Bộ tải hệ thống nguyên thủy sẽ không được giữ trong Đĩa Cứu hộ (lý do có thể là tập tin sao lưu bị mất).</string>
     <string lang="vi" key="ERROR_MBR_PROTECTED">Không viết vào khu vực MBR được.\n\nBIOS của bạn có thể được cấu hình để bảo vệ khu vực MBR. Kiểm soát những thiết đặt BIOS của bạn (bấm F2, Xóa, hay Esc, sau khi bật máy của bạn lên) xem coi có bảo vệ MBR/chống vi-rút.</string>
+    <string lang="en" key="BOOT_LOADER_FINGERPRINT_CHECK_FAILED">WARNING: The verification of VeraCrypt bootloader fingerprint failed!\nYour disk may have been tampered with by an attacker ("Evil Maid" attack).\n\nThis warning can also be triggered if you restored VeraCrypt boot loader using an Rescue Disk generated using a different VeraCrypt version.\n\nYou are advised to change your password immediately which will also restore the correct VeraCrypt bootloader. It is recommended to reinstall VeraCrypt and to take measures to avoid access to this machine by untrusted entities.</string>
     <string lang="vi" key="BOOT_LOADER_VERSION_INCORRECT_PREFERENCES">Phiên bản cần có của Bộ tải Khởi nạp VeraCrypt hiện không đang được cài đặt. Việc này có thể ngăn cản sự lưu trữ một số thiết lập.</string>
     <string lang="vi" key="CUSTOM_BOOT_LOADER_MESSAGE_HELP">Lưu ý: Trong một vài trường hợp, bạn có thể muốn ngăn cản một người (đối phương) đang nhìn xem bạn bắt đầu máy điện toán không cho biết là bạn sử dụng VeraCrypt. Những tùy chọn bên trên cho phép bạn làm như thế bằng cách đặc chế màn ảnh bộ tải khởi nạp của VeraCrypt. Nếu bạn bật tùy chọn thứ nhất lên, không có chữ nào sẽ được hiển thị bởi bộ tải khởi nạp (ngay cả khi bạn đánh mật mã sai vào). Máy điện toán sẽ nhìn giống như đang bị "ngưng đọng" trong lúc bạn có thể đánh mật mã của bạn vào. Thêm vào đó, một thông điệp riêng có thể được hiển thị để đánh lạc đối phương. Ví dụ như những thông điệp lỗi giả như "Mất hệ điều hành" (thường được hiển thị bởi bộ tải khởi nạp của Windows nếu nó không tìm được phân vùng khởi động Windows). Tuy nhiên, điều quan trọng cần lưu ý là nếu đối phương có thể phân tích nội dung của đĩa cứng thì họ vẫn có thể tìm được là nó có chứa bộ tải khởi nạp của VeraCrypt.</string>
     <string lang="vi" key="CUSTOM_BOOT_LOADER_MESSAGE_PROMPT">CẢNH BÁO: Xin nhớ là bạn bật tùy chọn này lên, bộ tải khởi nạp của VeraCrypt sẽ không hiển thị bất cứ chữ nào (ngay cả khi bạn đánh mật mã sai vào). Máy điện toán sẽ nhìn giống như đang bị "ngưng đọng" (không đáp lại) trong lúc bạn có thể đánh mật mã của bạn vào (con trỏ sẽ KHÔNG di chuyển và sẽ không có dấu sao nào được hiển thị khi bạn bấm một phím).\n\nBạn có chắc là bạn muốn bật tùy chọn này lên không?</string>
@@ -1018,13 +1098,17 @@
     <string lang="en" key="EXTRA_BOOT_PARTITION_REMOVAL_INSTRUCTIONS">\nThe extra boot partition can be removed before installing Windows. To do so, follow these steps:\n\n1) Boot your Windows installation disc.\n\n2) In the Windows installer screen, click 'Install now' &gt; 'Custom (advanced)'.\n\n3) Click 'Drive Options'.\n\n4) Select the main system partition and delete it by clicking 'Delete' and 'OK'.\n\n5) Select the 'System Reserved' partition, click 'Extend', and increase its size so that the operating system can be installed to it.\n\n6) Click 'Apply' and 'OK'.\n\n7) Install Windows on the 'System Reserved' partition.\n\n\nShould an attacker ask why you removed the extra boot partition, you can answer that you wanted to prevent any possible data leaks to the unencrypted boot partition.\n\nNote: You can print this text by clicking the 'Print' button below. If you save a copy of this text or print it (strongly recommended, unless your printer stores copies of documents it prints on its internal drive), you should destroy any copies of it after removing the extra boot partition (otherwise, if such a copy was found, it might indicate that there is a hidden operating system on this computer).</string>
     <string lang="vi" key="GAP_BETWEEN_SYS_AND_HIDDEN_OS_PARTITION">Cảnh báo: Có chỗ trống chưa phân phát giữa phân vùng hệ thống và phân vùng đầu tiên phía sau nó. Sau khi bạn cấu tạo hệ điều hành ẩn, bạn không được cấu tạo bất cứ phân vùng mới nào trong chỗ trống chưa phân phát đó. Không thôi, hệ điều hành ẩn sẽ không thể nào khởi động được (cho đến khi bạn xóa bỏ những phân vùng được cấu tạo như thế).</string>
     <string lang="vi" key="ALGO_NOT_SUPPORTED_FOR_SYS_ENCRYPTION">Thuật toán này hiện không được hỗ trợ cho việc mã hóa hệ thống.</string>
+    <string lang="en" key="ALGO_NOT_SUPPORTED_FOR_TRUECRYPT_MODE">This algorithm is not supported for TrueCrypt mode.</string>
+    <string lang="en" key="PIM_NOT_SUPPORTED_FOR_TRUECRYPT_MODE">PIM (Personal Iterations Multiplier) not supported for TrueCrypt mode.</string>	  
+    <string lang="en" key="PIM_REQUIRE_LONG_PASSWORD">Password must contain 20 or more characters in order to use the specified PIM.\nShorter passwords can only be used if the PIM is 485 or greater.</string>
+    <string lang="en" key="BOOT_PIM_REQUIRE_LONG_PASSWORD">Pre-boot authentication Password must contain 20 or more characters in order to use the specified PIM.\nShorter passwords can only be used if the PIM is 98 or greater.</string>    
     <string lang="vi" key="KEYFILES_NOT_SUPPORTED_FOR_SYS_ENCRYPTION">Các tập tin khóa hiện không được hỗ trợ cho việc mã hóa hệ thống.</string>
     <string lang="vi" key="CANNOT_RESTORE_KEYBOARD_LAYOUT">Cảnh báo: VeraCrypt không thể hồi phục bố trí bàn phím gốc được. Chuyện này có thể làm cho bạn đánh mật mã không đúng vào.</string>
     <string lang="vi" key="CANT_CHANGE_KEYB_LAYOUT_FOR_SYS_ENCRYPTION">Lỗi: Không thể thiết đặt bố trí bàn phím cho VeraCrypt thành bố trí bàn phím căn bản của Mỹ được.\n\nLưu ý là mật mã cần được đánh vào trong môi trường tiền khởi động (trước khi Windows bắt đầu) lúc mà bố trí bàn phím Windows không phải của Mỹ không có sẵn. Vì vậy, mật mã phải luôn luôn được đánh vào dùng bố trí bàn phím căn bản của Mỹ.</string>
     <string lang="vi" key="ALT_KEY_CHARS_NOT_FOR_SYS_ENCRYPTION">Vì VeraCrypt đã tạm thời thay đổi bố trí bàn phím thành bố trí bàn phím căn bản của Mỹ, nên không thể đánh các ký tự bằng cách nhấn bấm các phím trong lúc phím Alt bên phải đang được giữ xuống. Tuy nhiên, bạn có thể đánh đa số những ký tự như thế bằng cách bấm các phím thích hợp trong lúc phím Shift đang được giữ xuống.</string>
     <string lang="vi" key="KEYB_LAYOUT_CHANGE_PREVENTED">VeraCrypt ngăn cản sự thay đổi của bố trí bàn phím .</string>
     <string lang="vi" key="KEYB_LAYOUT_SYS_ENC_EXPLANATION">Lưu ý: Mật mã sẽ cần được đánh vào trong môi trường tiền khởi động (trước khi Windows bắt đầu) lúc mà bố trí bàn phím Windows không phải của Mỹ không có sẵn. Vì vậy, mật mã phải luôn luôn được đánh vào dùng bố trí bàn phím căn bản của Mỹ. Tuy nhiên, chuyện quan trọng cần lưu ý là bạn KHÔNG cần một bàn phím thật của Mỹ. VeraCrypt tự động đảm bảo là bạn có thể đánh mật mã một cách an toàn (ngay bây giờ và trong môi trường tiền khởi động) ngay cả nếu bạn KHÔNG có một bàn phím thật của Mỹ.</string>
-    <string lang="vi" key="RESCUE_DISK_INFO">Trước khi bạn có thể mã hóa phân vùng/ổ đĩa, bạn phải cấu tạo một Đĩa Cứu hộ VeraCrypt (TRD) để dùng cho những mục đích sau đây:\n\n- Nếu Bộ tải Khởi nạp của VeraCrypt, khóa chính, hoặc những dữ liệu trọng yếu bị tổn hại thì TRD để cho bạn hồi phục nó (tuy nhiên lưu ý là bạn sẽ vẫn phải nhập mật mã đúng vào).\n\n- Nếu Windows bị tổn hại và không thể bắt đầu, TRD để cho bạn giải mã phân vùng/ổ đĩa vĩnh viễn trước khi Windows bắt đầu.\n\n- TRD sẽ có chứa một bản sao của nội dung hiện tại của phần đường đầu tiên của ổ đĩa (cái mà thường có chứa một hệ thống khởi nạp hoặc hàm quản lý khởi động) và sẽ để cho bạn hồi phục nếu cần thiết.\n\nBản ảnh ISO của Đĩa Cứu hộ VeraCrypt sẽ được cấu tạo ở vị trí xác định bên dưới.</string>
+    <string lang="vi" key="RESCUE_DISK_INFO">Trước khi bạn có thể mã hóa phân vùng/ổ đĩa, bạn phải cấu tạo một Đĩa Cứu hộ VeraCrypt (VRD) để dùng cho những mục đích sau đây:\n\n- Nếu Bộ tải Khởi nạp của VeraCrypt, khóa chính, hoặc những dữ liệu trọng yếu bị tổn hại thì VRD để cho bạn hồi phục nó (tuy nhiên lưu ý là bạn sẽ vẫn phải nhập mật mã đúng vào).\n\n- Nếu Windows bị tổn hại và không thể bắt đầu, VRD để cho bạn giải mã phân vùng/ổ đĩa vĩnh viễn trước khi Windows bắt đầu.\n\n- VRD sẽ có chứa một bản sao của nội dung hiện tại của phần đường đầu tiên của ổ đĩa (cái mà thường có chứa một hệ thống khởi nạp hoặc hàm quản lý khởi động) và sẽ để cho bạn hồi phục nếu cần thiết.\n\nBản ảnh ISO của Đĩa Cứu hộ VeraCrypt sẽ được cấu tạo ở vị trí xác định bên dưới.</string>
     <string lang="vi" key="RESCUE_DISK_WIN_ISOBURN_PRELAUNCH_NOTE">Sau khi bạn nhấn OK, Microsoft Windows Disc Image Burner sẽ được khởi chạy. Xin sử dụng nó để sang bản ảnh ISO của Đĩa Cứu hộ VeraCrypt qua một CD hay DVD.\n\nSau khi bạn làm thế, trở lại Trợ lý Cấu tạo Tập đĩa VeraCrypt và theo những hướng dẫn của nó.</string>
     <string lang="vi" key="RESCUE_DISK_BURN_INFO">Bản ảnh của Đĩa Cứu hộ đã được cấu tạo và lưu trữ trong tập tin này:\n%hs\n\nBây giờ bạn cần sang nó qua một CD hay DVD.\n\n%lsSau khi bạn sang Đĩa Cứu hộ rồi, nhấn Kế tiếp để xác nhận là nó đã đuợc sang đúng cách.</string>
     <string lang="vi" key="RESCUE_DISK_BURN_INFO_NO_CHECK">Bản ảnh của Đĩa Cứu hộ đã được cấu tạo và lưu trữ trong tập tin này:\n%hs\n\nBây giờ bạn nên sang bản ảnh qua một CD/DVD hoặc or di chuyển nó qua một vị trí an toàn để sử dụng sau này.\n\n%lsNhấn Kế tiếp để tiếp tục.</string>
@@ -1102,6 +1186,7 @@
     <string lang="vi" key="SYS_ENCRYPTION_PRETEST_RESULT_INFO">Dự bị thử nghiệm đã được hoàn tất thành công.\n\nCẢNH BÁO: Xin lưu ý là nếu cung cấp điện bị gián đoạn đột ngột trong khi mã hóa dữ liệu hiện có tại chỗ, hoặc khi hệ điều hành bị hỏng do lỗi phần mềm hoặc trục trặc phần cứng trong khi VeraCrypt đang mã hóa dữ liệu hiện có tại chỗ, các phần của dữ liệu sẽ bị hỏng hoặc bị mất. Vì vậy, trước khi bắt đầu mã hóa, hãy chắc chắn rằng bạn đã sao lưu dự phòng dữ liệu mà bạn muốn mã hóa. Không thôi, xin sao lưu các tập tin ngay bây giờ (bạn có thể nhấn Hoãn, Sao lưu các tập tin, sau đó chạy VeraCrypt lại bất cứ lúc nào, và chọn 'Hệ thống'&gt; 'Tiếp tục lại quá trình bị gián đoạn' để bắt đầu mã hóa). \n\nKhi đã sẵn sàng, nhấn Mã hóa để bắt đầu mã hóa.</string>
     <string lang="vi" key="SYSENC_ENCRYPTION_PAGE_INFO">Bạn có thể nhấn vào Tạm dừng hoặc Trì hoãn bất cứ lúc nào để gây ngăn cản quá trình mã hóa hay giải mã, đi ra thuật này, khởi động lại hoặc tắt máy điện toán của bạn, và sau đó tiếp tục lại quá trình, mà sẽ tiếp tục từ chổ nó đã được ngừng lại. Để ngăn cản suy giảm khi hệ thống hoặc các ứng dụng viết hoặc đọc dữ liệu từ hệ thống ổ đĩa, tự động VeraCrypt đợi cho đến khi dữ liệu được viết hoặc đọc (xem Status trên) và sau đó tiếp tục tự động mã hóa hoặc giải mã.</string>
     <string lang="vi" key="NONSYS_INPLACE_ENC_ENCRYPTION_PAGE_INFO">\n\nBạn có thể nhấn vào Tạm dừng hoặc Trì hoãn bất cứ lúc nào để gây cắt đứt quá trình mã hóa, xuất khỏi thuật này, khởi động lại hoặc tắt máy điện toán của bạn, và sau đó tiếp tục lại quá trình, mà sẽ tiếp tục từ chổ nó đã ngừng lại. Lưu ý là tập đĩa không thể được gắn kết cho đến khi nó đã được mã hóa hoàn toàn.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_DECRYPTION_PAGE_INFO">\n\nYou can click Pause or Defer anytime to interrupt the process of decryption, exit this wizard, restart or shut down the computer, and then resume the process, which will continue from the point where it was stopped. Note that the volume cannot be mounted until it has been fully decrypted.</string>
     <string lang="vi" key="SYSENC_HIDDEN_OS_INITIAL_INFO_TITLE">Hệ Thống Ẩn đã bắt đầu</string>
     <string lang="vi" key="SYSENC_HIDDEN_OS_WIPE_INFO_TITLE">Hệ thống gốc</string>
     <string lang="vi" key="SYSENC_HIDDEN_OS_WIPE_INFO">Windows cấu tạo (thường, không cần sự hiểu biết hoặc sự đồng ý của bạn) các loại tập tin ghi bản, các tập tin tạm thời, v.v., trên phân vùng hệ thống. Nó cũng giúp để cho phần RAM được yên nghỉ và các tập tin phân trang nằm trên phân vùng hệ thống. Do đó, nếu một đối phương đã phân tích các tập tin được lưu trữ trên phân vùng mà hệ thống ban đầu (trong đó hệ thống ẩn là một bản sao) cư trú, họ có thể tìm hiểu, ví dụ như rằng bạn đã sử dụng thuật VeraCrypt ở trạng thái cấu tạo hệ thống ẩn, (mà có thể cho biết sự tồn tại của một hệ điều hành ẩn trên máy điện toán của bạn).\n\nĐể ngăn ngừa các vấn đề như vậy, VeraCrypt sẽ, trong các bước kế tiếp, an toàn xóa toàn bộ nội dung của phân vùng mà hệ thống ban đầu cư trú. Sau đó, để đạt được từ chối được chính đáng, bạn sẽ cần phải cài đặt một hệ thống mới trên phân vùng đó và mã hóa nó. Vì vậy bạn sẽ cấu tạo các hệ thống nghi trang và toàn bộ quá trình cấu tạo của hệ điều hành ẩn sẽ được hoàn thành.</string>
@@ -1141,7 +1226,7 @@
     <string lang="vi" key="HIDDEN_OS_CREATION_PREINFO_HELP">Trong các bước kế tiếp, VeraCrypt sẽ cấu tạo hệ điều hành ẩn bằng cách sao chép nội dung của phân vùng hệ thống thành tập đĩa ẩn (dữ liệu đã được sao chép sẽ được mã hóa ở bộ phận fly với một khoá mật mã khác với hệ sẽ được sử dụng cho các hệ thống hoạt động nghi trang).\n\nXin lưu ý là quá trình này sẽ được thực hiện trong môi trường tiền khởi động (trước khi bắt đầu Windows) và nó có thể mất một thời gian dài để hoàn thành; vài giờ hoặc thậm chí vài ngày (tùy thuộc vào kích cỡ của hệ thống phân vùng và về hiệu suất của máy điện toán của bạn).\n\n Bạn sẽ có thể làm gián đoạn quá trình,. tắt máy, khởi động hệ điều hành và sau đó tiếp tục lại quá trình. Tuy nhiên, nếu bạn làm gián đoạn nó, toàn bộ quá trình sao chép hệ thống sẽ phải bắt đầu từ đầu (vì nội dung của phân vùng hệ thống không phải thay đổi trong quá trình sao y).</string>
     <string lang="vi" key="CONFIRM_CANCEL_HIDDEN_OS_CREATION">Bạn có muốn hủy bỏ toàn bộ quá trình sáng tạo của hệ điều hành ẩn?\n\nLưu ý: Bạn sẽ không thể tiếp tục lại quá trình nếu bạn hủy bỏ nó ngay bây giờ.</string>
     <string lang="vi" key="CONFIRM_CANCEL_SYS_ENC_PRETEST">Bạn có muốn hủy bỏ hệ thống mã hóa thử trước?</string>
-    <string lang="en" key="BOOT_PRETEST_FAILED_RETRY">The VeraCrypt system encryption pretest failed. Do you want to try again?\n\nIf you select 'No', the pre-boot authentication component will be uninstalled.\n\nNotes:\n\n- If the VeraCrypt Boot Loader did not ask you to enter the password before Windows started, it is possible that your operating system does not boot from the drive on which it is installed. This is not supported.\n\n- If you used an encryption algorithm other than AES and the pretest failed (and you entered the password), it may have been caused by an inappropriately designed driver. Select 'No', and try encrypting the system partition/drive again, but use the AES encryption algorithm (which has the lowest memory requirements).\n\n- For more possible causes and solutions, see: http://www.veracrypt.org/docs/?s=troubleshooting</string>
+    <string lang="en" key="BOOT_PRETEST_FAILED_RETRY">The VeraCrypt system encryption pretest failed. Do you want to try again?\n\nIf you select 'No', the pre-boot authentication component will be uninstalled.\n\nNotes:\n\n- If the VeraCrypt Boot Loader did not ask you to enter the password before Windows started, it is possible that your operating system does not boot from the drive on which it is installed. This is not supported.\n\n- If you used an encryption algorithm other than AES and the pretest failed (and you entered the password), it may have been caused by an inappropriately designed driver. Select 'No', and try encrypting the system partition/drive again, but use the AES encryption algorithm (which has the lowest memory requirements).\n\n- For more possible causes and solutions, see: https://veracrypt.codeplex.com/wikipage?title=Troubleshooting</string>
     <string lang="vi" key="SYS_DRIVE_NOT_ENCRYPTED">Các phân vùng/ổ đĩa hệ thống dường như không được mã hóa (một phần hoặc hoàn toàn).</string>
     <string lang="vi" key="SETUP_FAILED_BOOT_DRIVE_ENCRYPTED">Phân vùng/ổ đĩa hệ thống của bạn được mã hóa (một phần hoặc hoàn toàn). \n\nXin giải mã phân vùng/ổ đĩa hệ thống của bạn hoàn toàn trước khi tiến hành. Để làm như vậy, hãy chọn 'Hệ thống'&gt; 'Vĩnh viễn Giải mã Phân vùng/Ổ đĩa Hệ thống' từ thanh trình đơn của cửa sổ VeraCrypt chính.</string>
     <string lang="vi" key="SETUP_FAILED_BOOT_DRIVE_ENCRYPTED_DOWNGRADE">Khi phân vùng/ổ đĩa hệ thống được mã hóa (một phần hoặc hoàn toàn), bạn không thể hạ cấp VeraCrypt xuống (nhưng bạn có thể nâng cấp hoặc cài đặt một phiên bản giống vậy lại).</string>
@@ -1158,6 +1243,8 @@
     <string lang="vi" key="CONFIRM_SYSTEM_ENCRYPTION_MODE">Bạn đã lựa chọn các phân vùng/ổ đĩa hệ thống (hoặc phân vùng khởi động), nhưng phương thức trợ lý bạn lựa chọn chỉ thích hợp cho phân vùng/ổ đĩa vô hệ.\n\nBạn có muốn thiết lập chứng thực tiền khởi động (có nghĩa là bạn sẽ cần phải bỏ vào mật mã của bạn mỗi lần trước khi</string>
     <string lang="vi" key="CONFIRM_DECRYPT_SYS_DEVICE">Bạn có chắc bạn muốn vĩnh viễn giải mã phân vùng/ổ đĩa hệ thống?</string>
     <string lang="vi" key="CONFIRM_DECRYPT_SYS_DEVICE_CAUTION">LƯU Ý: Nếu bạn thường giải mã phân vùng/ổ đĩa hệ thống, dữ liệu không được mã hóa sẽ được ghi vào nó. \n\nBạn có thực sự chắc chắn muốn vĩnh viễn giải mã hệ thống phân vùng/ổ đĩa?</string>
+    <string lang="en" key="CONFIRM_DECRYPT_NON_SYS_DEVICE">Are you sure you want to permanently decrypt the following volume?</string>
+    <string lang="en" key="CONFIRM_DECRYPT_NON_SYS_DEVICE_CAUTION">CAUTION: If you permanently decrypt the VeraCrypt volume, unencrypted data will be written to the disk.\n\nAre you really sure you want to permanently decrypt the selected volume?</string>
     <string lang="vi" key="CONFIRM_CASCADE_FOR_SYS_ENCRYPTION">Cảnh báo: Nếu bạn sử dụng một thác của thuật toán mã hóa cho hệ thống mã hóa, bạn có thể gặp phải các vấn đề sau:\n\n1) Bộ tải Khởi nạp VeraCrypt lớn hơn thông thường và, do đó, không có đủ chổ trong phần đường đầu tiên của ổ đĩa cho sự sao lưu Bộ tải Khởi nạp VeraCrypt. Vì vậy, bất cứ khi nào nó bị tổn hại (mà thường xảy ra, ví dụ như, trong những qúa trình kích hoạt chống sao chép lậu được thiết kế một cách không thích hợp của những chương trình nhất định), bạn sẽ cần phải sử dụng Đĩa Cứu hộ VeraCrypt để khởi nạp hoặc để sửa chữa Bộ tải Khởi nạp VeraCrypt.\n\n2) Trên một số máy vi tính, sẽ cần thời gian lâu hơn để tiếp tục lại sự ngưng hoạt động.\n\nNhững vấn đề tiềm năng này có thể được phòng ngừa bằng cách chọn một thuật toán mã hóa phi-thác (ví dụ như AES).\n\n Bạn có chắc bạn muốn sử dụng một thác của thuật toán mã hóa?</string>
     <string lang="vi" key="NOTE_CASCADE_FOR_SYS_ENCRYPTION">Nếu bạn gặp bất kỳ vấn đề nào được mô tả trước đây, giải mã phân vùng/ổ đĩa (nếu nó được mã hóa) và sau đó thử mã hóa nó một lần nữa bằng cách dùng một thuật toán mã hóa phi-thác (ví dụ như AES).</string>
     <string lang="en" key="UPDATE_TC_IN_DECOY_OS_FIRST">WARNING: For safety and security reasons, you should update VeraCrypt on the decoy operating system before you update it on the hidden operating system.\n\nTo do so, boot the decoy system and run the VeraCrypt installer from within it. Then boot the hidden system and run the installer from within it as well.\n\nNote: The decoy system and the hidden system share a single boot loader. If you upgraded VeraCrypt only on the hidden system (but not on the decoy system), the decoy system would contain a VeraCrypt driver and VeraCrypt applications whose version numbers are different from the version number of the VeraCrypt Boot Loader. Such a discrepancy might indicate that there is a hidden operating system on this computer.\n\n\nDo you want to continue?</string>
@@ -1173,6 +1260,7 @@
     <string lang="vi" key="ENABLE_BAD_SECTOR_ZEROING">Lỗi: Nội dung của một hoặc nhiều khu trên đĩa không đọc được (có lẽ vì đĩa hư).\n\nQuá trình mã hóa tại chỗ chỉ có thể tiếp tục khi các khu được làm cho đọc được lại. VeraCrypt có thể thử làm cho các khu này đọc được bằng cách viết những số không vào các khu này (sau đó các khối toàn bằng số không này sẽ được mã hóa). Tuy nhiên, lưu ý là bất cứ dữ liệu nào được cất giữ trong các khu không đọc được sẽ bị mất đi. Nếu bạn muốn tránh chuyện đó thì bạn có thể thử phục hồi một phần của dữ liệu bị hư bằng các công cụ thích hợp của những hãng khác.\n\nLưu ý: Trong trường hợp các khu bị tổn hại (thay vì chỉ là dữ liệu bị hư và tổng kiểm có lỗi) đa số các loại thiết bị cất giữ tự phân phối lại các khu khi dữ liệu được viết vào chúng (thế thì dữ liệu đã có trong các khu bị tổn hại có thể vẫn không được mã hóa trong ổ đĩa).\n\nBạn có muốn VeraCrypt viết các số không vào những khu không đọc được không?</string>
     <string lang="vi" key="DISCARD_UNREADABLE_ENCRYPTED_SECTORS">Lỗi: Nội dung của một hoặc nhiều khu trên đĩa không đọc được (có lẽ vì đĩa hư).\n\nĐể có thể tiến hành việc giải mã, VeraCrypt sẽ phải bỏ nội dung của các khu không đọc được (nội dung sẽ được thay thế với dữ liệu ngẫu nhiên giả). Xin lưu ý là trước khi tiến hành, bạn có thể thử phục hồi một phần của bất cứ dữ liệu bị hư nào bằng các công cụ thích hợp của những hãng khác.\n\nBạn có muốn VeraCrypt bỏ những dữ liệu trong các khu không đọc được bây giờ không?</string>
     <string lang="vi" key="ZEROED_BAD_SECTOR_COUNT">Lưu ý: VeraCrypt đã thay thế nội dung của %I64d khu không đọc được (%s) với các khối chữ thường toàn bằng số không được mã hóa.</string>
+    <string lang="en" key="SKIPPED_BAD_SECTOR_COUNT">Note: VeraCrypt has replaced the content of %I64d unreadable sectors (%s) with pseudorandom data.</string>
     <string lang="vi" key="ENTER_TOKEN_PASSWORD">Nhập vào mật mã/PIN cho hiệu bài '%s':</string>
     <string lang="vi" key="PKCS11_LIB_LOCATION_HELP">Để cho phép VeraCrypt truy cập một hiệu bài bảo mật hoặc thẻ smart, bạn cần cài đặt một thư viện nhu liệu của PKCS #11 cho hiệu bài hoặc thẻ smart trước. Một thư viện như thế có thể được cung cấp với thiết bị hoặc nó có sẵn để tải xuống từ trang web của nhà sản xuất hoặc những hãng khác.\n\nSau khi bạn cài đặt thư viện, bạn có thể tự chọn nó bằng cách nhấn 'Chọn Thư viện' hoặc bạn có thể để VeraCrypt tự động tìm và chọn nó bằng cách nhấn 'Tự động-Phát hiện Thư viện' (chỉ có thư mục hệ thống của Windows sẽ được kiếm).</string>
     <string lang="vi" key="SELECT_PKCS11_MODULE_HELP">Lưu ý: Để biết tên tập tin và vị trí của thư viện của PKCS #11 được cài đặt cho hiệu bài bảo mật hoặc thẻ smart của bạn, xin tham khảo tài liệu hướng dẫn được cung cấp với hiệu bài, thẻ, hoặc nhu liệu của hãng khác.\n\nNhấn 'OK' để chọn đường dẫn và tên tập tin.</string>
@@ -1217,6 +1305,7 @@
     <string lang="en" key="CONFIRM_SETTING_DEGRADES_PERFORMANCE">WARNING: This setting may degrade performance.\n\nAre you sure you want to use this setting?</string>
     <string lang="en" key="HOST_DEVICE_REMOVAL_DISMOUNT_WARN_TITLE">Warning: VeraCrypt volume auto-dismounted</string>
     <string lang="en" key="HOST_DEVICE_REMOVAL_DISMOUNT_WARN">Before you physically remove or turn off a device containing a mounted volume, you should always dismount the volume in VeraCrypt first.\n\nUnexpected spontaneous dismount is usually caused by an intermittently failing cable, drive (enclosure), etc.</string>
+    <string lang="en" key="UNSUPPORTED_TRUECRYPT_FORMAT">This volume was created with TrueCrypt %x.%x but VeraCrypt supports only TrueCrypt volumes created with TrueCrypt 6.x/7.x series</string>
     <string lang="vi" key="TEST">Thử nghiệm</string>
     <string lang="vi" key="KEYFILE">Tập tin Khóa</string>
     <string lang="vi" key="VKEY_08">Backspace</string>

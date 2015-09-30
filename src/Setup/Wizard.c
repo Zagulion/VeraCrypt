@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2012 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #include "Tcdefs.h"
@@ -231,7 +233,7 @@ BOOL CALLBACK PageDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 				}
 				else
 				{
-					Error("CANNOT_DISPLAY_LICENSE");
+					Error("CANNOT_DISPLAY_LICENSE", hwndDlg);
 					exit (1);
 				}
 
@@ -741,18 +743,6 @@ BOOL CALLBACK PageDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 		}
 		return 0; 
 
-
-	case WM_CTLCOLORSTATIC:
-
-		/* This maintains the background under the transparent-backround texts */
-
-		SetBkMode ((HDC) wParam, TRANSPARENT);
-		return ((LONG) (HBRUSH) (GetStockObject (NULL_BRUSH)));
-
-
-	case WM_ERASEBKGND:
-
-		return 0;
 	}
 
 	return 0;
@@ -904,14 +894,14 @@ BOOL CALLBACK MainDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 				if (nCurrentOS == WIN_2000)
 				{
-					WarningDirect (L"Warning: Please note that this may be the last version of VeraCrypt that supports Windows 2000. If you want to be able to upgrade to future versions of VeraCrypt (which is highly recommended), you will need to upgrade to Windows XP or a later version of Windows.\n\nNote: Microsoft stopped issuing security updates for Windows 2000 to the general public on 7/13/2010 (the last non-security update for Windows 2000 was issued to the general public in 2005).");
+					WarningDirect (L"Warning: Please note that this may be the last version of VeraCrypt that supports Windows 2000. If you want to be able to upgrade to future versions of VeraCrypt (which is highly recommended), you will need to upgrade to Windows XP or a later version of Windows.\n\nNote: Microsoft stopped issuing security updates for Windows 2000 to the general public on 7/13/2010 (the last non-security update for Windows 2000 was issued to the general public in 2005).", hwndDlg);
 
 
 					HKEY hkey;
 
 					if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Updates\\Windows 2000\\SP5\\Update Rollup 1", 0, KEY_READ, &hkey) != ERROR_SUCCESS)
 					{
-						ErrorDirect (L"VeraCrypt requires Update Rollup 1 for Windows 2000 SP4 to be installed.\n\nFor more information, see http://support.microsoft.com/kb/891861");
+						ErrorDirect (L"VeraCrypt requires Update Rollup 1 for Windows 2000 SP4 to be installed.\n\nFor more information, see http://support.microsoft.com/kb/891861", hwndDlg);
 						AbortProcessSilent ();
 					}
 
@@ -923,10 +913,10 @@ BOOL CALLBACK MainDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 			{
 				if (IsButtonChecked (GetDlgItem (hCurPage, IDC_WIZARD_MODE_EXTRACT_ONLY)))
 				{
-					Info ("TRAVELER_LIMITATIONS_NOTE");
+					Info ("TRAVELER_LIMITATIONS_NOTE", hwndDlg);
 
 					if (IsUacSupported() 
-						&& AskWarnYesNo ("TRAVELER_UAC_NOTE") == IDNO)
+						&& AskWarnYesNo ("TRAVELER_UAC_NOTE", hwndDlg) == IDNO)
 					{
 						return 1;
 					}
@@ -1114,7 +1104,7 @@ BOOL CALLBACK MainDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 		RefreshUIGFX ();
 
-		Info ("EXTRACTION_FINISHED_INFO");
+		Info ("EXTRACTION_FINISHED_INFO", hwndDlg);
 
 		SetWindowTextW (GetDlgItem (hwndDlg, IDC_NEXT), GetString ("FINALIZE"));
 
@@ -1146,7 +1136,7 @@ BOOL CALLBACK MainDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 		RefreshUIGFX();
 
-		Error ("EXTRACTION_FAILED");
+		Error ("EXTRACTION_FAILED", hwndDlg);
 
 		return 1;
 
@@ -1157,7 +1147,7 @@ BOOL CALLBACK MainDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 			if (bInProgress)
 			{
 				NormalCursor();
-				if (AskNoYes("CONFIRM_EXIT_UNIVERSAL") == IDNO)
+				if (AskNoYes("CONFIRM_EXIT_UNIVERSAL", hwndDlg) == IDNO)
 				{
 					return 1;
 				}
@@ -1171,24 +1161,24 @@ BOOL CALLBACK MainDialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 			else
 			{
 				if (bPromptReleaseNotes
-					&& AskYesNo ("AFTER_UPGRADE_RELEASE_NOTES") == IDYES)
+					&& AskYesNo ("AFTER_UPGRADE_RELEASE_NOTES", hwndDlg) == IDYES)
 				{
 					Applink ("releasenotes", TRUE, "");
 				}
 
 				bPromptReleaseNotes = FALSE;
 
-				/*if (bPromptTutorial
-					&& AskYesNo ("AFTER_INSTALL_TUTORIAL") == IDYES)
+				if (bPromptTutorial
+					&& AskYesNo ("AFTER_INSTALL_TUTORIAL", hwndDlg) == IDYES)
 				{
 					Applink ("beginnerstutorial", TRUE, "");
-				}*/
+				}
 
 				bPromptTutorial = FALSE;
 			}
 
 			if (bRestartRequired
-				&& AskYesNo (bUpgrade ? "UPGRADE_OK_REBOOT_REQUIRED" : "CONFIRM_RESTART") == IDYES)
+				&& AskYesNo (bUpgrade ? "UPGRADE_OK_REBOOT_REQUIRED" : "CONFIRM_RESTART", hwndDlg) == IDYES)
 			{
 				RestartComputer();
 			}

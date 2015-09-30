@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "System.h"
@@ -17,6 +21,7 @@
 #include "Platform/Unix/Process.h"
 #endif
 #include "Platform/SystemInfo.h"
+#include "Platform/SystemException.h"
 #include "Common/SecurityToken.h"
 #include "Volume/EncryptionTest.h"
 #include "Application.h"
@@ -248,7 +253,7 @@ namespace VeraCrypt
 #endif
 			prop << LangString["MOUNT_POINT"] << L": " << wstring (volume.MountPoint) << L'\n';
 			prop << LangString["SIZE"] << L": " << SizeToString (volume.Size) << L'\n';
-			prop << LangString["TYPE"] << L": " << VolumeTypeToString (volume.Type, volume.Protection) << L'\n';
+			prop << LangString["TYPE"] << L": " << VolumeTypeToString (volume.Type, volume.TrueCryptMode, volume.Protection) << L'\n';
 
 			prop << LangString["READ_ONLY"] << L": " << LangString [volume.Protection == VolumeProtection::ReadOnly ? "UISTR_YES" : "UISTR_NO"] << L'\n';
 
@@ -295,7 +300,7 @@ namespace VeraCrypt
 		ShowString (prop);
 	}
 
-	wxString UserInterface::ExceptionToMessage (const exception &ex) const
+	wxString UserInterface::ExceptionToMessage (const exception &ex)
 	{
 		wxString message;
 		
@@ -339,10 +344,9 @@ namespace VeraCrypt
 					message << L"\n\n" << LangString["ERR_HARDWARE_ERROR"];
 #endif
 
-#ifdef DEBUG
 				if (sysEx && sysEx->what())
 					message << L"\n\n" << StringConverter::ToWide (sysEx->what());
-#endif
+
 				return message;
 			}
 		}
@@ -364,7 +368,7 @@ namespace VeraCrypt
 		return StringConverter::ToWide (typeName) + L" at " + StringConverter::ToWide (ex.what());
 	}
 
-	wxString UserInterface::ExceptionToString (const Exception &ex) const
+	wxString UserInterface::ExceptionToString (const Exception &ex)
 	{
 		// Error messages
 		const ErrorMessage *errMsgEx = dynamic_cast <const ErrorMessage *> (&ex);
@@ -435,7 +439,7 @@ namespace VeraCrypt
 		return ExceptionTypeToString (typeid (ex));
 	}
 
-	wxString UserInterface::ExceptionTypeToString (const std::type_info &ex) const
+	wxString UserInterface::ExceptionTypeToString (const std::type_info &ex)
 	{
 #define EX2MSG(exception, message) do { if (ex == typeid (exception)) return (message); } while (false)
 		EX2MSG (DriveLetterUnavailable,				LangString["DRIVE_LETTER_UNAVAILABLE"]);
@@ -482,6 +486,8 @@ namespace VeraCrypt
 		EX2MSG (VolumeEncryptionNotCompleted,		LangString["ERR_ENCRYPTION_NOT_COMPLETED"]);
 		EX2MSG (VolumeHostInUse,					_("The host file/device is already in use."));
 		EX2MSG (VolumeSlotUnavailable,				_("Volume slot unavailable."));
+		EX2MSG (UnsupportedAlgoInTrueCryptMode,		LangString["ALGO_NOT_SUPPORTED_FOR_TRUECRYPT_MODE"]);
+		EX2MSG (UnsupportedTrueCryptFormat,			LangString["UNSUPPORTED_TRUECRYPT_FORMAT"]);
 
 #ifdef TC_MACOSX
 		EX2MSG (HigherFuseVersionRequired,			_("VeraCrypt requires OSXFUSE 2.3 or later with MacFUSE compatibility layer installer.\nPlease ensure that you have selected this compatibility layer during OSXFUSE installation."));
@@ -498,10 +504,8 @@ namespace VeraCrypt
 
 		LangString.Init();
 		Core->Init();
-
-		wxCmdLineParser parser;
-		parser.SetCmdLine (argc, argv);
-		CmdLine.reset (new CommandLineInterface (parser, InterfaceType));
+		
+		CmdLine.reset (new CommandLineInterface (argc, argv, InterfaceType));
 		SetPreferences (CmdLine->Preferences);
 
 		Core->SetApplicationExecutablePath (Application::GetExecutablePath());
@@ -729,7 +733,8 @@ namespace VeraCrypt
 
 		try
 		{
-			volume = Core->MountVolume (options);
+			volume = MountVolumeThread (options);
+
 		}
 		catch (VolumeHostInUse&)
 		{
@@ -828,7 +833,7 @@ namespace VeraCrypt
 		// MIME handler for directory seems to be unavailable through wxWidgets
 		wxString desktop = GetTraits()->GetDesktopEnvironment();
 
-		if (desktop == L"GNOME" || desktop.empty())
+		if (desktop == L"GNOME")
 		{
 			args.push_back ("--no-default-window");
 			args.push_back ("--no-desktop");
@@ -861,6 +866,22 @@ namespace VeraCrypt
 				catch (exception &e) { ShowError (e); }
 			}
 		}
+		else if (wxFileName::IsFileExecutable (wxT("/usr/bin/xdg-open")))
+		{
+			// Fallback on the standard xdg-open command 
+			// which is not always available by default
+			args.push_back (string (path));
+			try
+			{
+				Process::Execute ("xdg-open", args, 2000);
+			}
+			catch (TimeOut&) { }
+			catch (exception &e) { ShowError (e); }
+		}
+		else
+		{
+			ShowWarning (wxT("Unable to find a file manager to open the mounted volume"));
+		}
 #endif
 	}
 
@@ -868,11 +889,19 @@ namespace VeraCrypt
 	{
 		CommandLineInterface &cmdLine = *CmdLine;
 
-		switch (cmdLine.ArgCommand)
-		{
-		case CommandId::None:
+		if (cmdLine.ArgCommand == CommandId::None)
 			return false;
 
+		if (Preferences.UseStandardInput)
+		{
+			wstring pwdInput;
+			wcin >> pwdInput;
+
+			cmdLine.ArgPassword = make_shared<VolumePassword> (pwdInput);
+		}
+
+		switch (cmdLine.ArgCommand)
+		{
 		case CommandId::AutoMountDevices:
 		case CommandId::AutoMountFavorites:
 		case CommandId::AutoMountDevicesFavorites:
@@ -881,8 +910,15 @@ namespace VeraCrypt
 				cmdLine.ArgMountOptions.Path = cmdLine.ArgVolumePath;
 				cmdLine.ArgMountOptions.MountPoint = cmdLine.ArgMountPoint;
 				cmdLine.ArgMountOptions.Password = cmdLine.ArgPassword;
+				cmdLine.ArgMountOptions.Pim = cmdLine.ArgPim;
 				cmdLine.ArgMountOptions.Keyfiles = cmdLine.ArgKeyfiles;
 				cmdLine.ArgMountOptions.SharedAccessAllowed = cmdLine.ArgForce;
+				cmdLine.ArgMountOptions.TrueCryptMode = cmdLine.ArgTrueCryptMode;
+				if (cmdLine.ArgHash)
+				{
+					cmdLine.ArgMountOptions.Kdf = Pkcs5Kdf::GetAlgorithm (*cmdLine.ArgHash, cmdLine.ArgTrueCryptMode);
+				}
+
 
 				VolumeInfoList mountedVolumes;
 				switch (cmdLine.ArgCommand)
@@ -965,7 +1001,7 @@ namespace VeraCrypt
 			return true;
 
 		case CommandId::ChangePassword:
-			ChangePassword (cmdLine.ArgVolumePath, cmdLine.ArgPassword, cmdLine.ArgKeyfiles, cmdLine.ArgNewPassword, cmdLine.ArgNewKeyfiles, cmdLine.ArgHash);
+			ChangePassword (cmdLine.ArgVolumePath, cmdLine.ArgPassword, cmdLine.ArgPim, cmdLine.ArgHash, cmdLine.ArgTrueCryptMode, cmdLine.ArgKeyfiles, cmdLine.ArgNewPassword, cmdLine.ArgNewPim, cmdLine.ArgNewKeyfiles, cmdLine.ArgNewHash);
 			return true;
 
 		case CommandId::CreateKeyfile:
@@ -978,7 +1014,7 @@ namespace VeraCrypt
 
 				if (cmdLine.ArgHash)
 				{
-					options->VolumeHeaderKdf = Pkcs5Kdf::GetAlgorithm (*cmdLine.ArgHash);
+					options->VolumeHeaderKdf = Pkcs5Kdf::GetAlgorithm (*cmdLine.ArgHash, false);
 					RandomNumberGenerator::SetHash (cmdLine.ArgHash);
 				}
 				
@@ -986,6 +1022,7 @@ namespace VeraCrypt
 				options->Filesystem = cmdLine.ArgFilesystem;
 				options->Keyfiles = cmdLine.ArgKeyfiles;
 				options->Password = cmdLine.ArgPassword;
+				options->Pim = cmdLine.ArgPim;
 				options->Quick = cmdLine.ArgQuick;
 				options->Size = cmdLine.ArgSize;
 				options->Type = cmdLine.ArgVolumeType;
@@ -1477,18 +1514,100 @@ namespace VeraCrypt
 		return dateStr;
 	}
 
-	wxString UserInterface::VolumeTypeToString (VolumeType::Enum type, VolumeProtection::Enum protection) const
+	wxString UserInterface::VolumeTypeToString (VolumeType::Enum type, bool truecryptMode, VolumeProtection::Enum protection) const
 	{
+		wxString sResult;
 		switch (type)
 		{
 		case VolumeType::Normal:
-			return LangString[protection == VolumeProtection::HiddenVolumeReadOnly ? "OUTER" : "NORMAL"];
+			sResult = LangString[protection == VolumeProtection::HiddenVolumeReadOnly ? "OUTER" : "NORMAL"];
+			break;
 
 		case VolumeType::Hidden:
-			return LangString["HIDDEN"];
+			sResult = LangString["HIDDEN"];
+			break;
 
 		default:
-			return L"?";
+			sResult = L"?";
+			break;
 		}
+
+		if (truecryptMode)
+			sResult = wxT("TrueCrypt-") + sResult;
+		return sResult;
+	}
+
+	#define VC_CONVERT_EXCEPTION(NAME) if (dynamic_cast<NAME*> (ex)) throw (NAME&) *ex;
+
+	void UserInterface::ThrowException (Exception* ex)
+	{
+		VC_CONVERT_EXCEPTION (PasswordIncorrect);
+		VC_CONVERT_EXCEPTION (PasswordKeyfilesIncorrect);
+		VC_CONVERT_EXCEPTION (PasswordOrKeyboardLayoutIncorrect);
+		VC_CONVERT_EXCEPTION (PasswordOrMountOptionsIncorrect);
+		VC_CONVERT_EXCEPTION (ProtectionPasswordIncorrect);
+		VC_CONVERT_EXCEPTION (ProtectionPasswordKeyfilesIncorrect);
+		VC_CONVERT_EXCEPTION (PasswordEmpty);
+		VC_CONVERT_EXCEPTION (PasswordTooLong);
+		VC_CONVERT_EXCEPTION (UnportablePassword);
+		VC_CONVERT_EXCEPTION (ElevationFailed);
+		VC_CONVERT_EXCEPTION (RootDeviceUnavailable);
+		VC_CONVERT_EXCEPTION (DriveLetterUnavailable);
+		VC_CONVERT_EXCEPTION (DriverError);
+		VC_CONVERT_EXCEPTION (EncryptedSystemRequired);
+		VC_CONVERT_EXCEPTION (HigherFuseVersionRequired);
+		VC_CONVERT_EXCEPTION (KernelCryptoServiceTestFailed);
+		VC_CONVERT_EXCEPTION (LoopDeviceSetupFailed);
+		VC_CONVERT_EXCEPTION (MountPointRequired);
+		VC_CONVERT_EXCEPTION (MountPointUnavailable);
+		VC_CONVERT_EXCEPTION (NoDriveLetterAvailable);
+		VC_CONVERT_EXCEPTION (TemporaryDirectoryFailure);
+		VC_CONVERT_EXCEPTION (UnsupportedSectorSizeHiddenVolumeProtection);
+		VC_CONVERT_EXCEPTION (UnsupportedSectorSizeNoKernelCrypto);
+		VC_CONVERT_EXCEPTION (VolumeAlreadyMounted);
+		VC_CONVERT_EXCEPTION (VolumeSlotUnavailable);
+		VC_CONVERT_EXCEPTION (UserInterfaceException);
+		VC_CONVERT_EXCEPTION (MissingArgument);
+		VC_CONVERT_EXCEPTION (NoItemSelected);
+		VC_CONVERT_EXCEPTION (StringFormatterException);	
+		VC_CONVERT_EXCEPTION (ExecutedProcessFailed);
+		VC_CONVERT_EXCEPTION (AlreadyInitialized);
+		VC_CONVERT_EXCEPTION (AssertionFailed);
+		VC_CONVERT_EXCEPTION (ExternalException);
+		VC_CONVERT_EXCEPTION (InsufficientData);
+		VC_CONVERT_EXCEPTION (NotApplicable);
+		VC_CONVERT_EXCEPTION (NotImplemented);
+		VC_CONVERT_EXCEPTION (NotInitialized);
+		VC_CONVERT_EXCEPTION (ParameterIncorrect);
+		VC_CONVERT_EXCEPTION (ParameterTooLarge);
+		VC_CONVERT_EXCEPTION (PartitionDeviceRequired);
+		VC_CONVERT_EXCEPTION (StringConversionFailed);
+		VC_CONVERT_EXCEPTION (TestFailed);
+		VC_CONVERT_EXCEPTION (TimeOut);
+		VC_CONVERT_EXCEPTION (UnknownException);
+		VC_CONVERT_EXCEPTION (UserAbort)
+		VC_CONVERT_EXCEPTION (CipherInitError);
+		VC_CONVERT_EXCEPTION (WeakKeyDetected);	
+		VC_CONVERT_EXCEPTION (HigherVersionRequired);
+		VC_CONVERT_EXCEPTION (KeyfilePathEmpty);
+		VC_CONVERT_EXCEPTION (MissingVolumeData);
+		VC_CONVERT_EXCEPTION (MountedVolumeInUse);
+		VC_CONVERT_EXCEPTION (UnsupportedSectorSize);
+		VC_CONVERT_EXCEPTION (VolumeEncryptionNotCompleted);
+		VC_CONVERT_EXCEPTION (VolumeHostInUse);
+		VC_CONVERT_EXCEPTION (VolumeProtected);
+		VC_CONVERT_EXCEPTION (VolumeReadOnly);
+		VC_CONVERT_EXCEPTION (Pkcs11Exception);
+		VC_CONVERT_EXCEPTION (InvalidSecurityTokenKeyfilePath);
+		VC_CONVERT_EXCEPTION (SecurityTokenLibraryNotInitialized);
+		VC_CONVERT_EXCEPTION (SecurityTokenKeyfileAlreadyExists);
+		VC_CONVERT_EXCEPTION (SecurityTokenKeyfileNotFound);
+		VC_CONVERT_EXCEPTION (UnsupportedAlgoInTrueCryptMode);	
+		VC_CONVERT_EXCEPTION (UnsupportedTrueCryptFormat);
+		VC_CONVERT_EXCEPTION (SystemException);
+		VC_CONVERT_EXCEPTION (CipherException);
+		VC_CONVERT_EXCEPTION (VolumeException);
+		VC_CONVERT_EXCEPTION (PasswordException);
+		throw *ex;
 	}
 }

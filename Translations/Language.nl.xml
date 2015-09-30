@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VeraCrypt>
-  <localization prog-version="1.0e">
+  <localization prog-version="1.15">
     <!-- Languages -->
     <language langid="nl" name="Nederlands" en-name="Dutch" version="0.1.0" translators="Jan van der Wal" />
     <!-- Fonts -->
@@ -37,6 +37,7 @@
     <control lang="nl" key="IDC_DOWNLOAD_CD_BURN_SOFTWARE">Download CD/DVD brandersoftware</control>
     <control lang="nl" key="IDC_FILE_CONTAINER">Maak een gecodeerde bestandscontainer</control>
     <control lang="nl" key="IDC_GB">&amp;GB</control>
+    <control lang="nl" key="IDC_TB">&amp;TB</control>
     <control lang="nl" key="IDC_HIDDEN_SYSENC_INFO_LINK">Meer informatie</control>
     <control lang="nl" key="IDC_HIDDEN_VOL">Ve&amp;rborgen VeraCrypt volume </control>
     <control lang="nl" key="IDC_HIDDEN_VOL_HELP">Meer informatie over Verborgen Volumes</control>
@@ -44,9 +45,11 @@
     <control lang="nl" key="IDC_HIDVOL_WIZ_MODE_FULL">Normale modus</control>
     <control lang="nl" key="IDC_KB">&amp;KB</control>
     <control lang="nl" key="IDC_KEYFILES_ENABLE">G&amp;ebruik Sleutel Best.</control>
+    <control lang="en" key="IDC_KEYFILES_RANDOM_SIZE">Random size ( 64 &lt;-&gt; 1048576 )</control>
     <control lang="nl" key="IDC_KEY_FILES">&amp;Sleutelbestanden</control>
     <control lang="nl" key="IDC_LINK_HASH_INFO">Informatie over hash algoritmes</control>
     <control lang="nl" key="IDC_LINK_MORE_INFO_ABOUT_CIPHER">Meer informatie</control>
+    <control lang="en" key="IDC_LINK_PIM_INFO">Information on PIM</control>
     <control lang="nl" key="IDC_MB">&amp;MB</control>
     <control lang="nl" key="IDC_MORE_INFO_ON_CONTAINERS">Meer informatie</control>
     <control lang="nl" key="IDC_MORE_INFO_ON_SYS_ENCRYPTION">Meer informatie over systeem codering</control>
@@ -56,9 +59,11 @@
     <control lang="nl" key="IDC_NO_HISTORY">Nooit &amp;geschiedenis opslaan</control>
     <control lang="nl" key="IDC_OPEN_OUTER_VOLUME">Buiten-volume</control>
     <control lang="nl" key="IDC_PAUSE">&amp;Pauze</control>
+    <control lang="en" key="IDC_PIM_ENABLE">Use PIM</control>
     <control lang="nl" key="IDC_QUICKFORMAT">Snel Formatteren</control>
     <control lang="nl" key="IDC_SHOW_PASSWORD">&amp;Laat wachtwoord zien</control>
     <control lang="nl" key="IDC_SHOW_PASSWORD_SINGLE">&amp;Toon wachtwoord</control>
+    <control lang="en" key="IDC_SHOW_PIM">&amp;Display PIM</control>
     <control lang="nl" key="IDC_SINGLE_BOOT">Single-boot</control>
     <control lang="nl" key="IDC_STD_VOL">Standaard VeraCrypt volume</control>
     <control lang="nl" key="IDC_SYSENC_HIDDEN">Ver&amp;borgen</control>
@@ -71,6 +76,7 @@
     <control lang="nl" key="IDT_COLLECTING_RANDOM_DATA_NOTE">BELANGRIJK: Beweeg de muis zo willekeurig mogelijk binnen dit scherm. Hoe langer u hem beweegt, hoe beter. Dit verbetert significant de cryptografische sterkte van de codeersleutels. Klik vervolgens op Volgende om door te gaan.</control>
     <control lang="nl" key="IDT_CONFIRM">&amp;Bevestig:</control>
     <control lang="nl" key="IDT_DONE">Klaar </control>
+    <control lang="en" key="IDT_DRIVE_LETTER">Drive letter:</control>
     <control lang="nl" key="IDT_ENCRYPTION_ALGO">Codering Algoritme</control>
     <control lang="nl" key="IDT_FILESYSTEM">Filesysteem </control>
     <control lang="nl" key="IDT_FILE_CONTAINER">Maakt een virtueel gecodeerde schijf aan binnen een bestand. Aanbevolen voor onervaren gebruikers.</control>
@@ -84,6 +90,8 @@
     <control lang="nl" key="IDT_PARTIAL_POOL_CONTENTS">Huidige pool inhoud (gedeelte)</control>
     <control lang="nl" key="IDT_PASS">OK</control>
     <control lang="nl" key="IDT_PASSWORD">Wachtwoord:</control>
+    <control lang="en" key="IDT_PIM">Volume PIM:</control>
+    <control lang="en" key="IDT_OLD_PIM">Volume PIM:</control>
     <control lang="nl" key="IDT_PROGRESS">Voortgang:</control>
     <control lang="nl" key="IDT_RANDOM_POOL">Random Pool: </control>
     <control lang="nl" key="IDT_SINGLE_BOOT">Selecteer deze optie als er maar één operating systeem geïnstalleerd is op deze computer (ook als de computer meerdere gebruikers telt).</control>
@@ -92,6 +100,7 @@
     <control lang="nl" key="IDT_SYSENC_KEYS_GEN_INFO">De sleutels, salt, en andere data zijn met succes aangemaakt. Als u nieuwe sleutels wilt aanmaken, klik op Terug en dan op Volgende, klik Volgende om door te gaan.</control>
     <control lang="nl" key="IDT_SYS_DEVICE">Codeert de partitie/schijf waarop Windows is geïnstalleerd. Eenieder die toegang tot het systeem wil hebben, zal vóór iedere start van Windows het juiste wachtwoord moeten ingeven. Evt. kan een Verborgen Systeem worden aangemaakt.</control>
     <control lang="en" key="IDT_SYS_PARTITION">Select this option to encrypt the partition where the currently running Windows operating system is installed.</control>
+    <control lang="en" key="IDT_VOLUME_LABEL">Volume Label in Windows:</control>
     <control lang="nl" key="IDT_WIPE_MODE">Wis modus:</control>
     <control lang="nl" key="IDCLOSE">Sluiten </control>
     <control lang="nl" key="IDC_ALLOW_ESC_PBA_BYPASS">Sla de pre-boot &amp;authenticatie over door het indrukken van de Esc key (roept de boot manager op)</control>
@@ -105,6 +114,7 @@
     <control lang="nl" key="IDC_CACHE">&amp;Cache wachtwoorden en sleutels in geheugen</control>
     <control lang="nl" key="IDC_CLOSE_BKG_TASK_WHEN_NOVOL">Sluiten als er geen gekoppelde volumes zijn</control>
     <control lang="nl" key="IDC_CLOSE_TOKEN_SESSION_AFTER_MOUNT">&amp;Sluit token sessie (log uit) nadat een volume met succes is gekoppeld</control>
+    <control lang="en" key="IDC_COPY_EXPANDER">Include VeraCrypt Volume Expander</control>
     <control lang="nl" key="IDC_COPY_WIZARD">Inclusief VeraCrypt Volume Aanmaak Wizard</control>
     <control lang="nl" key="IDC_CREATE">Maak aan</control>
     <control lang="nl" key="IDC_CREATE_VOLUME">Maa&amp;k Volume</control>
@@ -141,10 +151,13 @@
     <control lang="nl" key="IDC_MOUNT_OPTIONS">&amp;Koppel Opties</control>
     <control lang="nl" key="IDC_MOUNT_READONLY">Koppel volume als alleen-&amp;lezen</control>
     <control lang="nl" key="IDC_NEW_KEYFILES">Sleutelbestanden</control>
+    <control lang="en" key="IDC_OLD_PIM_HELP">(Empty or 0 for default iterations)</control>
+    <control lang="en" key="IDC_PIM_HELP">(Empty or 0 for default iterations)</control>	
     <control lang="nl" key="IDC_PREF_BKG_TASK_ENABLE">Geactiveerd</control>
     <control lang="nl" key="IDC_PREF_CACHE_PASSWORDS">Cache wachtwoorden in geheugen</control>
     <control lang="nl" key="IDC_PREF_DISMOUNT_INACTIVE">Auto-ontkoppeling volume als geen data gelezen/geschreven gedurende</control>
     <control lang="nl" key="IDC_PREF_DISMOUNT_LOGOFF">Gebruiker uitlogt</control>
+    <control lang="en" key="IDC_PREF_DISMOUNT_SESSION_LOCKED">User session locked</control>
     <control lang="nl" key="IDC_PREF_DISMOUNT_POWERSAVING">Power save modus gestart is</control>
     <control lang="nl" key="IDC_PREF_DISMOUNT_SCREENSAVER">Screensaver geactiveerd is</control>
     <control lang="nl" key="IDC_PREF_FORCE_AUTO_DISMOUNT">Forceer auto-ontkoppeling, zelfs als volume open bestanden of directories bevat</control>
@@ -153,6 +166,7 @@
     <control lang="nl" key="IDC_PREF_MOUNT_READONLY">Koppel volumes als alleen-lezen</control>
     <control lang="nl" key="IDC_PREF_MOUNT_REMOVABLE">Koppel volumes als verwijderbare media</control>
     <control lang="nl" key="IDC_PREF_OPEN_EXPLORER">Open Explorer venster voor succesvol gekoppeld volume</control>
+    <control lang="en" key="IDC_PREF_TEMP_CACHE_ON_MULTIPLE_MOUNT">Temporary Cache password during "Mount Favorite Volumes" operations</control>
     <control lang="en" key="IDC_PREF_USE_DIFF_TRAY_ICON_IF_VOL_MOUNTED">Use a different taskbar icon when there are mounted volumes</control>
     <control lang="nl" key="IDC_PREF_WIPE_CACHE_ON_AUTODISMOUNT">Wis wachtwoorden in de cache bij auto-ontkoppeling</control>
     <control lang="nl" key="IDC_PREF_WIPE_CACHE_ON_EXIT">Wis wachtwoorden in de cache bij afsluiten</control>
@@ -165,16 +179,18 @@
     <control lang="nl" key="IDC_SHOW_PASSWORD_CHPWD_ORI">Toon wachtwoord</control>
     <control lang="nl" key="IDC_TRAVEL_OPEN_EXPLORER">Open &amp;Explorer venster voor gekoppeld volume</control>
     <control lang="nl" key="IDC_TRAV_CACHE_PASSWORDS">&amp;Cache wachtwoorden in programmageheugen</control>
+    <control lang="en" key="IDC_TRUECRYPT_MODE">TrueCrypt Mode</control>
     <control lang="nl" key="IDC_UNMOUNTALL">O&amp;ntkoppel Alles</control>
     <control lang="nl" key="IDC_VOLUME_PROPERTIES">Volume &amp;Eigenschappen</control>
     <control lang="nl" key="IDC_VOLUME_TOOLS">Vol&amp;ume Tools</control>
     <control lang="nl" key="IDC_WIPE_CACHE">&amp;Wis Cache</control>
+    <control lang="en" key="IDD_DEFAULT_MOUNT_PARAMETERS">VeraCrypt - Mount Parameters</control>
     <control lang="en" key="IDD_FAVORITE_VOLUMES">VeraCrypt - Favorite Volumes</control>
     <control lang="nl" key="IDD_HOTKEYS_DLG">VeraCrypt - Sneltoetsen</control>
     <control lang="nl" key="IDD_MOUNT_DLG">VeraCrypt</control>
     <control lang="nl" key="IDD_PASSWORDCHANGE_DLG">Verander Wachtwoord of Sleutelbestanden</control>
     <control lang="nl" key="IDD_PASSWORD_DLG">Voer VeraCrypt Volume Wachtwoord In</control>
-    <control lang="en" key="IDD_PERFORMANCE_SETTINGS">VeraCrypt - Performance Options</control>
+    <control lang="en" key="IDD_PERFORMANCE_SETTINGS">VeraCrypt - Performance and Driver Options</control>
     <control lang="nl" key="IDD_PREFERENCES_DLG">VeraCrypt - Voorkeuren</control>
     <control lang="nl" key="IDD_SYSENC_SETTINGS">VeraCrypt - Systeem Codeer Instellingen</control>
     <control lang="nl" key="IDD_TOKEN_PREFERENCES">VeraCrypt - Security Token Voorkeuren</control>
@@ -197,7 +213,10 @@
     <control lang="nl" key="IDM_CREATE_HIDDEN_OS">Aanmaak Verborgen Operating Systeem</control>
     <control lang="nl" key="IDM_CREATE_RESCUE_DISK">Maak Reddingsschijf aan</control>
     <control lang="nl" key="IDM_CREATE_VOLUME">Volume Aanmaak Wizard</control>
+    <control lang="en" key="IDM_DECRYPT_NONSYS_VOL">Permanently Decrypt...</control>
     <control lang="nl" key="IDM_DEFAULT_KEYFILES">Creëer Standaard Sleutelbestanden</control>
+    <control lang="en" key="IDM_DEFAULT_MOUNT_PARAMETERS">Default Mount Parameters...</control>
+    <control lang="en" key="IDM_DONATE">Donate now...</control>
     <control lang="nl" key="IDM_ENCRYPT_SYSTEM_DEVICE">Codeer Systeem Partitie/Schijf</control>
     <control lang="nl" key="IDM_FAQ">Veel Gestelde Vragen</control>
     <control lang="nl" key="IDM_HELP">Gebruikers Handleiding</control>
@@ -217,7 +236,7 @@
     <control lang="nl" key="IDM_ONLINE_TUTORIAL">Beginners Tutorial</control>
     <control lang="en" key="IDM_ORGANIZE_FAVORITES">Organize Favorite Volumes...</control>
     <control lang="en" key="IDM_ORGANIZE_SYSTEM_FAVORITES">Organize System Favorite Volumes...</control>
-    <control lang="en" key="IDM_PERFORMANCE_SETTINGS">Performance...</control>
+    <control lang="en" key="IDM_PERFORMANCE_SETTINGS">Performance/Driver Configuration</control>
     <control lang="nl" key="IDM_PERMANENTLY_DECRYPT_SYS">Permanent Decoderen Systeem Partitie/Schijf</control>
     <control lang="nl" key="IDM_PREFERENCES">Voorkeuren</control>
     <control lang="nl" key="IDM_REFRESH_DRIVE_LETTERS">Lees Station Letters opnieuw in</control>
@@ -239,6 +258,7 @@
     <control lang="nl" key="IDM_UNMOUNT_VOLUME">Ontkoppel Volume</control>
     <control lang="nl" key="IDM_VERIFY_RESCUE_DISK">Controleer Reddingsschijf</control>
     <control lang="nl" key="IDM_VERSION_HISTORY">Versie Geschiedenis</control>
+    <control lang="en" key="IDM_VOLUME_EXPANDER">Volume Expander</control>
     <control lang="nl" key="IDM_VOLUME_PROPERTIES">Volume Eigenschappen</control>
     <control lang="nl" key="IDM_VOLUME_WIZARD">Volume Aanmaak Wizard</control>
     <control lang="nl" key="IDM_WEBSITE">VeraCrypt Website</control>
@@ -255,6 +275,8 @@
     <control lang="nl" key="IDT_CUSTOM_BOOT_LOADER_MESSAGE">Laat deze aangepaste boodschap zien in het pre-boot authenticatie scherm (24 karakters maximaal):</control>
     <control lang="nl" key="IDT_DEFAULT_MOUNT_OPTIONS">Standaard Koppel Opties</control>
     <control lang="nl" key="IDT_DISMOUNT_ACTION">Sneltoets Opties</control>
+    <control lang="en" key="IDT_DRIVER_OPTIONS">Driver Configuration</control>
+    <control lang="en" key="IDC_ENABLE_EXTENDED_IOCTL_SUPPORT">Enable extended disk control codes support</control>
     <control lang="en" key="IDT_FAVORITE_LABEL">Label of selected favorite volume:</control>
     <control lang="nl" key="IDT_FILE_SETTINGS">Bestand Instellingen</control>
     <control lang="nl" key="IDT_HOTKEY_KEY">Toe te wijzen toetsen:</control>
@@ -268,6 +290,7 @@
     <control lang="en" key="IDT_PARALLELIZATION_OPTIONS">Thread-Based Parallelization</control>
     <control lang="nl" key="IDT_PKCS11_LIB_PATH">PKCS #11 Library Pad</control>
     <control lang="nl" key="IDT_PKCS5_PRF">PKCS-5 PRF:</control>
+    <control lang="en" key="IDT_NEW_PKCS5_PRF">PKCS-5 PRF:</control>
     <control lang="nl" key="IDT_PW_CACHE_OPTIONS">Wachtwoord Cache</control>
     <control lang="nl" key="IDT_SECURITY_OPTIONS">Security Opties</control>
     <control lang="nl" key="IDT_TASKBAR_ICON">VeraCrypt Achtergrond Taak</control>
@@ -330,6 +353,9 @@
     <control lang="nl" key="IDT_KEYFILE_GENERATOR_NOTE">BELANGRIJK: Beweeg de muis zo willekeurig mogelijk binnen dit scherm. Hoe langer u hem beweegt, hoe beter. Dit verbetert significant de cryptografische sterkte van de codeersleutels.</control>
     <control lang="nl" key="IDT_KEYFILE_WARNING">Let op: Als een Sleutelbestand zoekraakt of in de eerste 1024 kilobytes verandert, zal het corresponderende Volume niet meer gekoppeld kunnen worden!</control>
     <control lang="nl" key="IDT_KEY_UNIT">bits</control>
+    <control lang="en" key="IDT_NUMBER_KEYFILES">Number of keyfiles:</control>
+    <control lang="en" key="IDT_KEYFILES_SIZE">Keyfiles size (in Bytes):</control>
+    <control lang="en" key="IDT_KEYFILES_BASE_NAME">Keyfiles base name:</control>
     <control lang="nl" key="IDT_LANGPACK_AUTHORS">Vertaald door:</control>
     <control lang="nl" key="IDT_PLAINTEXT">Platte tekst grootte:</control>
     <control lang="nl" key="IDT_PLAINTEXT_SIZE_UNIT">bits</control>
@@ -340,6 +366,7 @@
     <control lang="nl" key="IDT_SECURITY_TOKEN">Security token:</control>
     <control lang="nl" key="IDT_SORT_METHOD">Weergave:</control>
     <control lang="en" key="IDT_STATIC_MODELESS_WAIT_DLG_INFO">Please wait. This process may take a long time...</control>
+    <control lang="en" key="IDT_STATIC_MODAL_WAIT_DLG_INFO">Please wait...\nThis process may take a long time and VeraCrypt may become unresponsive.</control>
     <control lang="nl" key="IDT_TEST_BLOCK_NUMBER">Blok nummer:</control>
     <control lang="nl" key="IDT_TEST_CIPHERTEXT">Codetekst (hexadecimaal)</control>
     <control lang="nl" key="IDT_TEST_DATA_UNIT_NUMBER">Data eenheid nummer (64-bit hexadecimaal, data eenheid grootte is 512 bytes)</control>
@@ -360,7 +387,7 @@
     <string lang="nl" key="ACCESS_DENIED">Fout: Toegang geweigerd.\n\nDe partitie die u probeert te bereiken is of 0 sectoren groot, of is uw opstart partitie.</string>
     <string lang="en" key="ADMINISTRATOR">Administrator</string>
     <string lang="nl" key="ADMIN_PRIVILEGES_DRIVER">Om de VeraCrypt driver te laden moet u zijn ingelogd met een account met administrator rechten.</string>
-    <string lang="nl" key="ADMIN_PRIVILEGES_WARN_DEVICES">Noot: om een apparaat/partitie te kunnen coderen/formatteren moet u ingelogd zijn met een beheersaccount, dus met administrator rechten.\n\nDit geldt niet voor het formatteren/coderen van volumes die zijn opgenomen in een Bestandscontainer.</string>
+    <string lang="nl" key="ADMIN_PRIVILEGES_WARN_DEVICES">Noot: om een apparaat/partitie te kunnen coderen/Decodeer/formatteren moet u ingelogd zijn met een beheersaccount, dus met administrator rechten.\n\nDit geldt niet voor het formatteren/coderen van volumes die zijn opgenomen in een Bestandscontainer.</string>
     <string lang="nl" key="ADMIN_PRIVILEGES_WARN_HIDVOL">Om een Verborgen Volume te kunnen maken moet u ingelogd zijn in een account met administrator rechten.\n\nDoorgaan?</string>
     <string lang="nl" key="ADMIN_PRIVILEGES_WARN_NTFS">Om het volume te kunen formatteren in NTFS formaat moet u ingelogd zijn in een account met administrator rechten.\n\nZonder administrator rechten kunt u het volume in FAT formaat formatteren.</string>
     <string lang="nl" key="AES_HELP">FIPS-goedgekeurde code (Rijndael, gepubliceerd 1998) die mag worden gebruikt door U.S. overheids departementen en agentschappen om geclassificeerde informatie  te beveiligen tot aan Top Secret level. 256-bit sleutel, 128-bit blok, 14 rondgangen (AES-256). Operatiemodus is XTS.</string>
@@ -431,7 +458,7 @@
     <string lang="en" key="ASK_DEBUGGER_INSTALL">In order to analyze the system crash, VeraCrypt needs to install Microsoft Debugging Tools for Windows first.\n\nAfter you click OK, the Windows installer will download the Microsoft Debugging Tools installation package (16 MB) from a Microsoft server and install it (the Windows installer will be forwarded to the Microsoft server URL from the veracrypt.org server, which ensures that this feature works even if Microsoft changes the location of the installation package).</string>
     <string lang="en" key="SYSTEM_CRASH_ANALYSIS_INFO">After you click OK, VeraCrypt will analyze the system crash. This may take up to several minutes.</string>
     <string lang="en" key="DEBUGGER_NOT_FOUND">Please make sure the environment variable 'PATH' includes the path to 'kd.exe' (Kernel Debugger).</string>
-    <string lang="en" key="SYSTEM_CRASH_NO_TRUECRYPT">It appears that VeraCrypt most likely did not cause the system crash. There are many potential reasons why the system could have crashed (for example, a failing hardware component, a bug in a device driver, etc.)</string>
+    <string lang="en" key="SYSTEM_CRASH_NO_VERACRYPT">It appears that VeraCrypt most likely did not cause the system crash. There are many potential reasons why the system could have crashed (for example, a failing hardware component, a bug in a device driver, etc.)</string>
     <string lang="en" key="SYSTEM_CRASH_UPDATE_DRIVER">Results of the analysis indicate that updating the following driver might solve this issue: </string>
     <string lang="en" key="SYSTEM_CRASH_REPORT">To help us determine whether there is a bug in VeraCrypt, you can send us an automatically generated error report containing the following items:\n- Program version\n- Operating system version\n- Type of CPU\n- Error category\n- Driver name and version\n- System call stack\n\nIf you select 'Yes', the following URL (which contains the entire error report) will be opened in your default Internet browser.</string>
     <string lang="en" key="ASK_SEND_ERROR_REPORT">Do you want to send us the above error report?</string>
@@ -476,7 +503,11 @@
     <string lang="nl" key="FORMAT_FINISHED_HELP">\n\nHet VeraCrypt Volume is succesvol aangemaakt en is klaar voor gebruik. Als u nog een VeraCrypt Volume wilt aanmaken, klik dan op Volgende. Anders op Sluiten klikken.</string>
     <string lang="nl" key="SYSENC_HIDDEN_VOL_FORMAT_FINISHED_HELP">\n\nHet Verborgen VeraCrypt Volume is aangemaakt (het verborgen operating system zal zich in dit Verborgen Volume bevinden).\n\nKlik op Volgende om door te gaan.</string>
     <string lang="nl" key="NONSYS_INPLACE_ENC_FINISHED_TITLE">Volume Geheel Gecodeerd</string>
-    <string lang="nl" key="NONSYS_INPLACE_ENC_FINISHED_INFO">BELANGRIJK: OM TOEGANG TOT DIT NIEUW AANGEMAAKT TRUECRYPT VOLUME TE KRIJGEN MOET HET EERST GEKOPPELD WORDEN, KLIK OP ‘Auto-Koppel Apparaten’ IN HET TRUECRYPT HOOFDSCHERM. Na ingave van het wachtwoord (en/of indien de juiste sleutelbestanden op aanwezigheid zijn gecontroleerd) zal het Volume worden gekoppeld aan de stationsletter die u heeft geselecteerd in het hoofdscherm. Via deze stationsletter heeft u toegang tot de data op uw VeraCrypt Volume.\n\nONTHOUDT DEZE STAPPEN GOED WANT U MOET ZE IEDERE KEER WEER UITVOEREN OM BIJ DE DATA TE KUNNEN KOMEN DIE OP HET VOLUME GECODEERD ZIJN OPGESLAGEN. Als alternatief kunt u in het hoofdscherm klikken op ‘Selecteer Apparaat’, selecteer dan deze partitie/apparaat, klik een lege stationsletter aan in het hoofdscherm en klik op ‘Koppel’.\n\nDe partitie/apparaat is met succes gecodeerd, het bevat nu een volledig gecodeerd VeraCrypt Volume en is klaar voor gebruik.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_TITLE">Volume Fully Decrypted</string>
+    <string lang="nl" key="NONSYS_INPLACE_ENC_FINISHED_INFO">BELANGRIJK: OM TOEGANG TOT DIT NIEUW AANGEMAAKT VERACRYPT VOLUME TE KRIJGEN MOET HET EERST GEKOPPELD WORDEN, KLIK OP ‘Auto-Koppel Apparaten’ IN HET VERACRYPT HOOFDSCHERM. Na ingave van het wachtwoord (en/of indien de juiste sleutelbestanden op aanwezigheid zijn gecontroleerd) zal het Volume worden gekoppeld aan de stationsletter die u heeft geselecteerd in het hoofdscherm. Via deze stationsletter heeft u toegang tot de data op uw VeraCrypt Volume.\n\nONTHOUDT DEZE STAPPEN GOED WANT U MOET ZE IEDERE KEER WEER UITVOEREN OM BIJ DE DATA TE KUNNEN KOMEN DIE OP HET VOLUME GECODEERD ZIJN OPGESLAGEN. Als alternatief kunt u in het hoofdscherm klikken op ‘Selecteer Apparaat’, selecteer dan deze partitie/apparaat, klik een lege stationsletter aan in het hoofdscherm en klik op ‘Koppel’.\n\nDe partitie/apparaat is met succes gecodeerd, het bevat nu een volledig gecodeerd VeraCrypt Volume en is klaar voor gebruik.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_INFO">The VeraCrypt volume has been successfully decrypted.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_DRIVE_LETTER_SEL_INFO">The VeraCrypt volume has been successfully decrypted.\n\nPlease select a drive letter that you wish to assign to the decrypted volume and then click Finish.\n\nIMPORTANT: Until a drive letter is assigned to the decrypted volume, you will not be able to access data stored on the volume.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_NO_DRIVE_LETTER_AVAILABLE">Warning: To be able to access the decrypted data, a drive letter needs to be assigned to the decrypted volume. However, no drive letter is currently available.\n\nPlease vacate a drive letter (for example, by disconnecting a USB flash drive or external hard drive, etc.) and then click OK.</string>
     <string lang="nl" key="FORMAT_FINISHED_INFO">Het VeraCrypt Volume is met succes aangemaakt.</string>
     <string lang="nl" key="FORMAT_FINISHED_TITLE">Volume Aangemaakt</string>
     <string lang="nl" key="FORMAT_HELP">BELANGRIJK: Beweeg de muis zo willekeurig als mogelijk binnen dit scherm. Hoe langer, hoe beter. Dit verbetert significant de cryptografische sterkte van de codeersleutels. Klik daarna op Formatteer om het volume aan te maken.</string>
@@ -489,7 +520,7 @@
     <string lang="nl" key="HIDDEN_VOL_WIZARD_MODE_DIRECT_HELP">Als u deze optie kiest, gaat u een Verborgen Volume aanmaken binnen een bestaand VeraCrypt volume. Er wordt aangenomen dat u reeds een VeraCrypt volume heeft aangemaakt dat geschikt is om het Verborgen Volume te huisvesten.</string>
     <string lang="nl" key="HIDDEN_VOL_WIZARD_MODE_TITLE">Volume Aanmaak Modus</string>
     <string lang="nl" key="HIDVOL_FORMAT_FINISHED_TITLE">Verborgen Volume Gemaakt</string>
-    <string lang="en" key="HIDVOL_FORMAT_FINISHED_HELP">The hidden VeraCrypt volume has been successfully created and is ready for use. If all the instructions have been followed and if the precautions and requirements listed in the section "Security Requirements and Precautions Pertaining to Hidden Volumes" in the VeraCrypt User's Guide are followed, it should be impossible to prove that the hidden volume exists, even when the outer volume is mounted.\n\nWARNING: IF YOU DO NOT PROTECT THE HIDDEN VOLUME (FOR INFORMATION ON HOW TO DO SO, REFER TO THE SECTION "PROTECTION OF HIDDEN VOLUMES AGAINST DAMAGE" IN THE TRUECRYPT USER'S GUIDE), DO NOT WRITE TO THE OUTER VOLUME. OTHERWISE, YOU MAY OVERWRITE AND DAMAGE THE HIDDEN VOLUME!</string>
+    <string lang="en" key="HIDVOL_FORMAT_FINISHED_HELP">The hidden VeraCrypt volume has been successfully created and is ready for use. If all the instructions have been followed and if the precautions and requirements listed in the section "Security Requirements and Precautions Pertaining to Hidden Volumes" in the VeraCrypt User's Guide are followed, it should be impossible to prove that the hidden volume exists, even when the outer volume is mounted.\n\nWARNING: IF YOU DO NOT PROTECT THE HIDDEN VOLUME (FOR INFORMATION ON HOW TO DO SO, REFER TO THE SECTION "PROTECTION OF HIDDEN VOLUMES AGAINST DAMAGE" IN THE VERACRYPT USER'S GUIDE), DO NOT WRITE TO THE OUTER VOLUME. OTHERWISE, YOU MAY OVERWRITE AND DAMAGE THE HIDDEN VOLUME!</string>
     <string lang="nl" key="FIRST_HIDDEN_OS_BOOT_INFO">U heeft het verborgen operating system gestart. Zoals u misschien heeft opgemerkt, lijkt het verborgen operating systeem geïnstalleerd te zijn op dezelfde partitie als het originele operating systeem. In werkelijkheid echter, is het aanwezig op de partitie erachter (in het Verborgen Volume). Alle lees- en schrijf operaties worden transparant doorgesluisd van het originele operating systeem naar het operating systeem in het Verborgen Volume.\n\nZowel het operating systeem als de applicaties ‘weten’ niet dat de data gelezen van en geschreven naar de systeem partitie in werkelijkheid worden gelezen van/geschreven naar de partitie erachter (van/naar het Verborgen Volume daar). Alle data worden on-the-fly gecodeerd met een codeersleutel die verschilt van de key die wordt gebruikt voor het lokaas operating systeem.\n\nKlik a.u.b. op ‘Volgende’ om door te gaan.</string>
     <string lang="nl" key="HIDVOL_HOST_FILLING_HELP_SYSENC">Het buiten volume is aangemaakt en gekoppeld als schijf %hc:. Kopieer nu enige belangrijk-uitziende bestanden naar dit buiten volume die u NIET wilt verbergen. Ze zullen daar staan t.b.v. eenieder die u zal dwingen het wachtwoord te onthullen van de eerste partitie achter de systeem partitie, waar naast het buiten volume ook het verborgen volume aanwezig is. U kunt dan het wachtwoord van het buiten volume onthullen waardoor het verborgen volume met daarin het verborgen operating systeem onontdekt zal blijven.\n\nBELANGRIJK: De bestanden die u gaat kopieren naar het buitenvolume mogen niet meer ruimte in beslag nemen dan %s. Anders is er mogelijk te weinig ruimte voor het verborgen volume waarna u niet verder kunt. Klik na het kopiëren op Volgende.</string>
     <string lang="nl" key="HIDVOL_HOST_FILLING_HELP">Het Buiten Volume is aangemaakt en gekoppeld als station %hc:. Naar dit volume moet u nu wat gevoelig uitziende bestanden kopiëren die u NIET wilt verbergen. Deze bestanden zijn voor degene die u onverhoopt dwingt uw wachtwoord prijs te geven. U kunt dan alleen het wachtwoord prijsgeven van het Buiten Volume. De bestanden die belangrijk zijn staan dan in het Verborgen Volume (dat nog moet worden aangemaakt). Druk op Volgende als u klaar bent met kopiëren. Ontkoppel het Buiten Volume niet.\n\nNoot: Nadat u op Volgende hebt gedrukt, zal de cluster bitmap van het Buiten Volume worden gescand om de grootte van de aaneengesloten vrije ruimte te bepalen die samenvalt met het einde van het Buiten Volume. Deze vrije ruimte zal het Verborgen Volume gaan huisvesten en dus meteen de maximum omvang ervan beperken. Dit scannen verzekert ervan dat geen data van het Buiten Volume zullen worden overschreven door het Verborgen Volume.</string>
@@ -512,8 +543,18 @@
     <string lang="nl" key="DECOY_TO_HIDDEN_OS_DATA_TRANSFER_HOWTO">Als u veilig bestanden wilt kopieren van het lokvogel system naar het verborgen systeem, volg dan deze stappen. 1) Start het lokvogel systeem. 2) Sla de bestanden op in een ongecodeerd volume of een normaal/buiten VeraCrypt Volume. 3) Start het verborgen systeem. 4) Als u de bestanden op een TryeCrypt Volume  opsloeg, koppel dit (het wordt automatisch gekoppeld als read-only). 5) Kopieer de bestanden naar de verborgen systeem partitie of een ander verborgen volume.</string>
     <string lang="nl" key="CONFIRM_RESTART">Uw computer moet opnieuw gestart worden.\n\nWilt u nu herstarten?</string>
     <string lang="nl" key="ERR_GETTING_SYSTEM_ENCRYPTION_STATUS">Er trad een fout op tijdens een poging de systeem codeer status op te halen.</string>
+    <string lang="en" key="ERR_PASSWORD_MISSING">No password specified in the command line. The volume can't be created.</string>
+    <string lang="en" key="ERR_SIZE_MISSING">No volume size specified in the command line. The volume can't be created.</string>
+    <string lang="en" key="ERR_NTFS_INVALID_VOLUME_SIZE">The volume file size specified in the command line is incompatible with selected NTFS filesystem.</string>
+    <string lang="en" key="ERR_FAT_INVALID_VOLUME_SIZE">The volume file size specified in the command line is incompatible with selected FAT32 filesystem.</string>
+    <string lang="en" key="ERR_DYNAMIC_NOT_SUPPORTED">The filesystem on the target drive doesn't support creating sparse files which is required for dynamic volumes.</string>
+    <string lang="en" key="ERR_DEVICE_CLI_CREATE_NOT_SUPPORTED">Only container files can be created through the command line.</string>
+    <string lang="en" key="ERR_CONTAINER_SIZE_TOO_BIG">The container file size specified in the command line is greater than the available disk free space. Volume can't be created.</string>
+    <string lang="en" key="ERR_VOLUME_SIZE_TOO_SMALL">The volume size specified in the command line is too small. The volume can't be created.</string>
+    <string lang="en" key="ERR_VOLUME_SIZE_TOO_BIG">The volume size specified in the command line is too big. The volume can't be created.</string>
     <string lang="nl" key="INIT_SYS_ENC">Applicatie componenten voor systeem codering kunnen niet geïnitialiseerd worden.</string>
     <string lang="nl" key="INIT_RAND">Het programma heeft de initialisatie van de random nummer generator niet kunnen voltooien!</string>
+    <string lang="en" key="CAPI_RAND">Windows Crypto API failed!\n\n\n(If you report a bug in connection with this, please include the following technical information in the bug report:\n%hs, Last Error = 0x%.8X)</string>
     <string lang="nl" key="INIT_REGISTER">Het programma heeft de initialisatie niet kunnen voltooien. Het registreren van de 'Dialog Class' is mislukt.</string>
     <string lang="nl" key="INIT_RICHEDIT">Fout: Laden van Rich Edit systeem library mislukt.</string>
     <string lang="nl" key="INTRO_TITLE">VeraCrypt Volume Aanmaak Wizard</string>
@@ -521,11 +562,13 @@
     <string lang="nl" key="MAX_HIDVOL_SIZE_KB">De maximaal mogelijke grootte voor dit Verborgen Volume is %.2f KB.</string>
     <string lang="nl" key="MAX_HIDVOL_SIZE_MB">De maximaal mogelijke grootte voor dit Verborgen Volume is %.2f MB.</string>
     <string lang="nl" key="MAX_HIDVOL_SIZE_GB">De Maximaal mogelijke grootte voor dit Verborgen Volume is %.2f GB.</string>
+    <string lang="nl" key="MAX_HIDVOL_SIZE_TB">De Maximaal mogelijke grootte voor dit Verborgen Volume is %.2f TB.</string>
     <string lang="nl" key="MOUNTED_NOPWCHANGE">Volume wachtwoord/sleutelbestanden kunnen niet worden gewijzigd als het volume is gekoppeld. A.u.b. eerst het volume ontkoppelen.</string>
     <string lang="nl" key="MOUNTED_NO_PKCS5_PRF_CHANGE">Het Header Key Afleidingsalgoritme kan niet worden gewijzigd als het volume gekoppeld is. A.u.b. eerst het volume ontkoppelen.</string>
     <string lang="nl" key="MOUNT_BUTTON">Koppe&amp;l</string>
     <string lang="nl" key="NEW_VERSION_REQUIRED">Een nieuwere versie van VeraCrypt is vereist om dit volume te kunnen koppelen.</string>
     <string lang="nl" key="VOL_CREATION_WIZARD_NOT_FOUND">Error: Volume Aanmaak Wizard niet gevonden.\n\nOvertuig u ervan dat het bestand 'VeraCrypt Format.exe' zich in de map bevindt waaruit ook 'VeraCrypt.exe' werd gestart. Als dit niet het geval is, herinstalleer dan VeraCrypt, of zoek 'VeraCrypt Format.exe' op uw schijf en start het.</string>
+    <string lang="en" key="VOL_EXPANDER_NOT_FOUND">Error: Volume Expander not found.\n\nPlease make sure that the file 'VeraCryptExpander.exe' is in the folder from which 'VeraCrypt.exe' was launched. If it is not, please reinstall VeraCrypt, or locate 'VeraCryptExpander.exe' on your disk and run it.</string>
     <string lang="nl" key="NEXT">Vol&amp;gende &gt;</string>
     <string lang="nl" key="FINALIZE">&amp;Beëindig</string>
     <string lang="nl" key="INSTALL">I&amp;nstalleer</string>
@@ -533,6 +576,7 @@
     <string lang="nl" key="NODRIVER">Kan geen verbinding maken met het VeraCrypt apparaat stuurprogramma. VeraCrypt kan niet werken als dit stuurprogramma niet gestart is.\n\nDoor de eigenschappen van Windows kan het nodig zijn uit te loggen of het systeem te herstarten voordat het apparaatstuurprogramma kan worden geladen.</string>
     <string lang="nl" key="NOFONT">Error ontstaan tijdens laden/voorbereiden lettertypes.</string>
     <string lang="nl" key="NOT_FOUND">De stations letter is niet gevonden of er is geen stations letter opgegeven.</string>
+    <string lang="en" key="ERR_CANNOT_ASSIGN_DRIVE_LETTER_NONSYS_DEC">Error: Cannot assign drive letter.\n\nUntil a drive letter is assigned to the decrypted volume, you will not be able to access data stored on the volume.\n\nRetry?</string>
     <string lang="nl" key="DRIVE_LETTER_UNAVAILABLE">Geen stations letter beschikbaar.</string>
     <string lang="nl" key="NO_FILE_SELECTED">Geen bestand geselecteerd!</string>
     <string lang="nl" key="NO_FREE_DRIVES">Geen Stations letters beschikbaar.</string>
@@ -549,18 +593,21 @@
     <string lang="nl" key="SELECT_PKCS11_MODULE">Selecteer PKCS #11 Library</string>
     <string lang="nl" key="OUTOFMEMORY">Te weinig geheugen</string>
     <string lang="en" key="FORMAT_DEVICE_FOR_ADVANCED_ONLY">IMPORTANT: We strongly recommend that inexperienced users create a VeraCrypt file container on the selected device/partition, instead of attempting to encrypt the entire device/partition.\n\nWhen you create a VeraCrypt file container (as opposed to encrypting a device or partition) there is, for example, no risk of destroying a large number of files. Note that a VeraCrypt file container (even though it contains a virtual encrypted disk) is actually just like any normal file. For more information, see the chapter Beginner's Tutorial in the VeraCrypt User Guide.\n\nAre you sure you want to encrypt the entire device/partition?</string>
-    <string lang="nl" key="OVERWRITEPROMPT">WAARSCHUWING: Het bestand '%hs' bestaat reeds!\n\nBELANGRIJK: TRUECRYPT ZAL DIT BESTAND NIET CODEREN MAAR VERWIJDEREN. Bent u er zeker van dat u het bestand wilt verwijderen en vervangen door een nieuwe VeraCrypt bestandscontainer?</string>
+    <string lang="nl" key="OVERWRITEPROMPT">WAARSCHUWING: Het bestand '%hs' bestaat reeds!\n\nBELANGRIJK: VERACRYPT ZAL DIT BESTAND NIET CODEREN MAAR VERWIJDEREN. Bent u er zeker van dat u het bestand wilt verwijderen en vervangen door een nieuwe VeraCrypt bestandscontainer?</string>
     <string lang="nl" key="OVERWRITEPROMPT_DEVICE">VOORZICHTIG: ALLE BESTANDEN DIE MOMENTEEL AANWEZIG ZIJN OP DE GESELECTEERDE %s '%hs'%s ZULLEN WORDEN GEWIST EN ZIJN VERLOREN (ZIJ ZULLEN NIET GECODEERD WORDEN)!\n\nBent u er zeker van dat u door wilt gaan met formatteren?</string>
     <string lang="nl" key="NONSYS_INPLACE_ENC_CONFIRM">LET OP: U kunt het volume niet koppelen en hebt dus geen toegang tot de bestanden totdat het coderen klaar is.\n\nWilt u starten met coderen van het geslecteerde %s '%hs'%s?</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_CONFIRM">WARNING: You will not be able to mount the volume or access any files stored on it until it has been fully decrypted.\n\nAre you sure you want to start decrypting the selected %s '%hs'%s?</string>
     <string lang="nl" key="NONSYS_INPLACE_ENC_CONFIRM_BACKUP">LET OP: Indien de spanning onderbroken wordt, of het operating systeem loopt onverhoopt vast door een soft/hardware fout tijdens de Op-De-Plaats Codering, dan kan hierdoor data verminkt raken of verloren gaan! Wij raden u daarom aan alvorens het coderen te starten, een deugdelijke back-up van de te coderen data te maken.\n\nHeeft u een back-up gemaakt?</string>
     <string lang="nl" key="OVERWRITEPROMPT_DEVICE_HIDDEN_OS_PARTITION">VOORZICHTIG: ALLE BESTANDEN OP DE PARTITIE '%hs'%s (DE EERSTE PARTITIE ACHTER DE SYSTEEM PARTITIE) WORDEN GEWIST (ZE WORDEN NIET GECODEERD)!\n\nBent u er zeker van dat u wilt formatteren?</string>
     <string lang="nl" key="OVERWRITEPROMPT_DEVICE_SECOND_WARNING_LOTS_OF_DATA">WAARSCHUWING! DE GESELECTEERDE PARTITIE BEVAT VEEL DATA! Alle bestanden op deze partitie zullen worden gewist (ze worden NIET gecodeerd)!</string>
     <string lang="nl" key="ERASE_FILES_BY_CREATING_VOLUME">Wis alle bestanden op de partitie door er een VeraCrypt Volume aan te maken</string>
     <string lang="nl" key="PASSWORD">Wachtwoord</string>
+    <string lang="en" key="PIM">PIM</string>
     <string lang="nl" key="IDD_PCDM_CHANGE_PKCS5_PRF">Creëer Header Key Afwijkingsalgoritme</string>
     <string lang="nl" key="IDD_PCDM_ADD_REMOVE_VOL_KEYFILES">Toevoegen/Verwijderen Sleutelbestanden aan/van Volume</string>
     <string lang="nl" key="IDD_PCDM_REMOVE_ALL_KEYFILES_FROM_VOL">Verwijder Alle Sleutelbestanden van Volume</string>
-    <string lang="en" key="PASSWORD_CHANGED">Password and/or keyfile(s) successfully changed.\n\nIMPORTANT: Please make sure you have read the section 'Changing Passwords and Keyfiles' in the chapter 'Security Requirements and Precautions' in the VeraCrypt User Guide.</string>
+    <string lang="en" key="PASSWORD_CHANGED">Password, PIM and/or keyfile(s) successfully changed.\n\nIMPORTANT: Please make sure you have read the section 'Changing Passwords and Keyfiles' in the chapter 'Security Requirements and Precautions' in the VeraCrypt User Guide.</string>
+    <string lang="en" key="FAVORITE_PIM_CHANGED">This volume is registered as a System Favorite and its PIM was changed.\nDo you want VeraCrypt to automatically update the System Favorite configuration (administrator privileges required)?\n\nPlease note that if you answer no, you'll have to update the System Favorite manually.</string>
     <string lang="nl" key="SYS_PASSWORD_CHANGED_ASK_RESCUE_DISK">BELANGRIJK: Als u uw VeraCrypt Reddingsschijf nog heeft, kan uw systeempartitie/schijf nog gedecodeerd worden met het oude wachtwoord (door op te starten met deze Reddingsschijf en het oude wachtwoord in te geven.) U dient een nieuwe Reddingsschijf aan te maken en dan de oude te vernietigen.\n\nWilt u een nieuwe Reddingsschijf maken?</string>
     <string lang="nl" key="SYS_HKD_ALGO_CHANGED_ASK_RESCUE_DISK">Merk op dat uw VeraCrypt Reddingsschijf nog steeds het vorige algoritme gebruikt. Als u het vorige algoritme als onveilig beschouwt, maak dan een nieuwe VeraCrypt Reddingsschijf aan en vernietig daarna de oude.\n\nWilt u een nieuwe VeraCrypt Reddingsschijf aanmaken?</string>
     <string lang="en" key="KEYFILES_NOTE">Any kind of file (for example, .mp3, .jpg, .zip, .avi) may be used as a VeraCrypt keyfile. Note that VeraCrypt never modifies the keyfile contents. You can select more than one keyfile (the order does not matter). If you add a folder, all non-hidden files found in it will be used as keyfiles. Click 'Add Token Files' to select keyfiles stored on security tokens or smart cards (or to import keyfiles to security tokens or smart cards).</string>
@@ -569,6 +616,7 @@
     <string lang="nl" key="PKCS5_PRF_CHANGED">Header Key Afleidingsalgoritme met succes gecreëerd.</string>
     <string lang="nl" key="NONSYS_INPLACE_ENC_RESUME_PASSWORD_PAGE_HELP">Geef a.u.b. wachtwoord en/of sleutelbestand(en) voor het niet-systeem volume waarvan u de Op-De-Plaats coderings wilt hervatten.\n\nNadat u op Volgende heeft gedrukt, zal VeraCrypt proberen alle niet-systeemvolumes te vinden waarvan de codering is onderbroken en waarop het verstrekte wachtwoord en/of de sleutelbestand(en) van toepassing zijn. Indien meer dan één zo’n volume wordt gevonden, dient u het juiste in de volgende stap te selecteren.</string>
     <string lang="nl" key="NONSYS_INPLACE_ENC_RESUME_VOL_SELECT_HELP">Selecteer a.u.b. een van de getoonde volumes. De lijst bevat ieder toegankelijk niet-syteem volume waarvan de codering is onderbroken en waarop het verstrekte wachtwoord en/of sleutelbestand(en) van toepassing zijn.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_PASSWORD_PAGE_HELP">Please enter the password and/or keyfile(s) for the non-system VeraCrypt volume that you want to decrypt.</string>
     <string lang="nl" key="PASSWORD_HELP">Het is erg belangrijk dat u een goed wachtwoord kiest. U dient een wachtwoord te vermijden dat bestaat uit een of meerdere woorden die kunnen worden teruggevonden in een woordenboek. Ook moeten eigennamen en geboortedata vermeden worden, evenmin mag het makkelijk te raden zijn. We raden u dringend een willekeurige combinatie van hoofd- en kleine letters, nummers en speciale karakters (zoals @ ^ = $ * +) aan. Het is heel belangrijk dat het meer dan 20 karakters telt (hoe langer hoe beter). The maximaal mogelijke lengte is 64 karakters.</string>
     <string lang="nl" key="PASSWORD_HIDDENVOL_HELP">Kies een wachtwoord voor het Verborgen Volume. </string>
     <string lang="nl" key="PASSWORD_HIDDEN_OS_HELP">Kies een wachtwoord voor het verborgen operating systeem (d.w.z. verborgen volume).</string>
@@ -588,17 +636,34 @@
     <string lang="nl" key="PASSWORD_WRONG_AUTOMOUNT">Verkeerd wachtwoord of geen VeraCrypt volume gevonden.</string>
     <string lang="nl" key="PASSWORD_OR_KEYFILE_WRONG_AUTOMOUNT">Incorrect Sleutelbestand(en)/wachtwoord of geen VeraCrypt volume gevonden.</string>
     <string lang="nl" key="PASSWORD_WRONG_CAPSLOCK_ON">\n\nWaarschuwing: Caps Lock staat aan. Dit kan er de oorzaak van zijn dat u het wachtwoord verkeerd ingeeft.</string>
+    <string lang="en" key="PIM_CHANGE_WARNING">Remember Number to Mount Volume</string>
+    <string lang="en" key="PIM_HIDVOL_HOST_TITLE">Outer Volume PIM</string>
+    <string lang="en" key="PIM_HIDVOL_TITLE">Hidden Volume PIM</string>
+    <string lang="en" key="PIM_HIDDEN_OS_TITLE">PIM for Hidden Operating System</string>
+    <string lang="en" key="PIM_HELP">PIM (Personal Iterations Multiplier) is a value that controls the number of iterations used by the header key derivation as follows:\n      Iterations = 15000 + (PIM x 1000).\n\nWhen left empty or set to 0, VeraCrypt will use a default value (485) that ensures a high security.\n\nWhen the password is less than 20 characters, PIM can't be smaller than 485 in order to maintain a minimal security level.\nWhen the password is 20 characters or more, PIM can be set to any value.\n\nA PIM value larger than 485 will lead to slower mount. A small PIM value (less than 485) will lead to a quicker mount but it can reduce security if the password is not strong enough.</string>
+    <string lang="en" key="PIM_SYSENC_HELP">PIM (Personal Iterations Multiplier) is a value that controls the number of iterations used by the header key derivation as follows:\n      Iterations = PIM x 2048.\n\nWhen left empty or set to 0, VeraCrypt will use a default value that ensures a high security.\n\nWhen the password is less than 20 characters, PIM can't be smaller than 98 in order to maintain a minimal security level.\nWhen the password is 20 characters or more, PIM can be set to any value.\n\nA PIM value larger than 98 will lead to slower boot. A small PIM value (less than 98) will lead to a quicker boot but it can reduce security if the password is not strong enough.</string>
+    <string lang="en" key="PIM_SYSENC_CHANGE_WARNING">Remember Number to Boot System</string>
+    <string lang="en" key="PIM_LARGE_WARNING">You have chosen a PIM value that is larger than VeraCrypt default value.\nPlease note that this will lead to much slower mount/boot.</string>
+    <string lang="en" key="PIM_SMALL_WARNING">You have chosen a Personal Iterations Multiplier (PIM) that is smaller than the default VeraCrypt value. Please note that if your password is not strong enough, this could lead to a weaker security.\n\nDo you confirm that you are using a strong password?</string>
+    <string lang="en" key="PIM_SYSENC_TOO_BIG">Personal Iterations Multiplier (PIM) maximum value for system encryption is 65535.</string>
+    <string lang="en" key="PIM_TITLE">Volume PIM</string>
     <string lang="en" key="HIDDEN_FILES_PRESENT_IN_KEYFILE_PATH">\n\nWARNING: Hidden file(s) have been found in a keyfile search path. Such hidden files cannot be used as keyfiles. If you need to use them as keyfiles, remove their 'Hidden' attribute (right-click each of them, select 'Properties', uncheck 'Hidden' and click OK). Note: Hidden files are visible only if the corresponding option is enabled (Computer &gt; Organize &gt; 'Folder and search options' &gt; View).</string>
     <string lang="nl" key="HIDDEN_VOL_PROT_PASSWORD_US_KEYB_LAYOUT">Indien u de bescherming instelt voor een verborgen volume met daarin een verborgen system, gebruik dan de standaard US toetsenbord layout bij het typen van het wachtwoord voor het verborgen volume. Dit is noodzakelijk omdat het wachtwoord in de pre boot omgeving (voordat Windows start) moet worden ingegeven waar niet-US toetsenbord layouts NIET beschikbaar zijn.</string>
     <string lang="nl" key="FOUND_NO_PARTITION_W_DEFERRED_INPLACE_ENC">VeraCrypt vond geen volume waarop niet-systeem codering werd onderbroken en waarop het verstrekte wachtwoord en/of sleutelbestanden(en) van toepassing zijn.\n\nControleer of het ingegeven wachtwoord en/of sleutelbestand(en) juist zijn en of de partitie/volume niet gebruikt wordt door het systeem of programma’s (bijv. een antivirus programma).</string>
+    <string lang="en" key="SELECTED_PARTITION_ALREADY_INPLACE_ENC">The selected partition/device is already fully encrypted.\nHeader Flags = 0x%.8X</string>
+    <string lang="en" key="SELECTED_PARTITION_NOT_INPLACE_ENC">The selected partition/device is not using in-place encryption.\nHeader Flags = 0x%.8X</string>
     <string lang="nl" key="SYSENC_MOUNT_WITHOUT_PBA_NOTE">\n\nNoot: Als u probeert een partitie te koppelen die is gelegen op een systeem schijf zonder pre-boot authenticatie of probeert de gecodeerde system partitie te koppelen van een operating systeem dat niet draait, dan doet u dit door te selecteren 'Systeem' &gt; 'Koppel Zonder Pre-Boot Authenticatie'.</string>
     <string lang="nl" key="MOUNT_WITHOUT_PBA_VOL_ON_ACTIVE_SYSENC_DRIVE">In deze modus kunt u geen partitie koppelen die aanwezig is op een schijf die momenteel actief gecodeerd wordt.\n\nVoordat u deze partitie kunt koppelen in deze modus, dient u op te starten met een operating systeem vanaf een andere schijf (gecodeerd of ongecodeerd) òf op te starten met een ongecodeerd operating systeem.</string>
+    <string lang="en" key="CANT_DECRYPT_PARTITION_ON_ENTIRELY_ENCRYPTED_SYS_DRIVE">VeraCrypt cannot decrypt an individual partition on an entirely encrypted system drive (you can decrypt only the entire system drive).</string>
+    <string lang="en" key="CANT_DECRYPT_PARTITION_ON_ENTIRELY_ENCRYPTED_SYS_DRIVE_UNSURE">Warning: As the drive contains the VeraCrypt Boot Loader, it may be an entirely encrypted system drive. If it is, please note that VeraCrypt cannot decrypt an individual partition on an entirely encrypted system drive (you can decrypt only the entire system drive). If that is the case, you will be able to continue now but you will receive the 'Incorrect password' error message later.</string>
     <string lang="nl" key="PREV">&lt; &amp;Terug</string>
     <string lang="nl" key="RAWDEVICES">Niet in staat om een lijst te maken van de ongebruikte stukken harddisk (raw devices) op uw systeem!</string>
     <string lang="nl" key="READONLYPROMPT">Het volume '%hs' bestaat, en is geregistreerd voor alleen-lezen. Bent u er zeker van dat u het wilt vervangen?</string>
     <string lang="nl" key="SELECT_DEST_DIR">Selecteer bestemmingsdirectory</string>
     <string lang="nl" key="SELECT_KEYFILE">Selecteer Sleutelbestand</string>
     <string lang="nl" key="SELECT_KEYFILE_PATH">Selecteer een sleutelbestand zoekpad. WAARSCHUWING: Alleen het pad wordt onthouden, niet de bestandsnamen!</string>
+    <string lang="en" key="SELECT_KEYFILE_GENERATION_DIRECTORY">Select a directory where to store the keyfiles.</string>
+    <string lang="en" key="SELECTED_KEYFILE_IS_CONTAINER_FILE">The current container file was selected as a keyfile. It will be skipped.</string>
     <string lang="nl" key="SERPENT_HELP">Ontworpen door Ross Anderson, Eli Biham, en Lars Knudsen. Gepubliceerd in 1998. 256-bit sleutel, 128-bit blok. Operatiemodus is XTS. Serpent was een van de AES finalisten.</string>
     <string lang="en" key="SIZE_HELP">Please specify the size of the container you want to create.\n\nIf you create a dynamic (sparse-file) container, this parameter will specify its maximum possible size.\n\nNote that the minimum possible size of a FAT volume is 292 KB. The minimum possible size of an NTFS volume is 3792 KB.</string>
     <string lang="en" key="SIZE_HELP_HIDDEN_HOST_VOL">Please specify the size of the outer volume to be created (you will first create the outer volume and then a hidden volume within it). The minimum possible size of a volume within which a hidden volume is intended to be created is 340 KB.</string>
@@ -691,11 +756,18 @@
     <string lang="nl" key="FOR_MORE_INFO_ON_PARTITIONS">Voor informatie over het maken en beheren van een partitie kunt u zich wenden tot de documentatie bij uw operating systeem of neem contact op met de technische helpdesk van uw computerverkoper.</string>
     <string lang="nl" key="SYSTEM_PARTITION_NOT_ACTIVE">Fout: Het nu actieve operating systeem staat niet op de boot partitie (eerste Actieve partitie). Dit wordt niet ondersteund.</string>
     <string lang="en" key="CONFIRM_FAT_FOR_FILES_OVER_4GB">You indicated that you intend to store files larger than 4 GB in this VeraCrypt volume. However, you chose the FAT file system, on which files larger than 4 GB cannot be stored.\n\nAre you sure you want to format the volume as FAT?</string>
+    <string lang="en" key="NONSYS_INPLACE_DECRYPTION_BAD_VOL_FORMAT">Error: VeraCrypt does not support in-place decryption of legacy non-system volumes created by VeraCrypt 1.0b or earlier.\n\nNote: You can still decrypt files stored on the volume by copying/moving them to any unencrypted volume.</string>
+    <string lang="en" key="NONSYS_INPLACE_DECRYPTION_CANT_DECRYPT_HID_VOL">Error: VeraCrypt cannot in-place decrypt a hidden VeraCrypt volume.\n\nNote: You can still decrypt files stored on the volume by copying/moving them to any unencrypted volume.</string>
+    <string lang="en" key="CONFIRM_VOL_CONTAINS_NO_HIDDEN_VOL">Warning: Note that VeraCrypt cannot in-place decrypt a volume that contains a hidden VeraCrypt volume (the hidden volume would be overwritten with pseudorandom data).\n\nPlease confirm that the volume you are about to decrypt contains no hidden volume.\n\nNote: If the volume contains a hidden volume but you do not mind losing the hidden volume, you can select Proceed (the outer volume will be safely decrypted).</string>
+    <string lang="en" key="VOL_CONTAINS_NO_HIDDEN_VOL">The volume does not contain any hidden volume. Proceed.</string>
+    <string lang="en" key="VOL_CONTAINS_A_HIDDEN_VOL">The volume contains a hidden volume. Cancel.</string>
     <string lang="nl" key="CANT_ACCESS_VOL">Fout: Toegang tot volume niet mogelijk!\n\nControleer of het geselecteerde volume bestaat, dat het niet is gekoppeld of wordt gebruikt door het systeem of een ander programma, dat er lees en schrijfbevoegdheid aanwezig is voor het volume, en dat het niet beschermd is tegen schrijven.</string>
+    <string lang="en" key="CANT_GET_VOL_INFO">Error: Cannot obtain volume properties.</string>
     <string lang="nl" key="INPLACE_ENC_CANT_ACCESS_OR_GET_INFO_ON_VOL">Fout: Het is onmogelijk toegang tot het volume te krijgen of er informatie over te verkrijgen.\n\nOvertuig u ervan dat dit volume bestaat, dat het niet wordt gebruikt door het systeem of programma’s, dat u lees/schrijf toegang ertoe hebt en dat het niet schrijf beveiligd is.</string>
     <string lang="nl" key="INPLACE_ENC_CANT_ACCESS_OR_GET_INFO_ON_VOL_ALT">Fout: Het is onmogelijk toegang tot het volume te krijgen of er informatie over te verkrijgen.\n\nOvertuig u ervan dat dit volume bestaat, dat het niet wordt gebruikt door het systeem of programma’s, dat u lees/schrijf toegang ertoe hebt en dat het niet schrijf beveiligd is.\n\nIndien dit probleem blijft bestaan, volg evt. de volgende stappen.</string>
     <string lang="nl" key="INPLACE_ENC_GENERIC_ERR_ALT_STEPS">Een fout verhinderde VeraCrypt de partitie te coderen. Los evt. eerder gerapporteerde fouten op en probeer het dan opnieuw. Als het probleem blijft bestaan probeer dan de volgende stappen.</string>
     <string lang="nl" key="INPLACE_ENC_GENERIC_ERR_RESUME">Een fout verhinderde VeraCrypt het codering proces van de partitie te hervatten.\n\nLos evt. eerder gerapporteerde fouten op en probeer het proces dan te hervatten. Noot: het volume kan niet gekoppeld worden tenzij het volledig gecodeerd is.</string>
+    <string lang="en" key="INPLACE_DEC_GENERIC_ERR">An error prevented VeraCrypt from decrypting the volume. Please try fixing any previously reported problems and then try again if possible.</string>
     <string lang="nl" key="CANT_DISMOUNT_OUTER_VOL">Fout: Het Buiten Volume kan niet ontkoppeld worden!\n\nEen volume kan niet ontkoppeld worden als het bestanden of mappen bevat die worden gebruikt door een programma of het systeem.\n\nSluit u alstublieft ieder programma dat bestanden of mappen zou kunnen gebruiken op het volume en klik op Opnieuw.</string>
     <string lang="nl" key="CANT_GET_OUTER_VOL_INFO">Fout: Kan geen informatie verkrijgen over het Buiten Volume! Volume aanmaak kan niet doorgaan.</string>
     <string lang="nl" key="CANT_ACCESS_OUTER_VOL">Fout: Het Buiten Volume kan niet bereikt worden! Volume aanmaak kan geen doorgang vinden.</string>
@@ -750,6 +822,7 @@
     <string lang="nl" key="REMOVABLE_DISK">Verwisselbare Schijf</string>
     <string lang="nl" key="HARDDISK">Harde schijf</string>
     <string lang="nl" key="UNCHANGED">Onveranderd</string>
+    <string lang="en" key="AUTODETECTION">Autodetection</string>
     <string lang="nl" key="SETUP_MODE_TITLE">Wizard Modus</string>
     <string lang="nl" key="SETUP_MODE_INFO">Selecteer een van de modi. Als u niet zeker bent welke te kiezen, neem de standaard modus.</string>
     <string lang="en" key="SETUP_MODE_HELP_INSTALL">Select this option if you want to install VeraCrypt on this system.</string>
@@ -779,7 +852,7 @@
     <string lang="nl" key="TC_INSTALLER_IS_RUNNING">De VeraCrypt Installer verzorgt op dit systeem op dit moment een installatie of update van VeraCrypt. Alvorens verder te gaan, wacht totdat deze is beëindigd of afgesloten. Indien afsluiten niet lukt, herstart dan de computer alvorens verder te gaan.</string>
     <string lang="nl" key="INSTALL_FAILED">Installatie mislukt.</string>
     <string lang="nl" key="UNINSTALL_FAILED">Deïnstallatie mislukt.</string>
-    <string lang="nl" key="DIST_PACKAGE_CORRUPTED">Dit installatiebestand is beschadigd. Wilt u het a.u.b. opnieuw downloaden (bij voorkeur van de officiële VeraCrypt website op www.veracrypt.org).</string>
+    <string lang="nl" key="DIST_PACKAGE_CORRUPTED">Dit installatiebestand is beschadigd. Wilt u het a.u.b. opnieuw downloaden (bij voorkeur van de officiële VeraCrypt website op https://veracrypt.codeplex.com).</string>
     <string lang="nl" key="CANNOT_WRITE_FILE_X">Kan niet schrijven bestand %hs</string>
     <string lang="nl" key="EXTRACTING_VERB">Uitpakken</string>
     <string lang="nl" key="CANNOT_READ_FROM_PACKAGE">Kan geen data lezen in het installatiebestand.</string>
@@ -863,6 +936,11 @@
     <string lang="nl" key="ENTER_HIDDEN_VOL_PASSWORD">Geef wachtwoord voor het verborgen volume</string>
     <string lang="nl" key="ENTER_HEADER_BACKUP_PASSWORD">Geef wachtwoord voor header opgeslagen in de back-up</string>
     <string lang="nl" key="KEYFILE_CREATED">Sleutelbestand is aangemaakt.</string>
+    <string lang="en" key="KEYFILE_INCORRECT_NUMBER">The number of keyfiles you supplied is invalid.</string>
+    <string lang="en" key="KEYFILE_INCORRECT_SIZE">The keyfile size must be comprized between 64 and 1048576 bytes.</string>
+    <string lang="en" key="KEYFILE_EMPTY_BASE_NAME">Please enter a name for the keyfile(s) to be generated</string>
+    <string lang="en" key="KEYFILE_INVALID_BASE_NAME">The base name of the keyfile(s) is invalid</string>
+    <string lang="en" key="KEYFILE_ALREADY_EXISTS">The keyfile '%s' already exists.\nDo you want to overwrite it? The generation process will be stopped if you answer No.</string>
     <string lang="nl" key="HEADER_DAMAGED_AUTO_USED_HEADER_BAK">WAARSCHUWING: De header van dit volume is beschadigd! VeraCrypt heeft automatisch de back-up ervan gebruikt die was opgeslagen in het volume.\n\nU  dient de volume header te repareren d.m.v. het tool ‘Herstel Volume Header’.</string>
     <string lang="nl" key="VOL_HEADER_BACKED_UP">Volume Header backup is met succes aangemaakt.\n\nBelangrijk: Het herstellen van de Volume Header door deze backup te gebruiken zal ook het huidige wachtwoord herstellen. Verder, als nu sleutelbestanden nodig zijn om het volume te koppelen, zullen dezelfde sleutelbestanden weer nodig zijn om te koppelen als de Volume Header is hersteld via het terugzetten van deze backup.\n\nWAARSCHUWING: Deze Volume Header backup kan uitsluitend worden gebruikt om de header van DIT volume te herstellen. Indien u deze header backup gebruikt om een ander Volume te herstellen, zult u daarna het volume kunnen koppelen, maar zult u niet in staat zijn enige data die op dit volume zijn opgeslagen te lezen (omdat u de master key dan heeft veranderd).</string>
     <string lang="nl" key="VOL_HEADER_RESTORED">De Volume Header is succesvol hersteld.\n\nBELANGRIJK: Neemt u er nota van dat een oud wachtwoord ook hersteld kan zijn. Verder, de sleutelbestanden die nodig waren om het volume te koppelen toen de backup werd gemaakt, zijn nu, na het terugzetten van deze backup, weer nodig om het volume te koppelen.</string>
@@ -911,14 +989,14 @@
     <string lang="nl" key="SIZE_ITEM">Grootte:   </string>
     <string lang="nl" key="PATH_ITEM">Pad:   </string>
     <string lang="nl" key="DRIVE_LETTER_ITEM">Stationsletter:   </string>
-    <string lang="nl" key="UNSUPPORTED_CHARS_IN_PWD">Fout: Een wachtwoord mag alleen zgn. ASCII karakters bevatten.\n\nNiet-ASCII karakters in een wachtwoord kunnen tot gevolg hebben dat het volume niet gekoppeld kan worden als de systeemconfiguratie verandert.\n\nDe volgende karakters zijn toegestaan:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w k y z { | } ~</string>
-    <string lang="nl" key="UNSUPPORTED_CHARS_IN_PWD_RECOM">Waarschuwing: Het wachtwoord bevat niet-ASCII karakters. Dit kan tot gevolg hebben dat het volume niet meer gekoppeld kan worden als de systeemconfiguratie verandert.\n\nU wordt dringened aangeraden alle niet-ASCII karakters in het wachtwoord te vervangen door ASCII karakters. Klik hiertoe op 'Volumes' -&gt; 'Verander Volume Wachtwoord'.\n\nDe volgende tekens zijn ASCII karakters:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w k y z { | } ~</string>
+    <string lang="nl" key="UNSUPPORTED_CHARS_IN_PWD">Fout: Een wachtwoord mag alleen zgn. ASCII karakters bevatten.\n\nNiet-ASCII karakters in een wachtwoord kunnen tot gevolg hebben dat het volume niet gekoppeld kan worden als de systeemconfiguratie verandert.\n\nDe volgende karakters zijn toegestaan:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~</string>
+    <string lang="nl" key="UNSUPPORTED_CHARS_IN_PWD_RECOM">Waarschuwing: Het wachtwoord bevat niet-ASCII karakters. Dit kan tot gevolg hebben dat het volume niet meer gekoppeld kan worden als de systeemconfiguratie verandert.\n\nU wordt dringened aangeraden alle niet-ASCII karakters in het wachtwoord te vervangen door ASCII karakters. Klik hiertoe op 'Volumes' -&gt; 'Verander Volume Wachtwoord'.\n\nDe volgende tekens zijn ASCII karakters:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~</string>
     <string lang="nl" key="EXE_FILE_EXTENSION_CONFIRM">WAARSCHUWING: We raden u sterk aan bestandsextensies te vermijden die gebruikt worden voor uitvoerbare bestanden, zoals .exe, .sys, .dll en andere problematische bestandsextensies. Het gebruik van zulke extensies zorgt ervoor dat Windows en antivirus software zich ongewenst bemoeien met de container, hetgeen de performance van het volume nadelig beïnvloedt en mogelijk andere serieuze problemen veroorzaakt.\n\nWe raden u nogmaals sterk aan deze bestandsextensie te verwijderen of te veranderen (bijv. in '.tc').\n\nBent u er zeker van dat u deze problematische bestandsextensie wilt gebruiken?</string>
     <string lang="nl" key="EXE_FILE_EXTENSION_MOUNT_WARNING">WAARSCHUWING: Deze bestandscontainer heeft een bestandsextensie die wordt gebruikt voor uitvoerbare bestanden (zoals .exe, .sys, of .dll), of een andere extensie die vergelijkbaar problematisch is. Deze extensie zal waarschijnlijk voor ongewenste bemoeienis zorgen van Windows en antivirussoftware met deze container, hetgeen de performance van het volume nadelig zal beïnvloeden en mogelijk ook andere serieuzere problemen zal veroorzaken.\n\nWe raden u sterk aan deze extensie te verwijderen of te veranderen (bijv. in '.tc') na ontkoppeling van het volume.</string>
     <string lang="nl" key="HOMEPAGE">Homepage</string>
     <string lang="nl" key="LARGE_IDE_WARNING_XP">WAARSCHUWING: Het blijkt dat u geen Service Pack heeft geïnstalleerd voor Windows. U kunt beter niet schrijven naar IDE schijven groter dan 128 GB onder Windows XP als u geen Service Pack 1 of later heeft geïnstalleerd! Als u dit toch doet kunnen de data op de schijf (onafhankelijk of dit een VeraCrypt volume is of niet) verminkt raken. Noot: dit is een beperking van Windows en geen bug in VeraCrypt.</string>
     <string lang="nl" key="LARGE_IDE_WARNING_2K">WAARSCHUWING: Het blijkt dat u geen Service Pack 3 of later heeft geïnstalleerd in Windows. U kunt beter niet schrijven naar IDE schijven groter dan 128 GB onder Windows 2000 als u geen Service Pack 3 of later heeft geïnstalleerd! Als u dit toch doet kunnen de data op de schijf (onafhankelijk of dit een VeraCrypt volume is of niet) verminkt raken. Noot: dit is een beperking van Windows en geen bug in VeraCrypt.\n\nNoot: Het zou kunnen dat u naast de installatie van Service Pack 3 ook de 48-bit LBA ondersteuning in het register dient aan te zetten. Voor meer informatie, kijk op http://support.microsoft.com/kb/305098/EN-US</string>
-    <string lang="nl" key="LARGE_IDE_WARNING_2K_REGISTRY">WAARSCHUWING: 48-bit LBA ATAPI ondersteuning is op uw systeem uitgeschakeld. Daarom wordt u afgeraden data te schrijven naar IDE schijven die groter zijn dan 128 GB! Als u dit toch doet, kunnen de data op de schijf (onafhankelijk of dit een VeraCrypt volume is of niet) verminkt raken. Merk op dat dit een beperking is van Windows en niet van Truecrypt.\n\nOm de 48-bit LBA ondersteuning aan te zetten, dient u de 'EnableBigLba' register waarde toe te voegen aan de registersleutel HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\atapi\\Parameters en deze op 1 te zetten.\n\nVoor meer informatie, zie http://support.microsoft.com/kb/305098</string>
+    <string lang="nl" key="LARGE_IDE_WARNING_2K_REGISTRY">WAARSCHUWING: 48-bit LBA ATAPI ondersteuning is op uw systeem uitgeschakeld. Daarom wordt u afgeraden data te schrijven naar IDE schijven die groter zijn dan 128 GB! Als u dit toch doet, kunnen de data op de schijf (onafhankelijk of dit een VeraCrypt volume is of niet) verminkt raken. Merk op dat dit een beperking is van Windows en niet van Veracrypt.\n\nOm de 48-bit LBA ondersteuning aan te zetten, dient u de 'EnableBigLba' register waarde toe te voegen aan de registersleutel HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\atapi\\Parameters en deze op 1 te zetten.\n\nVoor meer informatie, zie http://support.microsoft.com/kb/305098</string>
     <string lang="nl" key="VOLUME_TOO_LARGE_FOR_FAT32">Fout: bestanden groter dan 4 GB kunnen niet opgeslagen worden op een FAT32 systeem. Daarom kunnen VeraCrypt bestandscontainers, die zijn opgeslagen op een FAT32 systeem, niet groter zijn dan 4 GB.\n\nAls u een groter volume nodig heeft, maak het dan aan op een NTFS systeem (of, als u Windows Vista SP1 of later heeft, op een exFAT systeem) of, codeer een gehele partitie of apparaat.</string>
     <string lang="en" key="VOLUME_TOO_LARGE_FOR_WINXP">Warning: Windows XP does not support files larger than 2048 GB (it will report that "Not enough storage is available"). Therefore, you cannot create a file-hosted VeraCrypt volume (container) larger than 2048 GB under Windows XP.\n\nNote that it is still possible to encrypt the entire drive or create a partition-hosted VeraCrypt volume larger than 2048 GB under Windows XP.</string>
     <string lang="nl" key="FREE_SPACE_FOR_WRITING_TO_OUTER_VOLUME">Waarschuwing: Als u in de toekomst meer bestanden wilt toevoegen aan het Buiten Volume, zou u misschien beter een kleinere grootte kunnen kiezen voor het Verborgen Volume.\n\nBent u er zeker van dat u wilt doorgaan met de grootte die u hebt ingegeven?</string>
@@ -961,6 +1039,7 @@
     <string lang="nl" key="CONFIRM_EXIT_UNIVERSAL">Sluiten?</string>
     <string lang="nl" key="CHOOSE_ENCRYPT_OR_DECRYPT">VeraCrypt heeft niet voldoende informatie om te kunnen bepalen of het moet coderen of decoderen.</string>
     <string lang="nl" key="CHOOSE_ENCRYPT_OR_DECRYPT_FINALIZE_DECRYPT_NOTE">VeraCrypt heeft onvoldoende informatie om te bepalen of het moet coderen of decoderen.\n\nNoot: Als u de systeem partitie/schijf in de pre-boot omgeving decodeerde, zou het nodig kunnen zijn het proces af te maken door te klikken op Decodeer.</string>
+    <string lang="en" key="NONSYS_INPLACE_ENC_REVERSE_INFO">Note: When you are encrypting a non-system partition/volume in place and an error persistently prevents you from finishing the process, you will not be able to mount the volume (and access data stored on it) until you entirely DECRYPT the volume (i.e. reverse the process).\n\nIf you need to do so, follow these steps:\n1) Exit this wizard.\n2) In the main VeraCrypt window, select 'Volumes' &gt; 'Resume Interrupted Process'.\n3) Select 'Decrypt'.</string>
     <string lang="nl" key="NONSYS_INPLACE_ENC_DEFER_CONFIRM">Wilt u de codering van de partitie/volume onderbreken en tot een latere tijd uitstellen?\n\nNoot:Onthoud dat het volume niet kan worden gekoppeld totdat het geheel is gecodeerd. U kunt het proces hervatten, dit zal dan starten op de plaats waar u het stopte. U kunt dit zelf doen bijv. door 'Volumes' &gt; 'Hervat Onderbroken Proces' te kiezen uit het menu van het hoofdscherm van VeraCrypt.</string>
     <string lang="nl" key="SYSTEM_ENCRYPTION_DEFER_CONFIRM">Wilt u het coderen van de systeem partitie/schijf onderbreken en uitstellen?\n\nNoot: U zult het proces kunnen hervatten vanaf het punt waar het onderbroken was. U kunt dit bijv. doen door te kiezen voor 'Systeem' &gt; 'Hervat Onderbroken Proces' uit het systeemmenu van het hoofdscherm van VeraCrypt. Indien u het coderen helemaal wilt terugdraaien of beëindigen, selecteer 'Systeem' &gt; 'Permanent Decoderen Systeem Partitie/Schijf'.</string>
     <string lang="nl" key="SYSTEM_DECRYPTION_DEFER_CONFIRM">Wilt u het decoderen van de systeem partitie/schijf onderbreken en uitstellen?\n\nNoot: U zult het proces kunnen hervatten vanaf het punt waar het onderbroken was. U kunt dit bijv. doen door te kiezen voor 'Systeem' &gt; 'Hervat Onderbroken Proces' uit het systeemmenu van het hoofdscherm van VeraCrypt. Indien u het decoderen helemaal wilt terugdraaien (en met coderen starten), selecteer 'Systeem' &gt; 'Codeer Systeem Partitie/Schijf'.</string>
@@ -970,7 +1049,7 @@
     <string lang="nl" key="FAILED_TO_START_WIPING">Fout: Starten van het wissen is mislukt.</string>
     <string lang="nl" key="INCONSISTENCY_RESOLVED">Inconsistentie opgelost.\n\n\n(Indien u een programmafout in relatie hiermee wilt rapporteren, wilt u dan de volgende technische informatie meesturen in het bug rapport: %hs)</string>
     <string lang="nl" key="UNEXPECTED_STATE">Fout: Niet verwachte toestand.\n\n\n(Indien u deze fout rapporteert hiermee, neem dan a.u.b. de volgende technische informatie mee in de fout rapportage: %hs</string>
-    <string lang="nl" key="NOTHING_TO_RESUME">Er is geen proces/taak die hervat moet worden.</string>
+    <string lang="en" key="NO_SYS_ENC_PROCESS_TO_RESUME">There is no interrupted process of encryption/decryption of the system partition/drive to resume.\n\nNote: If you want to resume an interrupted process of encryption/decryption of a non-system partition/volume, select 'Volumes' &gt; 'Resume Interrupted Process'.</string>
     <string lang="nl" key="HIDVOL_PROT_BKG_TASK_WARNING">WAARSCHUWING: De VeraCrypt Achtergrond Taak is uitgeschakeld. Nadat VeraCrypt is beëindigd, zal niet worden gemeld indien schade aan een Verborgen Volume is voorkomen.\n\nNoot: U kunt op ieder moment de VeraCrypt Achtergrond Taak beëindigen door het VeraCrypt Systeem Tray Icoon rechts aan te klikken en te kiezen voor 'Sluiten'.\n\nWilt u dat de VeraCrypt Achtergrond Taak ingeschakeld wordt?</string>
     <string lang="nl" key="LANG_PACK_VERSION">Vertaling versie:  %s</string>
     <string lang="nl" key="CHECKING_FS">Controleren van het bestandssyteem op het VeraCrypt volume dat is gekoppeld als %hs...</string>
@@ -997,6 +1076,7 @@
     <string lang="nl" key="SYS_LOADER_RESTORE_FAILED">Fout in herstellen van de originele systeemlader.\n\nGebruik aub uw VeraCrypt reddingsschijf ('Repair Options' &gt; 'Restore original system loader') of Windows installatie medium om de VeraCrypt Boot Lader te vervangen door de Windows systeem lader.</string>
     <string lang="nl" key="SYS_LOADER_UNAVAILABLE_FOR_RESCUE_DISK">De originele systeem lader zal niet opgeslagen worden op de Reddingsschijf (waarschijnlijke oorzaak: ontbrekende backup).</string>
     <string lang="nl" key="ERROR_MBR_PROTECTED">Kon de MBR sector niet schrijven.\n\nUw BIOS zou ingesteld kunnen zijn om de MBR sector te beschermen. Controleer uw BIOS (druk op F2, Delete, or Esc, tijdens het eerste opstartscherm van uw computer) voor MBR/antivirus protectie instellingen.</string>
+    <string lang="en" key="BOOT_LOADER_FINGERPRINT_CHECK_FAILED">WARNING: The verification of VeraCrypt bootloader fingerprint failed!\nYour disk may have been tampered with by an attacker ("Evil Maid" attack).\n\nThis warning can also be triggered if you restored VeraCrypt boot loader using an Rescue Disk generated using a different VeraCrypt version.\n\nYou are advised to change your password immediately which will also restore the correct VeraCrypt bootloader. It is recommended to reinstall VeraCrypt and to take measures to avoid access to this machine by untrusted entities.</string>
     <string lang="nl" key="BOOT_LOADER_VERSION_INCORRECT_PREFERENCES">De juiste versie van de VeraCrypt Boot Lader is niet geïnstalleerd. Hierdoor kunnen enkele instellingen evt. niet worden opgeslagen.</string>
     <string lang="nl" key="CUSTOM_BOOT_LOADER_MESSAGE_HELP">In sommige situaties zult u willen voorkomen dat iemand die u de computer ziet starten (een vijand) erachter komt dat VeraCrypt aanwezig is op de computer. De bovenstaande optie stelt u in staat het VeraCrypt Boot Lader scherm aan te passen. Als u de eerste optie kiest zal geen enkele tekst worden weergegeven door de boot lader (zelfs niet als u een verkeerd wachtwoord ingeeft). De computer zal “bevroren” lijken terwijl u uw wachtwoord intypt. Als extra kan er een zelfgemaakte boodschap worden weergegeven om de vijand te misleiden. Bijv. “Ontbrekend Operating Systeem” (wat normaal wordt weergegeven door de Windows Boot Lader als deze geen boot partitie vindt.) Het is echter belangrijk dat u zich realiseert dat, als de vijand in staat is de inhoud van de harde schijf te analyseren, hij erachter kan komen dat er een VeraCrypt Boot Lader aanwezig is.</string>
     <string lang="nl" key="CUSTOM_BOOT_LOADER_MESSAGE_PROMPT">WAARSCHUWING: Na selectie van deze optie zal de VeraCrypt Boot Lader geen enkele tekst laten zien (zelfs niet bij ingave van een verkeerd wachtwoord). De computer zal “bevroren” lijken terwijl u uw wachtwoord kunt ingeven (de cursor zal NIET bewegen en geen sterretjes worden zichtbaar bij intypen).\n\nBent u er zeker van dat u deze optie wilt selecteren?</string>
@@ -1018,13 +1098,17 @@
     <string lang="en" key="EXTRA_BOOT_PARTITION_REMOVAL_INSTRUCTIONS">\nThe extra boot partition can be removed before installing Windows. To do so, follow these steps:\n\n1) Boot your Windows installation disc.\n\n2) In the Windows installer screen, click 'Install now' &gt; 'Custom (advanced)'.\n\n3) Click 'Drive Options'.\n\n4) Select the main system partition and delete it by clicking 'Delete' and 'OK'.\n\n5) Select the 'System Reserved' partition, click 'Extend', and increase its size so that the operating system can be installed to it.\n\n6) Click 'Apply' and 'OK'.\n\n7) Install Windows on the 'System Reserved' partition.\n\n\nShould an attacker ask why you removed the extra boot partition, you can answer that you wanted to prevent any possible data leaks to the unencrypted boot partition.\n\nNote: You can print this text by clicking the 'Print' button below. If you save a copy of this text or print it (strongly recommended, unless your printer stores copies of documents it prints on its internal drive), you should destroy any copies of it after removing the extra boot partition (otherwise, if such a copy was found, it might indicate that there is a hidden operating system on this computer).</string>
     <string lang="nl" key="GAP_BETWEEN_SYS_AND_HIDDEN_OS_PARTITION">WAARSCHUWING: Er is niet-toegewezen ruimte aanwezig tussen de systeem partitie en de eerste partitie daar achter. Na aanmaken van het verborgen operating systeem (OS) mag u geen partitie meer maken in deze ruimte, anders zal het verborgen OS systeem niet meer te starten zijn (totdat u deze partitie weer verwijdert).</string>
     <string lang="nl" key="ALGO_NOT_SUPPORTED_FOR_SYS_ENCRYPTION">Dit algoritme wordt momenteel niet ondersteund voor systeem codering.</string>
+    <string lang="en" key="ALGO_NOT_SUPPORTED_FOR_TRUECRYPT_MODE">This algorithm is not supported for TrueCrypt mode.</string>
+    <string lang="en" key="PIM_NOT_SUPPORTED_FOR_TRUECRYPT_MODE">PIM (Personal Iterations Multiplier) not supported for TrueCrypt mode.</string>	  
+    <string lang="en" key="PIM_REQUIRE_LONG_PASSWORD">Password must contain 20 or more characters in order to use the specified PIM.\nShorter passwords can only be used if the PIM is 485 or greater.</string>
+    <string lang="en" key="BOOT_PIM_REQUIRE_LONG_PASSWORD">Pre-boot authentication Password must contain 20 or more characters in order to use the specified PIM.\nShorter passwords can only be used if the PIM is 98 or greater.</string>    
     <string lang="nl" key="KEYFILES_NOT_SUPPORTED_FOR_SYS_ENCRYPTION">Sleutelbestanden zijn niet ondersteund bij systeemcodering.</string>
     <string lang="nl" key="CANNOT_RESTORE_KEYBOARD_LAYOUT">Waarschuwing: VeraCrypt kon de originele toetsenbord lay-out niet terugzetten. Dit zou ertoe kunnen leiden dat u een wachtwoord verkeerd ingeeft.</string>
     <string lang="nl" key="CANT_CHANGE_KEYB_LAYOUT_FOR_SYS_ENCRYPTION">Fout: Kan de toetsenbord indeling voor VeraCrypt niet instellen op de standaard (US) toetsenbord indeling.\n\nMerk op dat het wachtwoord ingetypt moet worden in de pre-boot omgeving (voor Windows start) waar niet-standaard (US) Windows toetsenbord indelingen niet beschikbaar zijn. Daarom moet het wachtwoord altijd worden ingetypt met gebruik van de standaard (US) toetsenbord indeling.</string>
     <string lang="nl" key="ALT_KEY_CHARS_NOT_FOR_SYS_ENCRYPTION">Omdat VeraCrypt tijdelijk de toetsenbord lay-out veranderde naar de standaard (US) toetsenbordindeling, is het niet mogelijk karakters te typen terwijl u de rechter ALT toets ingedrukt houdt. Echter, u kunt de meeste van dit soort karakters creëren door de betreffende toets in te drukken terwijl u de SHIFT toets ingedrukt houdt.</string>
     <string lang="nl" key="KEYB_LAYOUT_CHANGE_PREVENTED">VeraCrypt verhinderde het veranderen van de toetsenbord lay-out.</string>
     <string lang="nl" key="KEYB_LAYOUT_SYS_ENC_EXPLANATION">Noot: Het wachtwoord moet worden ingetypt in de pre-boot omgeving (voordat Windows start) waar niet-standaard (US) Windows toetsenbord indelingen niet beschikbaar zijn. Daarom moet het wachtwoord altijd worden ingetypt met gebruik van de standaard (US) toetsenbord indeling. Echter, het is belangrijk op te merken dat u geen ECHT standaard (US) toetsenbord nodig hebt. VeraCrypt zorgt er automatisch voor dat u het wachtwoord veilig kunt intypen (nu direct en in de pre-boot omgeving) zelfs als u geen echt standaard (US) toetsenbord hebt.</string>
-    <string lang="en" key="RESCUE_DISK_INFO">Before you can encrypt the partition/drive, you must create a VeraCrypt Rescue Disk (TRD), which serves the following purposes:\n\n- If the VeraCrypt Boot Loader, master key, or other critical data gets damaged, the TRD allows you to restore it (note, however, that you will still have to enter the correct password then).\n\n- If Windows gets damaged and cannot start, the TRD allows you to permanently decrypt the partition/drive before Windows starts.\n\n- The TRD will contain a backup of the present content of the first drive track (which typically contains a system loader or boot manager) and will allow you to restore it if necessary.\n\nThe VeraCrypt Rescue Disk ISO image will be created in the location specified below.</string>
+    <string lang="en" key="RESCUE_DISK_INFO">Before you can encrypt the partition/drive, you must create a VeraCrypt Rescue Disk (VRD), which serves the following purposes:\n\n- If the VeraCrypt Boot Loader, master key, or other critical data gets damaged, the VRD allows you to restore it (note, however, that you will still have to enter the correct password then).\n\n- If Windows gets damaged and cannot start, the VRD allows you to permanently decrypt the partition/drive before Windows starts.\n\n- The VRD will contain a backup of the present content of the first drive track (which typically contains a system loader or boot manager) and will allow you to restore it if necessary.\n\nThe VeraCrypt Rescue Disk ISO image will be created in the location specified below.</string>
     <string lang="en" key="RESCUE_DISK_WIN_ISOBURN_PRELAUNCH_NOTE">After you click OK, Microsoft Windows Disc Image Burner will be launched. Please use it to burn the VeraCrypt Rescue Disk ISO image to a CD or DVD.\n\nAfter you do so, return to the VeraCrypt Volume Creation Wizard and follow its instructions.</string>
     <string lang="en" key="RESCUE_DISK_BURN_INFO">The Rescue Disk image has been created and stored in this file:\n%hs\n\nNow you need to burn it to a CD or DVD.\n\n%lsAfter you burn the Rescue Disk, click Next to verify that it has been correctly burned.</string>
     <string lang="en" key="RESCUE_DISK_BURN_INFO_NO_CHECK">The Rescue Disk image has been created and stored in this file:\n%hs\n\nNow you should either burn the image to a CD/DVD or move it to a safe location for later use.\n\n%lsClick Next to continue.</string>
@@ -1102,6 +1186,7 @@
     <string lang="nl" key="SYS_ENCRYPTION_PRETEST_RESULT_INFO">De pre-test is met succes voltooid.\n\nWaarschuwing: Indien de stroomtoevoer onderbroken wordt of het operating systeem crasht door een fout, tijdens het Op-De-Plaats coderen van data, kunnen er gegevens verloren gaan of verminkt raken. Maak daarom een back-up van de te coderen bestanden. Indien u dit nog niet heeft gedaan, doe dit nu door op 'Pauzeer' te klikken en dan de back-up te maken. Start daarna VeraCrypt  en selecteer 'Systeem' &gt; 'Hervat Onderbroken Proces' om het decoderen te hervatten.\n\nIndien u klaar bent, klik op 'Codeer' om het Coderingsproces te starten.</string>
     <string lang="en" key="SYSENC_ENCRYPTION_PAGE_INFO">You can click Pause or Defer anytime to interrupt the process of encryption or decryption, exit this wizard, restart or shut down your computer, and then resume the process, which will continue from the point it was stopped. To prevent slowdown when the system or applications write or read data from the system drive, VeraCrypt automatically waits until the data is written or read (see Status above) and then automatically continues encrypting or decrypting.</string>
     <string lang="nl" key="NONSYS_INPLACE_ENC_ENCRYPTION_PAGE_INFO">\n\nU kunt op Pauzeer drukken wanneer u het coderingsproces wilt stoppen, deze wizard beëindigen en de computer afsluiten. Na herstart van de computer en van dit proces zal het verdergaan op het punt van onderbreking. Het volume kan niet gekoppeld worden totdat het volledig gecodeerd is.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_DECRYPTION_PAGE_INFO">\n\nYou can click Pause or Defer anytime to interrupt the process of decryption, exit this wizard, restart or shut down the computer, and then resume the process, which will continue from the point where it was stopped. Note that the volume cannot be mounted until it has been fully decrypted.</string>
     <string lang="nl" key="SYSENC_HIDDEN_OS_INITIAL_INFO_TITLE">Hidden System Started</string>
     <string lang="nl" key="SYSENC_HIDDEN_OS_WIPE_INFO_TITLE">Origineel Systeem</string>
     <string lang="nl" key="SYSENC_HIDDEN_OS_WIPE_INFO">Windows maakt (zonder uw medeweten) log-bestanden en tijdelijke bestanden aan op de syteempartitie. Ook de inhoud van RAM wordt opgeslagen in de slaap- en wisselbestanden op de systeem partitie. Indien een afperser bestanden op de partitie waar het originele operating systeem (OS) staat zou analyseren (waarvan het verborgen systeem een kloon is), zou hij bijv. kunnen achterhalen dat u de VeraCrypt wizard gebruikte om een verborgen OS aan te maken (hetgeen een sterke aanwijzing is voor het bestaan van een verborgen OS op uw computer).\n\nOm dit te voorkomen zal in de volgende stappen de gehele inhoud van de partitie waar het originele OS staat veilig worden gewist. Daarna, t.b.v. de aannemelijke ontkenbaarheid, moet u een nieuw OS installeren op deze partitie en dit coderen. Daarmee maakt u een lokvogel OS waarna het proces van aanmaak van een verborgen OS afgerond zal zijn.</string>
@@ -1141,7 +1226,7 @@
     <string lang="nl" key="HIDDEN_OS_CREATION_PREINFO_HELP">In de volgende stappen zal VeraCrypt het verborgen operating systeem aanmaken door de inhoud van de system partitie naar het verborgen volume te kopiëren (de te kopiëren data worden on-the-fly gecodeerd met een andere codering sleutel dan die van het lokvogel operating systeem)\n\nMerk op dat dit proces wordt uitgevoerd in de pre-boot omgeving (dus voordat Windows start) en dat voltooiing lang kan duren: meerder uren of zelfs dagen (afhankelijk van de grootte van de systeem partitie en van de performance van uw computer).\n\nU kunt het proces onderbreken, de computer afsluiten, en weer hervatten na aanzetten van de  computer. Echter, na onderbreking zal het proces van het kopiëren en coderen van de systeem partitie altijd weer van voren af aan beginnen omdat de inhoud van deze partitie tijdens het klonen niet gewijzigd mag worden.</string>
     <string lang="nl" key="CONFIRM_CANCEL_HIDDEN_OS_CREATION">Wilt u het gehele proces tot aanmaak van een verborgen operating systeem stoppen?\n\nNoot: U zult het proces NIET kunnen hervatten als u nu stopt.</string>
     <string lang="nl" key="CONFIRM_CANCEL_SYS_ENC_PRETEST">Wilt u de systeem codering pre-test annuleren?</string>
-    <string lang="en" key="BOOT_PRETEST_FAILED_RETRY">The VeraCrypt system encryption pretest failed. Do you want to try again?\n\nIf you select 'No', the pre-boot authentication component will be uninstalled.\n\nNotes:\n\n- If the VeraCrypt Boot Loader did not ask you to enter the password before Windows started, it is possible that your operating system does not boot from the drive on which it is installed. This is not supported.\n\n- If you used an encryption algorithm other than AES and the pretest failed (and you entered the password), it may have been caused by an inappropriately designed driver. Select 'No', and try encrypting the system partition/drive again, but use the AES encryption algorithm (which has the lowest memory requirements).\n\n- For more possible causes and solutions, see: http://www.veracrypt.org/docs/?s=troubleshooting</string>
+    <string lang="en" key="BOOT_PRETEST_FAILED_RETRY">The VeraCrypt system encryption pretest failed. Do you want to try again?\n\nIf you select 'No', the pre-boot authentication component will be uninstalled.\n\nNotes:\n\n- If the VeraCrypt Boot Loader did not ask you to enter the password before Windows started, it is possible that your operating system does not boot from the drive on which it is installed. This is not supported.\n\n- If you used an encryption algorithm other than AES and the pretest failed (and you entered the password), it may have been caused by an inappropriately designed driver. Select 'No', and try encrypting the system partition/drive again, but use the AES encryption algorithm (which has the lowest memory requirements).\n\n- For more possible causes and solutions, see: https://veracrypt.codeplex.com/wikipage?title=Troubleshooting</string>
     <string lang="nl" key="SYS_DRIVE_NOT_ENCRYPTED">De systeem partitie/schijf blijkt niet gecodeerd te zijn (ook niet gedeeltelijk).</string>
     <string lang="nl" key="SETUP_FAILED_BOOT_DRIVE_ENCRYPTED">Uw systeem partitie/schijf is gecodeerd (volledig of geheel).\n\nDecodeer a.u.b. uw systeem partitie/schijf geheel alvorens verder te gaan. Om dit te doen, selecteer 'Systeem' &gt; 'Permanent Decoderen Systeem Partitie/Schijf' uit het menu van het hoofdscherm van VeraCrypt.</string>
     <string lang="en" key="SETUP_FAILED_BOOT_DRIVE_ENCRYPTED_DOWNGRADE">When the system partition/drive is encrypted (partially or fully), you cannot downgrade VeraCrypt (but you can upgrade it or reinstall the same version).</string>
@@ -1158,6 +1243,8 @@
     <string lang="en" key="CONFIRM_SYSTEM_ENCRYPTION_MODE">You have selected the system partition/drive (or the boot partition), but the wizard mode you selected is suitable only for non-system partitions/drives.\n\nDo you want to set up pre-boot authentication (which means that you will need to enter your password each time before Windows boots/starts) and encrypt the system partition/drive?</string>
     <string lang="nl" key="CONFIRM_DECRYPT_SYS_DEVICE">Bent u er zeker van dat u de systeem partitie/schijf permanent wilt decoderen?</string>
     <string lang="nl" key="CONFIRM_DECRYPT_SYS_DEVICE_CAUTION">VOORZICHTIG: Als u de systeem partitie/schijf permanent decodeert, worden er ongecodeerde data naar geschreven.\n\nBent u er zeker van dat u de systeem partitie/schijf permanent wilt decoderen?</string>
+    <string lang="en" key="CONFIRM_DECRYPT_NON_SYS_DEVICE">Are you sure you want to permanently decrypt the following volume?</string>
+    <string lang="en" key="CONFIRM_DECRYPT_NON_SYS_DEVICE_CAUTION">CAUTION: If you permanently decrypt the VeraCrypt volume, unencrypted data will be written to the disk.\n\nAre you really sure you want to permanently decrypt the selected volume?</string>
     <string lang="nl" key="CONFIRM_CASCADE_FOR_SYS_ENCRYPTION">Waarschuwing: als u codes in cascade gebruikt voor system codering, kunt u de volgende problemen tegenkomen:\n\n)1 De VeraCrypt Boot Lader is dan groter dan normaal waardoor er niet genoeg ruimte zou kunnen zijn op de eerste track van de schijf voor een backup van deze Boot Lader. Als de Boot Lader beschadigd raakt, hetgeen nogal eens gebeurt (bijv. door slecht ontworpen anti-piraterij activatieprocedures van bepaalde programma’s), heeft u de VeraCrypt Reddingsschijf nodig om op te starten of om de Boot Lader te repareren.\n\n2) Op sommige computers neemt het herstarten uit de slaapstand meer tijd in beslag.\n\nDeze mogelijke problemen kunt u vermijden door een niet-cascade coderingsalgoritme (bijv. AES) te kiezen.\n\nBent u er zeker van dat u codes in cascade wilt gebruiken?</string>
     <string lang="nl" key="NOTE_CASCADE_FOR_SYS_ENCRYPTION">Als u enige van de hiervoor beschreven problemen tegenkomt, decodeer de partitie/schijf (als het is gecodeerd) en codeer het daarna opnieuw met gebruik van een niet-cascade-code (bijv. AES).</string>
     <string lang="en" key="UPDATE_TC_IN_DECOY_OS_FIRST">WARNING: For safety and security reasons, you should update VeraCrypt on the decoy operating system before you update it on the hidden operating system.\n\nTo do so, boot the decoy system and run the VeraCrypt installer from within it. Then boot the hidden system and run the installer from within it as well.\n\nNote: The decoy system and the hidden system share a single boot loader. If you upgraded VeraCrypt only on the hidden system (but not on the decoy system), the decoy system would contain a VeraCrypt driver and VeraCrypt applications whose version numbers are different from the version number of the VeraCrypt Boot Loader. Such a discrepancy might indicate that there is a hidden operating system on this computer.\n\n\nDo you want to continue?</string>
@@ -1173,6 +1260,7 @@
     <string lang="nl" key="ENABLE_BAD_SECTOR_ZEROING">Fout: De inhoud van een of meerdere sectoren van de schijf kon niet gelezen worden, waarschijnlijk ten gevolge van een fysieke fout.\n\nDe Op-De-Plaats codering kan alleen maar voortgang vinden als deze sectoren weer leesbaar gemaakt zijn. VeraCrypt kan proberen deze sectoren weer leesbaar te maken door er nullen in te schrijven, waarna al deze nullen gecodeerd zullen worden. Merk echter op dat ten gevolge van deze oplossing alle (onleesbare) data die in deze sectoren liggen opgeslagen verloren zullen zijn. Indien u dit wilt vermijden kunt u proberen stukken van de betreffende data te herstellen met toepasselijke software van derden.\n\nNoot: Indien de sectoren fysiek beschadigd zijn (dus tegengesteld aan data corruptie en checksum fouten) zullen de meeste typen opslag media deze sectoren intern doorverwijzen naar andere goed functionerende sectoren wanneer geprobeerd wordt data er naartoe te schrijven. In dit geval kunnen de bestaande data op de beschadigde sectoren ongecodeerd op de schijf achterblijven).\n\nWilt u dat VeraCrypt nullen schrijft naar de onleesbare sectoren?</string>
     <string lang="nl" key="DISCARD_UNREADABLE_ENCRYPTED_SECTORS">Fout: De inhoud van een of meer sectoren op de schijf kan niet worden gelezen (waarschijnlijk ten gevolgen van een fysieke fout).\n\nTeneinde door te kunnen gaan met de codering dient VeraCrypt de inhoud van de onleesbare sectoren te wissen (deze worden dan gevuld met pseudo-random data). Merk op dat u, alvorens verder te gaan, de inhoud van deze sectoren kunt proberen te herstellen middels software van derden.\n\nWilt u dat VeraCrypt de data in de onleesbare sectoren nu wist?</string>
     <string lang="nl" key="ZEROED_BAD_SECTOR_COUNT">Noot: VeraCrypt heeft de inhoud van %I64d onleesbare sectoren (%s) vervangen door gecodeerde nullen in platte tekst blokken.</string>
+    <string lang="en" key="SKIPPED_BAD_SECTOR_COUNT">Note: VeraCrypt has replaced the content of %I64d unreadable sectors (%s) with pseudorandom data.</string>
     <string lang="nl" key="ENTER_TOKEN_PASSWORD">Geef wachtwoord/PIN voor token '%s':</string>
     <string lang="nl" key="PKCS11_LIB_LOCATION_HELP">Voordat VeraCrypt toegang kan krijgen tot een security token of smartcard, moet u eerst een PKCS #11 software library voor het token of smartcard installeren. Deze library kan meegeleverd zijn met het apparaat of kan op de website van de verkoper of van derden te vinden zijn.\n\nNa installatie van de library kunt u deze selecteren door te klikken op 'Selecteer Library' of u kunt VeraCrypt de bibliotheek automatisch laten vinden en selecteren door te klikken op 'Auto-Detect Library' (er wordt dan alleen in de Windows systeem mappen gezocht).</string>
     <string lang="nl" key="SELECT_PKCS11_MODULE_HELP">Noot: Raadpleeg voor de bestandsnaam en plaats van de PKCS #11 library van uw security token of smartcard de documentaie van het token, smartcard of software van derden.\n\nKlik op 'OK' om het pad en bestandsnaam te selecteren.</string>
@@ -1217,6 +1305,7 @@
     <string lang="en" key="CONFIRM_SETTING_DEGRADES_PERFORMANCE">WARNING: This setting may degrade performance.\n\nAre you sure you want to use this setting?</string>
     <string lang="en" key="HOST_DEVICE_REMOVAL_DISMOUNT_WARN_TITLE">Warning: VeraCrypt volume auto-dismounted</string>
     <string lang="en" key="HOST_DEVICE_REMOVAL_DISMOUNT_WARN">Before you physically remove or turn off a device containing a mounted volume, you should always dismount the volume in VeraCrypt first.\n\nUnexpected spontaneous dismount is usually caused by an intermittently failing cable, drive (enclosure), etc.</string>
+    <string lang="en" key="UNSUPPORTED_TRUECRYPT_FORMAT">This volume was created with TrueCrypt %x.%x but VeraCrypt supports only TrueCrypt volumes created with TrueCrypt 6.x/7.x series</string>
     <string lang="nl" key="TEST">Test</string>
     <string lang="nl" key="KEYFILE">Sleutel</string>
     <string lang="nl" key="VKEY_08">Backspace</string>

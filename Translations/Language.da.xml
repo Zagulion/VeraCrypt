@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VeraCrypt>
-  <localization prog-version="1.0e">
+  <localization prog-version="1.15">
     <!-- Languages -->
     <language langid="da" name="Dansk" en-name="Danish" version="0.1.0" translators="Lasse Bond" />
     <!-- Fonts -->
@@ -37,6 +37,7 @@
     <control lang="da" key="IDC_DOWNLOAD_CD_BURN_SOFTWARE">Download CD/DVD brænde software</control>
     <control lang="en" key="IDC_FILE_CONTAINER">Create an encrypted file container</control>
     <control lang="en" key="IDC_GB">&amp;GB</control>
+    <control lang="en" key="IDC_TB">&amp;TB</control>
     <control lang="da" key="IDC_HIDDEN_SYSENC_INFO_LINK">Mere information</control>
     <control lang="da" key="IDC_HIDDEN_VOL">Sk&amp;jult VeraCrypt bind </control>
     <control lang="da" key="IDC_HIDDEN_VOL_HELP">Mere information om skjulte bind</control>
@@ -44,9 +45,11 @@
     <control lang="da" key="IDC_HIDVOL_WIZ_MODE_FULL">Normal tilstand</control>
     <control lang="da" key="IDC_KB">&amp;KB</control>
     <control lang="da" key="IDC_KEYFILES_ENABLE">Brug nøglef&amp;iler</control>
+    <control lang="en" key="IDC_KEYFILES_RANDOM_SIZE">Random size ( 64 &lt;-&gt; 1048576 )</control>
     <control lang="da" key="IDC_KEY_FILES">Nøglefiler..</control>
     <control lang="da" key="IDC_LINK_HASH_INFO">Information om hakke algoritmer</control>
     <control lang="da" key="IDC_LINK_MORE_INFO_ABOUT_CIPHER">Mere information</control>
+    <control lang="en" key="IDC_LINK_PIM_INFO">Information on PIM</control>
     <control lang="da" key="IDC_MB">&amp;MB</control>
     <control lang="da" key="IDC_MORE_INFO_ON_CONTAINERS">Mere information</control>
     <control lang="da" key="IDC_MORE_INFO_ON_SYS_ENCRYPTION">Mere information om system kryptering</control>
@@ -56,9 +59,11 @@
     <control lang="da" key="IDC_NO_HISTORY">Gem aldrig hi&amp;storik</control>
     <control lang="da" key="IDC_OPEN_OUTER_VOLUME">Åben Ydre Bind</control>
     <control lang="da" key="IDC_PAUSE">&amp;Pause</control>
+    <control lang="en" key="IDC_PIM_ENABLE">Use PIM</control>
     <control lang="da" key="IDC_QUICKFORMAT">Ekspres Formatering</control>
     <control lang="da" key="IDC_SHOW_PASSWORD">&amp;Vis kodeord</control>
     <control lang="en" key="IDC_SHOW_PASSWORD_SINGLE">&amp;Display password</control>
+    <control lang="en" key="IDC_SHOW_PIM">&amp;Display PIM</control>
     <control lang="da" key="IDC_SINGLE_BOOT">Single-boot</control>
     <control lang="da" key="IDC_STD_VOL">Standard VeraCrypt bind</control>
     <control lang="da" key="IDC_SYSENC_HIDDEN">Skj&amp;ult</control>
@@ -71,6 +76,7 @@
     <control lang="da" key="IDT_COLLECTING_RANDOM_DATA_NOTE">VIGTIGT: Bevæg musen så tilfældigt som muligt indenfor dette vindue. Jo længere tid du bevæger den, jo bedre. Dette forhøjer den kryptografiske styrke af krypteringsnøglerne betydeligt. Klik på Næste for at fortsætte.</control>
     <control lang="da" key="IDT_CONFIRM">Godkend:</control>
     <control lang="da" key="IDT_DONE">Fuldført </control>
+    <control lang="en" key="IDT_DRIVE_LETTER">Drive letter:</control>
     <control lang="da" key="IDT_ENCRYPTION_ALGO">Krypterings Algoritme</control>
     <control lang="da" key="IDT_FILESYSTEM">Filsystem </control>
     <control lang="da" key="IDT_FILE_CONTAINER">Opretter en virtuel krypteret disk inden i en fil. Anbefales til uerfarne brugere.</control>
@@ -84,6 +90,8 @@
     <control lang="da" key="IDT_PARTIAL_POOL_CONTENTS">Nuværende pool indhold (partiel)</control>
     <control lang="en" key="IDT_PASS">Pass</control>
     <control lang="da" key="IDT_PASSWORD">Kodeord:</control>
+    <control lang="en" key="IDT_PIM">Volume PIM:</control>
+    <control lang="en" key="IDT_OLD_PIM">Volume PIM:</control>
     <control lang="da" key="IDT_PROGRESS">Udførsel:</control>
     <control lang="da" key="IDT_RANDOM_POOL">Tilfældig Pool: </control>
     <control lang="da" key="IDT_SINGLE_BOOT">Vælg dette hvis der kun er et operativsystem installeret på denne computer (også selv om der er flere brugere).</control>
@@ -92,6 +100,7 @@
     <control lang="da" key="IDT_SYSENC_KEYS_GEN_INFO">Nøgler, salt, og anden data er blevet oprettet med succes. Hvis du ønsker at oprette nye nøgler, klik på Tilbage og så Næste. Ellers klik på Næste for at fortsætte.</control>
     <control lang="da" key="IDT_SYS_DEVICE">Krypterer partitionen/drevet hvor Windows er installeret. Enhver der ønsker at få adgang og bruge systemet, læse og skrive filer, osv., er nødt til at indtaste det korrekte kodeord hver gang inden Windows booter op. Valgfrit, oprettes et skjult system.</control>
     <control lang="en" key="IDT_SYS_PARTITION">Select this option to encrypt the partition where the currently running Windows operating system is installed.</control>
+    <control lang="en" key="IDT_VOLUME_LABEL">Volume Label in Windows:</control>
     <control lang="da" key="IDT_WIPE_MODE">Udviske tilstand:</control>
     <control lang="da" key="IDCLOSE">Luk</control>
     <control lang="en" key="IDC_ALLOW_ESC_PBA_BYPASS">Allow pre-boot &amp;authentication to be bypassed by pressing the Esc key (enables boot manager)</control>
@@ -105,6 +114,7 @@
     <control lang="da" key="IDC_CACHE">Gem kodeord og nøgl&amp;efiler i hukommelsen</control>
     <control lang="da" key="IDC_CLOSE_BKG_TASK_WHEN_NOVOL">Afslut når alle tilsluttede bind afbrydes</control>
     <control lang="en" key="IDC_CLOSE_TOKEN_SESSION_AFTER_MOUNT">&amp;Close token session (log out) after a volume is successfully mounted</control>
+    <control lang="en" key="IDC_COPY_EXPANDER">Include VeraCrypt Volume Expander</control>
     <control lang="da" key="IDC_COPY_WIZARD">Anvend VeraCrypt Bind Oprettelsesguide</control>
     <control lang="da" key="IDC_CREATE">Opret</control>
     <control lang="da" key="IDC_CREATE_VOLUME">&amp;Opret Bind</control>
@@ -141,10 +151,13 @@
     <control lang="da" key="IDC_MOUNT_OPTIONS">Tilslutnings Va&amp;lg...</control>
     <control lang="da" key="IDC_MOUNT_READONLY">Tilslut bind som læs-&amp;kun</control>
     <control lang="da" key="IDC_NEW_KEYFILES">Nøglefiler...</control>
+    <control lang="en" key="IDC_OLD_PIM_HELP">(Empty or 0 for default iterations)</control>
+    <control lang="en" key="IDC_PIM_HELP">(Empty or 0 for default iterations)</control>	
     <control lang="da" key="IDC_PREF_BKG_TASK_ENABLE">Tilsluttet</control>
     <control lang="da" key="IDC_PREF_CACHE_PASSWORDS">Gem kodeord i driverhukommelse</control>
     <control lang="da" key="IDC_PREF_DISMOUNT_INACTIVE">Auto-afbryd bind efter der ikke har været læst/skrevet til det i</control>
     <control lang="da" key="IDC_PREF_DISMOUNT_LOGOFF">Brugeren logger af</control>
+    <control lang="en" key="IDC_PREF_DISMOUNT_SESSION_LOCKED">User session locked</control>
     <control lang="da" key="IDC_PREF_DISMOUNT_POWERSAVING">Går i strømbesparende funktion</control>
     <control lang="da" key="IDC_PREF_DISMOUNT_SCREENSAVER">Pauseskærm aktiveres</control>
     <control lang="da" key="IDC_PREF_FORCE_AUTO_DISMOUNT">Udfør auto-afbryd selvom bindet indeholder åbne filer eller mapper</control>
@@ -153,6 +166,7 @@
     <control lang="da" key="IDC_PREF_MOUNT_READONLY">Tilslut bind som læs-kun</control>
     <control lang="da" key="IDC_PREF_MOUNT_REMOVABLE">Tilslut bind som flytbart medie</control>
     <control lang="da" key="IDC_PREF_OPEN_EXPLORER">Åben Explorer vindue til succesfuldt tilsluttet bind</control>
+    <control lang="en" key="IDC_PREF_TEMP_CACHE_ON_MULTIPLE_MOUNT">Temporary Cache password during "Mount Favorite Volumes" operations</control>
     <control lang="en" key="IDC_PREF_USE_DIFF_TRAY_ICON_IF_VOL_MOUNTED">Use a different taskbar icon when there are mounted volumes</control>
     <control lang="da" key="IDC_PREF_WIPE_CACHE_ON_AUTODISMOUNT">Slet kodeord i hukommelsen ved auto-afbryd</control>
     <control lang="da" key="IDC_PREF_WIPE_CACHE_ON_EXIT">Slet kodeord i hukommelsen ved afslut</control>
@@ -165,16 +179,18 @@
     <control lang="da" key="IDC_SHOW_PASSWORD_CHPWD_ORI">Vis kodeord</control>
     <control lang="da" key="IDC_TRAVEL_OPEN_EXPLORER">Åben &amp;Explorer vindue for tilsluttet bind</control>
     <control lang="da" key="IDC_TRAV_CACHE_PASSWORDS">&amp;Gem kodeord i driver-hukommelsen</control>
+    <control lang="en" key="IDC_TRUECRYPT_MODE">TrueCrypt Mode</control>
     <control lang="da" key="IDC_UNMOUNTALL">Afb&amp;ryd Alle</control>
     <control lang="da" key="IDC_VOLUME_PROPERTIES">Bin&amp;d Egenskaber...</control>
     <control lang="da" key="IDC_VOLUME_TOOLS">Bind V&amp;ærktøjer...</control>
     <control lang="da" key="IDC_WIPE_CACHE">&amp;Slet hukommelsen</control>
+    <control lang="en" key="IDD_DEFAULT_MOUNT_PARAMETERS">VeraCrypt - Mount Parameters</control>
     <control lang="en" key="IDD_FAVORITE_VOLUMES">VeraCrypt - Favorite Volumes</control>
     <control lang="da" key="IDD_HOTKEYS_DLG">VeraCrypt - System genvejstaster</control>
     <control lang="da" key="IDD_MOUNT_DLG">VeraCrypt</control>
     <control lang="da" key="IDD_PASSWORDCHANGE_DLG">Ændre Kodeord eller Nøglefiler</control>
     <control lang="da" key="IDD_PASSWORD_DLG">Indtast VeraCrypt Bind kodeord</control>
-    <control lang="en" key="IDD_PERFORMANCE_SETTINGS">VeraCrypt - Performance Options</control>
+    <control lang="en" key="IDD_PERFORMANCE_SETTINGS">VeraCrypt - Performance and Driver Options</control>
     <control lang="da" key="IDD_PREFERENCES_DLG">VeraCrypt - Præferencer</control>
     <control lang="en" key="IDD_SYSENC_SETTINGS">VeraCrypt - System Encryption Settings</control>
     <control lang="en" key="IDD_TOKEN_PREFERENCES">VeraCrypt - Security Token Preferences</control>
@@ -197,7 +213,10 @@
     <control lang="da" key="IDM_CREATE_HIDDEN_OS">Opret Skjult Operativsystem...</control>
     <control lang="da" key="IDM_CREATE_RESCUE_DISK">Opret Nødhjælps Disk...</control>
     <control lang="da" key="IDM_CREATE_VOLUME">Opret nyt Bind...</control>
+    <control lang="en" key="IDM_DECRYPT_NONSYS_VOL">Permanently Decrypt...</control>
     <control lang="da" key="IDM_DEFAULT_KEYFILES">Standard nøglefiler...</control>
+    <control lang="en" key="IDM_DEFAULT_MOUNT_PARAMETERS">Default Mount Parameters...</control>
+    <control lang="en" key="IDM_DONATE">Donate now...</control>
     <control lang="da" key="IDM_ENCRYPT_SYSTEM_DEVICE">Krypter System Partition/Drev...</control>
     <control lang="da" key="IDM_FAQ">FAQ - Ofte stillede spørgsmål</control>
     <control lang="da" key="IDM_HELP">Brugervejledning</control>
@@ -217,7 +236,7 @@
     <control lang="da" key="IDM_ONLINE_TUTORIAL">Begyndervejledning</control>
     <control lang="en" key="IDM_ORGANIZE_FAVORITES">Organize Favorite Volumes...</control>
     <control lang="en" key="IDM_ORGANIZE_SYSTEM_FAVORITES">Organize System Favorite Volumes...</control>
-    <control lang="en" key="IDM_PERFORMANCE_SETTINGS">Performance...</control>
+    <control lang="en" key="IDM_PERFORMANCE_SETTINGS">Performance/Driver Configuration</control>
     <control lang="da" key="IDM_PERMANENTLY_DECRYPT_SYS">Dekrypter System Partition/Drev Permanent</control>
     <control lang="da" key="IDM_PREFERENCES">Præferencer...</control>
     <control lang="da" key="IDM_REFRESH_DRIVE_LETTERS">Opdater drev bogstaver</control>
@@ -239,6 +258,7 @@
     <control lang="da" key="IDM_UNMOUNT_VOLUME">Afbryd Bind</control>
     <control lang="da" key="IDM_VERIFY_RESCUE_DISK">Kontroller Nødhjælps Disk</control>
     <control lang="da" key="IDM_VERSION_HISTORY">Versions Historik</control>
+    <control lang="en" key="IDM_VOLUME_EXPANDER">Volume Expander</control>
     <control lang="da" key="IDM_VOLUME_PROPERTIES">Bind Egenskaber</control>
     <control lang="da" key="IDM_VOLUME_WIZARD">Bind Oprettelsesguide</control>
     <control lang="da" key="IDM_WEBSITE">VeraCrypt Hjemmeside</control>
@@ -255,6 +275,8 @@
     <control lang="en" key="IDT_CUSTOM_BOOT_LOADER_MESSAGE">Display this custom message in the pre-boot authentication screen (24 characters maximum):</control>
     <control lang="da" key="IDT_DEFAULT_MOUNT_OPTIONS">Standard Tilslutning Funktioner</control>
     <control lang="da" key="IDT_DISMOUNT_ACTION">Genvejstast Funktioner</control>
+    <control lang="en" key="IDT_DRIVER_OPTIONS">Driver Configuration</control>
+    <control lang="en" key="IDC_ENABLE_EXTENDED_IOCTL_SUPPORT">Enable extended disk control codes support</control>
     <control lang="en" key="IDT_FAVORITE_LABEL">Label of selected favorite volume:</control>
     <control lang="da" key="IDT_FILE_SETTINGS">Fil Indstillinger</control>
     <control lang="da" key="IDT_HOTKEY_KEY">Tildel tast:</control>
@@ -268,6 +290,7 @@
     <control lang="en" key="IDT_PARALLELIZATION_OPTIONS">Thread-Based Parallelization</control>
     <control lang="en" key="IDT_PKCS11_LIB_PATH">PKCS #11 Library Path</control>
     <control lang="da" key="IDT_PKCS5_PRF">PKCS-5 PRF:</control>
+    <control lang="en" key="IDT_NEW_PKCS5_PRF">PKCS-5 PRF:</control>
     <control lang="da" key="IDT_PW_CACHE_OPTIONS">Kodeords hukommelse</control>
     <control lang="en" key="IDT_SECURITY_OPTIONS">Security Options</control>
     <control lang="da" key="IDT_TASKBAR_ICON">VeraCrypt Baggrundsopgaver</control>
@@ -330,6 +353,9 @@
     <control lang="da" key="IDT_KEYFILE_GENERATOR_NOTE">VIGTIGT: Bevæg musen så tilfældigt som muligt i dette vindue. Jo længere tid du bevæger den, jo bedre. Dette forbedrer signifikant den kryptografiske styrke på nøglefilen.</control>
     <control lang="da" key="IDT_KEYFILE_WARNING">ADVARSEL: Hvis du mister en nøglefil eller dele af dens første 1024 kilobytes ændres, vil det være umuligt at tilslutte bindet som bruger denne nøglefil!</control>
     <control lang="da" key="IDT_KEY_UNIT">bits</control>
+    <control lang="en" key="IDT_NUMBER_KEYFILES">Number of keyfiles:</control>
+    <control lang="en" key="IDT_KEYFILES_SIZE">Keyfiles size (in Bytes):</control>
+    <control lang="en" key="IDT_KEYFILES_BASE_NAME">Keyfiles base name:</control>
     <control lang="da" key="IDT_LANGPACK_AUTHORS">Oversat af:</control>
     <control lang="da" key="IDT_PLAINTEXT">Ren tekst størrelse:</control>
     <control lang="da" key="IDT_PLAINTEXT_SIZE_UNIT">bits</control>
@@ -340,6 +366,7 @@
     <control lang="en" key="IDT_SECURITY_TOKEN">Security token:</control>
     <control lang="da" key="IDT_SORT_METHOD">Sorterings Metode:</control>
     <control lang="en" key="IDT_STATIC_MODELESS_WAIT_DLG_INFO">Please wait. This process may take a long time...</control>
+    <control lang="en" key="IDT_STATIC_MODAL_WAIT_DLG_INFO">Please wait...\nThis process may take a long time and VeraCrypt may become unresponsive.</control>
     <control lang="da" key="IDT_TEST_BLOCK_NUMBER">Blok nummer:</control>
     <control lang="da" key="IDT_TEST_CIPHERTEXT">Ciffer tekst (hexadecimal)</control>
     <control lang="da" key="IDT_TEST_DATA_UNIT_NUMBER">Data enheds nummer (64-bit hexadecimal, data enheds størrelsen er 512 bytes)</control>
@@ -431,7 +458,7 @@
     <string lang="en" key="ASK_DEBUGGER_INSTALL">In order to analyze the system crash, VeraCrypt needs to install Microsoft Debugging Tools for Windows first.\n\nAfter you click OK, the Windows installer will download the Microsoft Debugging Tools installation package (16 MB) from a Microsoft server and install it (the Windows installer will be forwarded to the Microsoft server URL from the veracrypt.org server, which ensures that this feature works even if Microsoft changes the location of the installation package).</string>
     <string lang="en" key="SYSTEM_CRASH_ANALYSIS_INFO">After you click OK, VeraCrypt will analyze the system crash. This may take up to several minutes.</string>
     <string lang="en" key="DEBUGGER_NOT_FOUND">Please make sure the environment variable 'PATH' includes the path to 'kd.exe' (Kernel Debugger).</string>
-    <string lang="en" key="SYSTEM_CRASH_NO_TRUECRYPT">It appears that VeraCrypt most likely did not cause the system crash. There are many potential reasons why the system could have crashed (for example, a failing hardware component, a bug in a device driver, etc.)</string>
+    <string lang="en" key="SYSTEM_CRASH_NO_VERACRYPT">It appears that VeraCrypt most likely did not cause the system crash. There are many potential reasons why the system could have crashed (for example, a failing hardware component, a bug in a device driver, etc.)</string>
     <string lang="en" key="SYSTEM_CRASH_UPDATE_DRIVER">Results of the analysis indicate that updating the following driver might solve this issue: </string>
     <string lang="en" key="SYSTEM_CRASH_REPORT">To help us determine whether there is a bug in VeraCrypt, you can send us an automatically generated error report containing the following items:\n- Program version\n- Operating system version\n- Type of CPU\n- Error category\n- Driver name and version\n- System call stack\n\nIf you select 'Yes', the following URL (which contains the entire error report) will be opened in your default Internet browser.</string>
     <string lang="en" key="ASK_SEND_ERROR_REPORT">Do you want to send us the above error report?</string>
@@ -476,7 +503,11 @@
     <string lang="da" key="FORMAT_FINISHED_HELP">\n\nVeraCrypt bindet er oprettet og klar til brug. Hvis du ønsker at oprette et andet VeraCrypt bind, klik Næste. Ellers, klik Afslut.</string>
     <string lang="en" key="SYSENC_HIDDEN_VOL_FORMAT_FINISHED_HELP">\n\nThe hidden VeraCrypt volume has been successfully created (the hidden operating system will reside within this hidden volume).\n\nClick Next to continue.</string>
     <string lang="en" key="NONSYS_INPLACE_ENC_FINISHED_TITLE">Volume Fully Encrypted</string>
-    <string lang="en" key="NONSYS_INPLACE_ENC_FINISHED_INFO">IMPORTANT: TO MOUNT THIS NEWLY CREATED TRUECRYPT VOLUME AND TO ACCESS DATA STORED IN IT, CLICK 'Auto-Mount Devices' IN THE MAIN TRUECRYPT WINDOW. After you enter the correct password (and/or supply correct keyfiles), the volume will be mounted to the drive letter you select from the list in the main VeraCrypt window (and you will be able to access the encrypted data via the selected drive letter).\n\nPLEASE REMEMBER OR WRITE DOWN THE ABOVE STEPS. YOU MUST FOLLOW THEM WHENEVER YOU WANT TO MOUNT THE VOLUME AND ACCESS DATA STORED IN IT. Alternatively, in the main VeraCrypt window, click 'Select Device', then select this partition/volume, and click 'Mount'.\n\nThe partition/volume has been successfully encrypted (it contains a fully encrypted VeraCrypt volume now) and is ready for use.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_TITLE">Volume Fully Decrypted</string>
+    <string lang="en" key="NONSYS_INPLACE_ENC_FINISHED_INFO">IMPORTANT: TO MOUNT THIS NEWLY CREATED VERACRYPT VOLUME AND TO ACCESS DATA STORED IN IT, CLICK 'Auto-Mount Devices' IN THE MAIN VERACRYPT WINDOW. After you enter the correct password (and/or supply correct keyfiles), the volume will be mounted to the drive letter you select from the list in the main VeraCrypt window (and you will be able to access the encrypted data via the selected drive letter).\n\nPLEASE REMEMBER OR WRITE DOWN THE ABOVE STEPS. YOU MUST FOLLOW THEM WHENEVER YOU WANT TO MOUNT THE VOLUME AND ACCESS DATA STORED IN IT. Alternatively, in the main VeraCrypt window, click 'Select Device', then select this partition/volume, and click 'Mount'.\n\nThe partition/volume has been successfully encrypted (it contains a fully encrypted VeraCrypt volume now) and is ready for use.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_INFO">The VeraCrypt volume has been successfully decrypted.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_DRIVE_LETTER_SEL_INFO">The VeraCrypt volume has been successfully decrypted.\n\nPlease select a drive letter that you wish to assign to the decrypted volume and then click Finish.\n\nIMPORTANT: Until a drive letter is assigned to the decrypted volume, you will not be able to access data stored on the volume.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_FINISHED_NO_DRIVE_LETTER_AVAILABLE">Warning: To be able to access the decrypted data, a drive letter needs to be assigned to the decrypted volume. However, no drive letter is currently available.\n\nPlease vacate a drive letter (for example, by disconnecting a USB flash drive or external hard drive, etc.) and then click OK.</string>
     <string lang="da" key="FORMAT_FINISHED_INFO">VeraCrypt bindet er oprettet med succes.</string>
     <string lang="da" key="FORMAT_FINISHED_TITLE">Bind Oprettet</string>
     <string lang="da" key="FORMAT_HELP">VIGTIGT: Bevæg musen så tilfældigt som muligt i dette vindue. Jo længere tid du bevæger den, jo bedre. Dette forbedrer signifikant den kryptografiske styrke på nøglefilen. Klik på Formater for at oprette bindet.</string>
@@ -489,7 +520,7 @@
     <string lang="da" key="HIDDEN_VOL_WIZARD_MODE_DIRECT_HELP">Hvis du vælger denne mulighed, vil du oprette et skjult bind i et eksisterende VeraCrypt bind. Det vil formodes at du allerede har oprettet et VeraCrypt bind der er passende som vært til det skjulte bind.</string>
     <string lang="da" key="HIDDEN_VOL_WIZARD_MODE_TITLE">Bind oprettelses tilstand</string>
     <string lang="da" key="HIDVOL_FORMAT_FINISHED_TITLE">Skjult Bind oprettet</string>
-    <string lang="en" key="HIDVOL_FORMAT_FINISHED_HELP">The hidden VeraCrypt volume has been successfully created and is ready for use. If all the instructions have been followed and if the precautions and requirements listed in the section "Security Requirements and Precautions Pertaining to Hidden Volumes" in the VeraCrypt User's Guide are followed, it should be impossible to prove that the hidden volume exists, even when the outer volume is mounted.\n\nWARNING: IF YOU DO NOT PROTECT THE HIDDEN VOLUME (FOR INFORMATION ON HOW TO DO SO, REFER TO THE SECTION "PROTECTION OF HIDDEN VOLUMES AGAINST DAMAGE" IN THE TRUECRYPT USER'S GUIDE), DO NOT WRITE TO THE OUTER VOLUME. OTHERWISE, YOU MAY OVERWRITE AND DAMAGE THE HIDDEN VOLUME!</string>
+    <string lang="en" key="HIDVOL_FORMAT_FINISHED_HELP">The hidden VeraCrypt volume has been successfully created and is ready for use. If all the instructions have been followed and if the precautions and requirements listed in the section "Security Requirements and Precautions Pertaining to Hidden Volumes" in the VeraCrypt User's Guide are followed, it should be impossible to prove that the hidden volume exists, even when the outer volume is mounted.\n\nWARNING: IF YOU DO NOT PROTECT THE HIDDEN VOLUME (FOR INFORMATION ON HOW TO DO SO, REFER TO THE SECTION "PROTECTION OF HIDDEN VOLUMES AGAINST DAMAGE" IN THE VERACRYPT USER'S GUIDE), DO NOT WRITE TO THE OUTER VOLUME. OTHERWISE, YOU MAY OVERWRITE AND DAMAGE THE HIDDEN VOLUME!</string>
     <string lang="en" key="FIRST_HIDDEN_OS_BOOT_INFO">You have started the hidden operating system. As you may have noticed, the hidden operating system appears to be installed on the same partition as the original operating system. However, in reality, it is installed within the partition behind it (in the hidden volume). All read and write operations are being transparently redirected from the original system partition to the hidden volume.\n\nNeither the operating system nor applications will know that data written to and read from the system partition are actually written to and read from the partition behind it (from/to a hidden volume). Any such data is encrypted and decrypted on the fly as usual (with an encryption key different from the one that will be used for the decoy operating system).\n\n\nPlease click Next to continue.</string>
     <string lang="da" key="HIDVOL_HOST_FILLING_HELP_SYSENC">Det ydre bind er blevet oprettet og tilsluttet som drev %hc:. Til dette ydre bind bør du nu kopiere nogle følsomt udseende filer som du egentlig IKKE ønsker at skjule. De vil være der for dem der eventuelt afpresser dig til at afsløre kodeordet for den første partition bag system partitionen, hvor både det ydre og skjulte bind (indeholdende det skjulte operativsystem) vil være placeret. Du vil kunne afsløre kodeordet for dette ydre bind, og eksistensen af det skjulte bind (og det skjulte operativsystem) vil fortsat være hemmeligt.\n\nVIGTIGT: Filerne du kopierer til det ydre bind bør ikke optage mere plads end %s. Ellers er der muligvis ikke nok ledig plads i det ydre bind for det skjulte bind (og du vil ikke være i stand til at fortsætte). Efter du har afsluttet din kopiering, klik Næste (afbryd ikke bindet).</string>
     <string lang="da" key="HIDVOL_HOST_FILLING_HELP">Ydre Bind er oprettet med succes og tilsluttet som drev %hc:. Til dette bind bør du nu kopiere nogle filer over der ser følsomme ud, men som du egentlig ikke ønsker at skjule. Filerne vil så være der hvis nogen aftvinger dig dit kodeord. Du afslører da kun kodeordet for det ydre bind, ikke for det skjulte. De filer du virkelig bekymrer dig om vil være i det skjulte bind, som bliver oprettet senere. Når du er færdig med at kopiere, klik Næste. Afslut ikke bindet.\n\nBemærk: Når du har klikket på Næste, vil klynge bitmap til det ydre bind blive skannet for at afgøre størrelsen af uafbrudt fri plads hvis slutning ligger udenfor slutningen af bindet. Dette område vil indeholde det skjulte bind, så det vil begrænse den maksimale størrelse. Klynge bitmap skanning sikrer at ingen data på det ydre bind overskrives af det skjulte bind.</string>
@@ -512,8 +543,18 @@
     <string lang="da" key="DECOY_TO_HIDDEN_OS_DATA_TRANSFER_HOWTO">Bemærk: Hvis du har behov for at overføre filer sikkert fra aflednings systemet til det skjulte system, følg disse trin: 1) Start aflednings systemet. 2) Gem filerne til et ukrypteret bind eller til et normalt/ydre VeraCrypt bind. 3) Start det skjulte system. 4) Hvis du har gemt filerne til et VeraCrypt bind, tilslut det (det vil automatisk blive tilsluttet som læs-kun). 5) Kopier filerne til den skjulte system partition eller til et andet skjult bind.</string>
     <string lang="da" key="CONFIRM_RESTART">Din computer skal genstartes.\n\nØnsker du at genstarte den nu?</string>
     <string lang="da" key="ERR_GETTING_SYSTEM_ENCRYPTION_STATUS">En fejl opstod under læsning af system krypterings status.</string>
+    <string lang="en" key="ERR_PASSWORD_MISSING">No password specified in the command line. The volume can't be created.</string>
+    <string lang="en" key="ERR_SIZE_MISSING">No volume size specified in the command line. The volume can't be created.</string>
+    <string lang="en" key="ERR_NTFS_INVALID_VOLUME_SIZE">The volume file size specified in the command line is incompatible with selected NTFS filesystem.</string>
+    <string lang="en" key="ERR_FAT_INVALID_VOLUME_SIZE">The volume file size specified in the command line is incompatible with selected FAT32 filesystem.</string>
+    <string lang="en" key="ERR_DYNAMIC_NOT_SUPPORTED">The filesystem on the target drive doesn't support creating sparse files which is required for dynamic volumes.</string>
+    <string lang="en" key="ERR_DEVICE_CLI_CREATE_NOT_SUPPORTED">Only container files can be created through the command line.</string>
+    <string lang="en" key="ERR_CONTAINER_SIZE_TOO_BIG">The container file size specified in the command line is greater than the available disk free space. Volume can't be created.</string>
+    <string lang="en" key="ERR_VOLUME_SIZE_TOO_SMALL">The volume size specified in the command line is too small. The volume can't be created.</string>
+    <string lang="en" key="ERR_VOLUME_SIZE_TOO_BIG">The volume size specified in the command line is too big. The volume can't be created.</string>
     <string lang="da" key="INIT_SYS_ENC">Kan ikke initialisere applikations komponenter for system kryptering.</string>
     <string lang="da" key="INIT_RAND">Kunne ikke initialisere tilfældigheds nummergenerator!</string>
+    <string lang="en" key="CAPI_RAND">Windows Crypto API failed!\n\n\n(If you report a bug in connection with this, please include the following technical information in the bug report:\n%hs, Last Error = 0x%.8X)</string>
     <string lang="da" key="INIT_REGISTER">Kunne ikke initialisere applikationen. Fejl i registrering af Dialog class.</string>
     <string lang="en" key="INIT_RICHEDIT">Error: Failed to load the Rich Edit system library.</string>
     <string lang="da" key="INTRO_TITLE">VeraCrypt Bind Oprettelsesguide</string>
@@ -521,11 +562,13 @@
     <string lang="da" key="MAX_HIDVOL_SIZE_KB">Den maksimale skjulte bind størrelse for dette bind er %.2f KB.</string>
     <string lang="da" key="MAX_HIDVOL_SIZE_MB">Den maksimale skjulte bind størrelse for dette bind er %.2f MB.</string>
     <string lang="en" key="MAX_HIDVOL_SIZE_GB">Maximum possible hidden volume size for this volume is %.2f GB.</string>
+    <string lang="en" key="MAX_HIDVOL_SIZE_TB">Maximum possible hidden volume size for this volume is %.2f TB.</string>
     <string lang="da" key="MOUNTED_NOPWCHANGE">Bind kodeord/nøglefiler kan ikke ændres mens bindet er tilsluttet. Afbryd venligst bindet først.</string>
     <string lang="da" key="MOUNTED_NO_PKCS5_PRF_CHANGE">Etiketnøgle oprindelses algoritmen kan ikke ændres mens bindet er tilsluttet. Afbryd venligst bindet først.</string>
     <string lang="da" key="MOUNT_BUTTON">&amp;Tilslut</string>
     <string lang="da" key="NEW_VERSION_REQUIRED">En nyere version af VeraCrypt kræves for at tilslutte dette bind.</string>
     <string lang="da" key="VOL_CREATION_WIZARD_NOT_FOUND">Fejl: Bind Oprettelsesguiden er ikke fundet.\n\nKontroller venligst at 'VeraCrypt Format.exe' er i mappen hvorfra 'VeraCrypt.exe' blev startet. Hvis den ikke er, geninstaller VeraCrypt, eller find 'VeraCrypt Format.exe' på din harddisk og start den.</string>
+    <string lang="en" key="VOL_EXPANDER_NOT_FOUND">Error: Volume Expander not found.\n\nPlease make sure that the file 'VeraCryptExpander.exe' is in the folder from which 'VeraCrypt.exe' was launched. If it is not, please reinstall VeraCrypt, or locate 'VeraCryptExpander.exe' on your disk and run it.</string>
     <string lang="da" key="NEXT">&amp;Næste &gt;</string>
     <string lang="da" key="FINALIZE">&amp;Afslut</string>
     <string lang="da" key="INSTALL">&amp;Installer</string>
@@ -533,6 +576,7 @@
     <string lang="da" key="NODRIVER">Ude i stand til at tilslutte VeraCrypt enhedsdriver. VeraCrypt vil ikke virke hvis enhedsdriveren ikke kører.\n\nBemærk venligst at, pga. et Windows problem, kan det være nødvendigt at logge af eller genstarte systemet førend enhedsdriveren kan lokalisere.</string>
     <string lang="da" key="NOFONT">Fejl opstået under indlæsning/forberedelse af skrifttyper.</string>
     <string lang="da" key="NOT_FOUND">Drev bogstavet blev ikke fundet eller der blev ikke angivet noget drev bogstav.</string>
+    <string lang="en" key="ERR_CANNOT_ASSIGN_DRIVE_LETTER_NONSYS_DEC">Error: Cannot assign drive letter.\n\nUntil a drive letter is assigned to the decrypted volume, you will not be able to access data stored on the volume.\n\nRetry?</string>
     <string lang="da" key="DRIVE_LETTER_UNAVAILABLE">Drev bogstav er ikke tilgængeligt.</string>
     <string lang="da" key="NO_FILE_SELECTED">Ingen fil valgt!</string>
     <string lang="da" key="NO_FREE_DRIVES">Ingen drev bogstaver tilgængelige.</string>
@@ -549,18 +593,21 @@
     <string lang="en" key="SELECT_PKCS11_MODULE">Select PKCS #11 Library</string>
     <string lang="da" key="OUTOFMEMORY">Ikke mere hukommelse</string>
     <string lang="en" key="FORMAT_DEVICE_FOR_ADVANCED_ONLY">IMPORTANT: We strongly recommend that inexperienced users create a VeraCrypt file container on the selected device/partition, instead of attempting to encrypt the entire device/partition.\n\nWhen you create a VeraCrypt file container (as opposed to encrypting a device or partition) there is, for example, no risk of destroying a large number of files. Note that a VeraCrypt file container (even though it contains a virtual encrypted disk) is actually just like any normal file. For more information, see the chapter Beginner's Tutorial in the VeraCrypt User Guide.\n\nAre you sure you want to encrypt the entire device/partition?</string>
-    <string lang="da" key="OVERWRITEPROMPT">ADVARSEL: Filen '%hs' eksisterer allerede!\n\nVIGTIGT: TRUECRYPT KRYPTERER IKKE FILEN, MEN VIL SLETTE DEN. Er du sikker på du vil slette filen og erstatte den med en ny VeraCrypt beholder?</string>
+    <string lang="da" key="OVERWRITEPROMPT">ADVARSEL: Filen '%hs' eksisterer allerede!\n\nVIGTIGT: VERACRYPT KRYPTERER IKKE FILEN, MEN VIL SLETTE DEN. Er du sikker på du vil slette filen og erstatte den med en ny VeraCrypt beholder?</string>
     <string lang="da" key="OVERWRITEPROMPT_DEVICE">ADVARSEL: ALLE NUVÆRENDE FILER GEMT PÅ DET VALGTE %s '%hs'%s VIL BLIVE SLETTET OG TABT (DE BLIVER IKKE KRYPTERET)!\n\nEr du sikker på du ønsker at fortsætte med formatering?</string>
     <string lang="en" key="NONSYS_INPLACE_ENC_CONFIRM">WARNING: You will not be able to mount the volume or access any files stored on it until it has been fully encrypted.\n\nAre you sure you want to start encrypting the selected %s '%hs'%s?</string>
-    <string lang="en" key="NONSYS_INPLACE_ENC_CONFIRM_BACKUP">WARNING: Please note that if power supply is suddenly interrupted while encrypting existing data in place, or when the operating system crashes due to a software error or hardware malfunction while VeraCrypt is encrypting existing data in place, portions of the data will be corrupted or lost. Therefore, before you start encrypting, please make sure that you have backup copies of the files you want to encrypt.\n\nDo you have such a backup?</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_CONFIRM">WARNING: You will not be able to mount the volume or access any files stored on it until it has been fully decrypted.\n\nAre you sure you want to start decrypting the selected %s '%hs'%s?</string>
+    <string lang="en" key="NONSYS_INPLACE_ENC_CONFIRM_BACKUP">WARNING: Please note that if power supply is suddenly interrupted while encrypting/decrypting existing data in place, or when the operating system crashes due to a software error or hardware malfunction while VeraCrypt is encrypting/decrypting existing data in place, portions of the data will be corrupted or lost. Therefore, before you start encrypting/decrypting, please make sure that you have backup copies of the files you want to encrypt/decrypt.\n\nDo you have such a backup?</string>
     <string lang="da" key="OVERWRITEPROMPT_DEVICE_HIDDEN_OS_PARTITION">FORSIGTIG: ALLE NUVÆRENDE GEMTE FILER PÅ PARTITIONEN '%hs'%s (F.EKS. PÅ DEN FØRSTE PARTITION BAG SYSTEM PARTITIONEN) VIL BLIVE SLETTET OG TABT (DE VIL IKKE BLIVE KRYPTERET)!\n\nEr du sikker på du ønsker at fortsætte med formattering?</string>
     <string lang="en" key="OVERWRITEPROMPT_DEVICE_SECOND_WARNING_LOTS_OF_DATA">WARNING: THE SELECTED PARTITION CONTAINS A LARGE AMOUNT OF DATA! Any files stored on the partition will be erased and lost (they will NOT be encrypted)!</string>
     <string lang="en" key="ERASE_FILES_BY_CREATING_VOLUME">Erase any files stored on the partition by creating a VeraCrypt volume within it</string>
     <string lang="da" key="PASSWORD">Kodeord</string>
+    <string lang="en" key="PIM">PIM</string>
     <string lang="da" key="IDD_PCDM_CHANGE_PKCS5_PRF">Ændre etiketnøgle oprindelses algoritme</string>
     <string lang="da" key="IDD_PCDM_ADD_REMOVE_VOL_KEYFILES">Tilføj/Fjern nøglefiler til/fra Bind</string>
     <string lang="da" key="IDD_PCDM_REMOVE_ALL_KEYFILES_FROM_VOL">Fjern alle nøglefiler fra Bind</string>
-    <string lang="en" key="PASSWORD_CHANGED">Password and/or keyfile(s) successfully changed.\n\nIMPORTANT: Please make sure you have read the section 'Changing Passwords and Keyfiles' in the chapter 'Security Requirements and Precautions' in the VeraCrypt User Guide.</string>
+    <string lang="en" key="PASSWORD_CHANGED">Password, PIM and/or keyfile(s) successfully changed.\n\nIMPORTANT: Please make sure you have read the section 'Changing Passwords and Keyfiles' in the chapter 'Security Requirements and Precautions' in the VeraCrypt User Guide.</string>
+    <string lang="en" key="FAVORITE_PIM_CHANGED">This volume is registered as a System Favorite and its PIM was changed.\nDo you want VeraCrypt to automatically update the System Favorite configuration (administrator privileges required)?\n\nPlease note that if you answer no, you'll have to update the System Favorite manually.</string>
     <string lang="da" key="SYS_PASSWORD_CHANGED_ASK_RESCUE_DISK">VIGTIGT: Hvis du ikke har destrueret din VeraCrypt Nødhjælps Disk, vil dit system partition/drev stadig kunne dekrypteres ved brug af det gamle kodeord (ved at boote på VeraCrypt Nødhjælps Disk og indtaste det gamle kodeord). Du bør oprette en ny VeraCrypt Nødhjælps Disk og så destruere den gamle.\n\nØnsker du at oprette en ny VeraCrypt Nødhjælps Disk?</string>
     <string lang="da" key="SYS_HKD_ALGO_CHANGED_ASK_RESCUE_DISK">Bemærk at din VeraCrypt Nødhjælps Disk stadig bruger den tidligere algoritme. Hvis du fornemmer den tidligere algoritme er usikker, bør du oprette en ny VeraCrypt Nødhjælps Disk og så destruere den gamle.\n\nØnsker du at oprette en ny VeraCrypt Nødhjælps Disk?</string>
     <string lang="en" key="KEYFILES_NOTE">Any kind of file (for example, .mp3, .jpg, .zip, .avi) may be used as a VeraCrypt keyfile. Note that VeraCrypt never modifies the keyfile contents. You can select more than one keyfile (the order does not matter). If you add a folder, all non-hidden files found in it will be used as keyfiles. Click 'Add Token Files' to select keyfiles stored on security tokens or smart cards (or to import keyfiles to security tokens or smart cards).</string>
@@ -569,6 +616,7 @@
     <string lang="da" key="PKCS5_PRF_CHANGED">Etiketnøgle oprindelses algoritme ændret med success.</string>
     <string lang="en" key="NONSYS_INPLACE_ENC_RESUME_PASSWORD_PAGE_HELP">Please enter the password and/or keyfile(s) for the non-system volume where you want to resume the process of in-place encryption.\n\n\nRemark: After you click Next, VeraCrypt will attempt to find all non-system volumes where the process of encryption has been interrupted and where the VeraCrypt volume header can be decrypted using the supplied password and/or keyfile(s). If more than one such volume is found, you will need to select one of them in the next step.</string>
     <string lang="en" key="NONSYS_INPLACE_ENC_RESUME_VOL_SELECT_HELP">Please select one of the listed volumes. The list contains every accessible non-system volume where the process of encryption has been interrupted and whose header could be decrypted using the supplied password and/or keyfile(s).</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_PASSWORD_PAGE_HELP">Please enter the password and/or keyfile(s) for the non-system VeraCrypt volume that you want to decrypt.</string>
     <string lang="da" key="PASSWORD_HELP">Det er meget vigtigt at du vælger et godt kodeord. Du bør undgå at vælge et der kun indeholder et enkelt ord der kan findes i en ordbog (eller en kombination af 2, 3 eller 4 af sådanne ord). Det bør ikke indeholde nogle navne eller fødselsdatoer. Det skal ikke være nemt at gætte. Et godt kodeord er en tilfældig kombination af store og små bogstaver, tal, og specielle karakterer, så som @ ^ = $ * + osv. Vi anbefaler at du vælger et kodeord der består af mere end 20 karakterer (jo længere, jo bedre). Det maksimalt mulige længde er 64 karakterer.</string>
     <string lang="da" key="PASSWORD_HIDDENVOL_HELP">Vælg venligst et kodeord til det skjulte bind. </string>
     <string lang="da" key="PASSWORD_HIDDEN_OS_HELP">Vælg venligst et kodeord til det skjulte operativsystem (f.eks. til det skjulte bind). </string>
@@ -588,17 +636,34 @@
     <string lang="da" key="PASSWORD_WRONG_AUTOMOUNT">Ukorrekt kodeord eller intet VeraCrypt bind fundet.</string>
     <string lang="da" key="PASSWORD_OR_KEYFILE_WRONG_AUTOMOUNT">Ukorrekt nøglefil(er)/kodeord eller intet VeraCrypt bind fundet.</string>
     <string lang="da" key="PASSWORD_WRONG_CAPSLOCK_ON">\n\nAdvarsel: Caps Lock er slået til. Dette kan medføre at kodeordet indtastes ukorrekt.</string>
+    <string lang="en" key="PIM_CHANGE_WARNING">Remember Number to Mount Volume</string>
+    <string lang="en" key="PIM_HIDVOL_HOST_TITLE">Outer Volume PIM</string>
+    <string lang="en" key="PIM_HIDVOL_TITLE">Hidden Volume PIM</string>
+    <string lang="en" key="PIM_HIDDEN_OS_TITLE">PIM for Hidden Operating System</string>
+    <string lang="en" key="PIM_HELP">PIM (Personal Iterations Multiplier) is a value that controls the number of iterations used by the header key derivation as follows:\n      Iterations = 15000 + (PIM x 1000).\n\nWhen left empty or set to 0, VeraCrypt will use a default value (485) that ensures a high security.\n\nWhen the password is less than 20 characters, PIM can't be smaller than 485 in order to maintain a minimal security level.\nWhen the password is 20 characters or more, PIM can be set to any value.\n\nA PIM value larger than 485 will lead to slower mount. A small PIM value (less than 485) will lead to a quicker mount but it can reduce security if the password is not strong enough.</string>
+    <string lang="en" key="PIM_SYSENC_HELP">PIM (Personal Iterations Multiplier) is a value that controls the number of iterations used by the header key derivation as follows:\n      Iterations = PIM x 2048.\n\nWhen left empty or set to 0, VeraCrypt will use a default value that ensures a high security.\n\nWhen the password is less than 20 characters, PIM can't be smaller than 98 in order to maintain a minimal security level.\nWhen the password is 20 characters or more, PIM can be set to any value.\n\nA PIM value larger than 98 will lead to slower boot. A small PIM value (less than 98) will lead to a quicker boot but it can reduce security if the password is not strong enough.</string>
+    <string lang="en" key="PIM_SYSENC_CHANGE_WARNING">Remember Number to Boot System</string>
+    <string lang="en" key="PIM_LARGE_WARNING">You have chosen a PIM value that is larger than VeraCrypt default value.\nPlease note that this will lead to much slower mount/boot.</string>
+    <string lang="en" key="PIM_SMALL_WARNING">You have chosen a Personal Iterations Multiplier (PIM) that is smaller than the default VeraCrypt value. Please note that if your password is not strong enough, this could lead to a weaker security.\n\nDo you confirm that you are using a strong password?</string>
+    <string lang="en" key="PIM_SYSENC_TOO_BIG">Personal Iterations Multiplier (PIM) maximum value for system encryption is 65535.</string>
+    <string lang="en" key="PIM_TITLE">Volume PIM</string>
     <string lang="en" key="HIDDEN_FILES_PRESENT_IN_KEYFILE_PATH">\n\nWARNING: Hidden file(s) have been found in a keyfile search path. Such hidden files cannot be used as keyfiles. If you need to use them as keyfiles, remove their 'Hidden' attribute (right-click each of them, select 'Properties', uncheck 'Hidden' and click OK). Note: Hidden files are visible only if the corresponding option is enabled (Computer &gt; Organize &gt; 'Folder and search options' &gt; View).</string>
     <string lang="en" key="HIDDEN_VOL_PROT_PASSWORD_US_KEYB_LAYOUT">If you are attempting to protect a hidden volume containing a hidden system, please make sure you are using the standard US keyboard layout when typing the password for the hidden volume. This is required due to the fact that the password needs to be typed in the pre-boot environment (before Windows starts) where non-US Windows keyboard layouts are not available.</string>
     <string lang="en" key="FOUND_NO_PARTITION_W_DEFERRED_INPLACE_ENC">VeraCrypt has not found any volume where non-system encryption has been interrupted and where the volume header can be decrypted using the supplied password and/or keyfile(s).\n\nPlease make sure the password and/or keyfile(s) are correct and that the partition/volume is not being used by the system or applications (including antivirus software).</string>
+    <string lang="en" key="SELECTED_PARTITION_ALREADY_INPLACE_ENC">The selected partition/device is already fully encrypted.\nHeader Flags = 0x%.8X</string>
+    <string lang="en" key="SELECTED_PARTITION_NOT_INPLACE_ENC">The selected partition/device is not using in-place encryption.\nHeader Flags = 0x%.8X</string>
     <string lang="da" key="SYSENC_MOUNT_WITHOUT_PBA_NOTE">\n\nBemærk: Hvis du forsøger at tilslutte en partition placeret på et krypteret system drev uden før-boot godkendelse eller tilslutte en krypteret system partition fra et operativsystem der ikke kører, kan du gøre dette ved at vælge 'System' &gt; 'Tilslut uden før-Boot Godkendelse'.</string>
     <string lang="da" key="MOUNT_WITHOUT_PBA_VOL_ON_ACTIVE_SYSENC_DRIVE">I denne tilstand kan du ikke tilslutte en partition placeret på et drev hvis portion er indenfor nøglens rækkevidde af aktiv system kryptering.\n\nFør du kan tilslutte denne partition i denne tilstand, er du nødt til enten at boote et operativsystem installeret på et andet drev (krypteret eller ukrypteret) eller boote på et ukrypteret operativsystem.</string>
+    <string lang="en" key="CANT_DECRYPT_PARTITION_ON_ENTIRELY_ENCRYPTED_SYS_DRIVE">VeraCrypt cannot decrypt an individual partition on an entirely encrypted system drive (you can decrypt only the entire system drive).</string>
+    <string lang="en" key="CANT_DECRYPT_PARTITION_ON_ENTIRELY_ENCRYPTED_SYS_DRIVE_UNSURE">Warning: As the drive contains the VeraCrypt Boot Loader, it may be an entirely encrypted system drive. If it is, please note that VeraCrypt cannot decrypt an individual partition on an entirely encrypted system drive (you can decrypt only the entire system drive). If that is the case, you will be able to continue now but you will receive the 'Incorrect password' error message later.</string>
     <string lang="da" key="PREV">&lt; &amp;Tilbage</string>
     <string lang="da" key="RAWDEVICES">Ude af stand til at vise de rå enheder der er installeret på dit system!</string>
     <string lang="da" key="READONLYPROMPT">Bindet '%hs' eksisterer, og er læs-kun. Er du sikker på du vil erstatte det?</string>
     <string lang="da" key="SELECT_DEST_DIR">Vælg destinationsmappe</string>
     <string lang="da" key="SELECT_KEYFILE">Vælg nøglefil</string>
     <string lang="da" key="SELECT_KEYFILE_PATH">Vælg en nøglefil søgesti. ADVARSEL: Bemærk at kun stien vil blive husket, ikke filnavne!</string>
+    <string lang="en" key="SELECT_KEYFILE_GENERATION_DIRECTORY">Select a directory where to store the keyfiles.</string>
+    <string lang="en" key="SELECTED_KEYFILE_IS_CONTAINER_FILE">The current container file was selected as a keyfile. It will be skipped.</string>
     <string lang="da" key="SERPENT_HELP">Designet af Ross Anderson, Eli Biham, og Lars Knudsen. Udgivet i 1998. 256-bit nøgle, 128-bit blok. Driftstilstand er XTS. Serpent var en af AES finalisterne.</string>
     <string lang="en" key="SIZE_HELP">Please specify the size of the container you want to create.\n\nIf you create a dynamic (sparse-file) container, this parameter will specify its maximum possible size.\n\nNote that the minimum possible size of a FAT volume is 292 KB. The minimum possible size of an NTFS volume is 3792 KB.</string>
     <string lang="en" key="SIZE_HELP_HIDDEN_HOST_VOL">Please specify the size of the outer volume to be created (you will first create the outer volume and then a hidden volume within it). The minimum possible size of a volume within which a hidden volume is intended to be created is 340 KB.</string>
@@ -691,11 +756,18 @@
     <string lang="da" key="FOR_MORE_INFO_ON_PARTITIONS">For information om hvordan man opretter og administrerer partitioner, læs venligst dokumentationen som fulgte med dit operativsystem eller kontakt din computer forhandlers tekniske support for yderligere hjælp.</string>
     <string lang="da" key="SYSTEM_PARTITION_NOT_ACTIVE">Fejl: Det nuværende kørende operativsystem er ikke installeret på boot partitionen (første Aktive partition). Dette er ikke supporteret.</string>
     <string lang="en" key="CONFIRM_FAT_FOR_FILES_OVER_4GB">You indicated that you intend to store files larger than 4 GB in this VeraCrypt volume. However, you chose the FAT file system, on which files larger than 4 GB cannot be stored.\n\nAre you sure you want to format the volume as FAT?</string>
+    <string lang="en" key="NONSYS_INPLACE_DECRYPTION_BAD_VOL_FORMAT">Error: VeraCrypt does not support in-place decryption of legacy non-system volumes created by VeraCrypt 1.0b or earlier.\n\nNote: You can still decrypt files stored on the volume by copying/moving them to any unencrypted volume.</string>
+    <string lang="en" key="NONSYS_INPLACE_DECRYPTION_CANT_DECRYPT_HID_VOL">Error: VeraCrypt cannot in-place decrypt a hidden VeraCrypt volume.\n\nNote: You can still decrypt files stored on the volume by copying/moving them to any unencrypted volume.</string>
+    <string lang="en" key="CONFIRM_VOL_CONTAINS_NO_HIDDEN_VOL">Warning: Note that VeraCrypt cannot in-place decrypt a volume that contains a hidden VeraCrypt volume (the hidden volume would be overwritten with pseudorandom data).\n\nPlease confirm that the volume you are about to decrypt contains no hidden volume.\n\nNote: If the volume contains a hidden volume but you do not mind losing the hidden volume, you can select Proceed (the outer volume will be safely decrypted).</string>
+    <string lang="en" key="VOL_CONTAINS_NO_HIDDEN_VOL">The volume does not contain any hidden volume. Proceed.</string>
+    <string lang="en" key="VOL_CONTAINS_A_HIDDEN_VOL">The volume contains a hidden volume. Cancel.</string>
     <string lang="da" key="CANT_ACCESS_VOL">Fejl: Har ikke adgang til bindet!\n\nSørg for at det valgte bind eksisterer, at det ikke er tilsluttet eller bliver brugt af systemet eller andre programmer, at du har læse/skrive rettighed til bindet, og at det ikke er skrivebeskyttet.</string>
+    <string lang="en" key="CANT_GET_VOL_INFO">Error: Cannot obtain volume properties.</string>
     <string lang="en" key="INPLACE_ENC_CANT_ACCESS_OR_GET_INFO_ON_VOL">Error: Cannot access the volume and/or obtain information about the volume.\n\nMake sure that the selected volume exists, that it is not being used by the system or applications, that you have read/write permission for the volume, and that it is not write-protected.</string>
     <string lang="en" key="INPLACE_ENC_CANT_ACCESS_OR_GET_INFO_ON_VOL_ALT">Error: Cannot access the volume and/or obtain information about the volume. Make sure that the selected volume exists, that it is not being used by the system or applications, that you have read/write permission for the volume, and that it is not write-protected.\n\nIf the problem persists, it might help to follow the below steps.</string>
     <string lang="en" key="INPLACE_ENC_GENERIC_ERR_ALT_STEPS">An error prevented VeraCrypt from encrypting the partition. Please try fixing any previously reported problems and then try again. If the problems persist, it might help to follow the below steps.</string>
     <string lang="en" key="INPLACE_ENC_GENERIC_ERR_RESUME">An error prevented VeraCrypt from resuming the process of encryption of the partition.\n\nPlease try fixing any previously reported problems and then try resuming the process again. Note that the volume cannot be mounted until it has been fully encrypted.</string>
+    <string lang="en" key="INPLACE_DEC_GENERIC_ERR">An error prevented VeraCrypt from decrypting the volume. Please try fixing any previously reported problems and then try again if possible.</string>
     <string lang="da" key="CANT_DISMOUNT_OUTER_VOL">Fejl: Kan ikke afbryde det ydre bind!\n\nBindet kan ikke afbrydes hvis det indeholder filer eller mapper der bliver brugt af et program eller systemet.\n\nLuk venligst alle programmer der måtte bruge filer eller mapper på bindet og klik på Prøv igen.</string>
     <string lang="da" key="CANT_GET_OUTER_VOL_INFO">Fejl: Kan ikke finde information om det ydre bind! Oprettelse af bind kan ikke fortsætte.</string>
     <string lang="da" key="CANT_ACCESS_OUTER_VOL">Fejl: Har ikke adgang til det ydre bind! Oprettelse af bind kan ikke fortsætte.</string>
@@ -750,6 +822,7 @@
     <string lang="en" key="REMOVABLE_DISK">Removable Disk</string>
     <string lang="da" key="HARDDISK">Harddisk</string>
     <string lang="da" key="UNCHANGED">Uændret</string>
+    <string lang="en" key="AUTODETECTION">Autodetection</string>
     <string lang="da" key="SETUP_MODE_TITLE">Oprettelsesguide Tilstand</string>
     <string lang="da" key="SETUP_MODE_INFO">Vælg en af tilstandende. Hvis du ikke er sikker på hvilken du skal vælge, brug da standard tilstand.</string>
     <string lang="en" key="SETUP_MODE_HELP_INSTALL">Select this option if you want to install VeraCrypt on this system.</string>
@@ -779,7 +852,7 @@
     <string lang="da" key="TC_INSTALLER_IS_RUNNING">VeraCrypt Installation kører nu på dette system og udfører eller forbereder installation eller opdatering af VeraCrypt. Før du fortsætter, vent venligst til det afsluttes eller luk det. Hvis du ikke kan lukke det, genstart venligst din computer før du fortsætter.</string>
     <string lang="da" key="INSTALL_FAILED">Fejl under installation.</string>
     <string lang="da" key="UNINSTALL_FAILED">Fejl under afinstallation.</string>
-    <string lang="da" key="DIST_PACKAGE_CORRUPTED">Denne distributions pakke er beskadiget. Prøv venligst at downloade den igen (helst fra det officielle VeraCrypt websted på www.veracrypt.org).</string>
+    <string lang="da" key="DIST_PACKAGE_CORRUPTED">Denne distributions pakke er beskadiget. Prøv venligst at downloade den igen (helst fra det officielle VeraCrypt websted på https://veracrypt.codeplex.com).</string>
     <string lang="da" key="CANNOT_WRITE_FILE_X">Kan ikke skrive fil %hs</string>
     <string lang="da" key="EXTRACTING_VERB">Udpakker</string>
     <string lang="da" key="CANNOT_READ_FROM_PACKAGE">Kan ikke læse data fra pakken.</string>
@@ -863,6 +936,11 @@
     <string lang="da" key="ENTER_HIDDEN_VOL_PASSWORD">Indtast kodeord for det skjulte bind</string>
     <string lang="da" key="ENTER_HEADER_BACKUP_PASSWORD">Indtast kodeord for header gemt i backup filen</string>
     <string lang="da" key="KEYFILE_CREATED">Nøglefil er oprettet med succes.</string>
+    <string lang="en" key="KEYFILE_INCORRECT_NUMBER">The number of keyfiles you supplied is invalid.</string>
+    <string lang="en" key="KEYFILE_INCORRECT_SIZE">The keyfile size must be comprized between 64 and 1048576 bytes.</string>
+    <string lang="en" key="KEYFILE_EMPTY_BASE_NAME">Please enter a name for the keyfile(s) to be generated</string>
+    <string lang="en" key="KEYFILE_INVALID_BASE_NAME">The base name of the keyfile(s) is invalid</string>
+    <string lang="en" key="KEYFILE_ALREADY_EXISTS">The keyfile '%s' already exists.\nDo you want to overwrite it? The generation process will be stopped if you answer No.</string>
     <string lang="da" key="HEADER_DAMAGED_AUTO_USED_HEADER_BAK">ADVARSEL: Etikettet på dette bind er beskadiget! VeraCrypt brugte automatisk det backup af bind etiketten der er implementeret i bindet.\n\nDu bør reparere bind etiketten ved at vælge 'Værktøjer' &gt; 'Gendan Bind Etiket'.</string>
     <string lang="da" key="VOL_HEADER_BACKED_UP">Backup af bind etiket er udført med succes.\n\nVIGTIGT: Gendannelse af bind etiket med dette backup vil også gendanne det nuværende binds kodeord. Derudover, hvis nøglefil(er) er nødvendige for at tilslutte bindet, vil de samme nøglefil(er) være nødvendige for at tilslutte bindet igen når bind etiketten gendannes.\n\nADVARSEL: Denne backup af bind etiket kan KUN bruges til at gendanne etiket for dette bestemte bind. Hvis du bruger denne etiket backup til at gendanne en etiket for et andet bind, vil du kunne tilslutte bindet, men du vil ikke være i stand til at dekryptere nogen data på bindet (fordi du vil ændre dets hovednøgle).</string>
     <string lang="da" key="VOL_HEADER_RESTORED">Bindets etiket er blevet gendannet med succes.\n\nVIGTIGT: Bemærk venligst at et gammelt kodeord også kan være gendannet. Derudover, hvis nøglefil(er) var nødvendig til at tilslutte bindet da backup var lavet, vil de samme nøglefil(er) nu være nødvendige for at tilslutte bindet igen.</string>
@@ -911,8 +989,8 @@
     <string lang="en" key="SIZE_ITEM">Size:   </string>
     <string lang="en" key="PATH_ITEM">Path:   </string>
     <string lang="en" key="DRIVE_LETTER_ITEM">Drive Letter:   </string>
-    <string lang="da" key="UNSUPPORTED_CHARS_IN_PWD">Fejl: Kodeord må kun indeholde ASCII karakterer.\n\nIkke-ASCII karakterer i kodeord kan forårsage at bindet vil være umuligt at tilslutte når dine system indstillinger ændres.\n\nFølgende karakterer kan anvendes:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w k y z { | } ~</string>
-    <string lang="da" key="UNSUPPORTED_CHARS_IN_PWD_RECOM">Advarsel: Kodeord indeholder ikke-ASCII karakterer. Dettekan forårsage at bindet vil være umuligt at tilslutte når dine system indstillinger ændres.\n\nDu bør udskifte alle ikke-ASCII karakterer i kodeordet med ASCII. For at gøre dette klik 'Bind' -&gt; 'Ændre Bind Kodeord'.\n\nFølgende er ASCII karakterer:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w k y z { | } ~</string>
+    <string lang="da" key="UNSUPPORTED_CHARS_IN_PWD">Fejl: Kodeord må kun indeholde ASCII karakterer.\n\nIkke-ASCII karakterer i kodeord kan forårsage at bindet vil være umuligt at tilslutte når dine system indstillinger ændres.\n\nFølgende karakterer kan anvendes:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~</string>
+    <string lang="da" key="UNSUPPORTED_CHARS_IN_PWD_RECOM">Advarsel: Kodeord indeholder ikke-ASCII karakterer. Dettekan forårsage at bindet vil være umuligt at tilslutte når dine system indstillinger ændres.\n\nDu bør udskifte alle ikke-ASCII karakterer i kodeordet med ASCII. For at gøre dette klik 'Bind' -&gt; 'Ændre Bind Kodeord'.\n\nFølgende er ASCII karakterer:\n\n  ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~</string>
     <string lang="en" key="EXE_FILE_EXTENSION_CONFIRM">WARNING: We strongly recommend that you avoid file extensions that are used for executable files (such as .exe, .sys, or .dll) and other similarly problematic file extensions. Using such file extensions causes Windows and antivirus software to interfere with the container, which adversely affects the performance of the volume and may also cause other serious problems.\n\nWe strongly recommend that you remove the file extension or change it (e.g., to '.tc').\n\nAre you sure you want to use the problematic file extension?</string>
     <string lang="en" key="EXE_FILE_EXTENSION_MOUNT_WARNING">WARNING: This container has a file extension that is used for executable files (such as .exe, .sys, or .dll) or some other file extension that is similarly problematic. It will very likely cause Windows and antivirus software to interfere with the container, which will adversely affect the performance of the volume and may also cause other serious problems.\n\nWe strongly recommend that you remove the file extension of the container or change it (e.g., to '.tc') after you dismount the volume.</string>
     <string lang="da" key="HOMEPAGE">Hjemmeside</string>
@@ -961,6 +1039,7 @@
     <string lang="da" key="CONFIRM_EXIT_UNIVERSAL">Afslut?</string>
     <string lang="da" key="CHOOSE_ENCRYPT_OR_DECRYPT">VeraCrypt har ikke nok information til at afgøre om der skal krypteres eller dekrypteres.</string>
     <string lang="da" key="CHOOSE_ENCRYPT_OR_DECRYPT_FINALIZE_DECRYPT_NOTE">VeraCrypt har ikke nok information til at afgøre om der skal krypteres eller dekrypteres.\n\nBemærk: Hvis du har dekrypteret system partition/drev i før-boot miljøet, kan det være nødvendigt at du afslutter processen ved at klikke på Dekrypter.</string>
+    <string lang="en" key="NONSYS_INPLACE_ENC_REVERSE_INFO">Note: When you are encrypting a non-system partition/volume in place and an error persistently prevents you from finishing the process, you will not be able to mount the volume (and access data stored on it) until you entirely DECRYPT the volume (i.e. reverse the process).\n\nIf you need to do so, follow these steps:\n1) Exit this wizard.\n2) In the main VeraCrypt window, select 'Volumes' &gt; 'Resume Interrupted Process'.\n3) Select 'Decrypt'.</string>
     <string lang="en" key="NONSYS_INPLACE_ENC_DEFER_CONFIRM">Do you want to interrupt and postpone the process of encryption of the partition/volume?\n\nNote: Keep in mind that the volume cannot be mounted until it has been fully encrypted. You will be able to resume the process of encryption and it will continue from the point it was stopped. You can do so, for example, by selecting 'Volumes' &gt; 'Resume Interrupted Process' from the menu bar of the main VeraCrypt window.</string>
     <string lang="da" key="SYSTEM_ENCRYPTION_DEFER_CONFIRM">Ønsker du at afbryde og udskyde processen med kryptering af system partition/drev?\n\nBemærk: Du vil være i stand til at genoptage processen og den vil fortsætte fra det sted den blev stoppet. Du kan gøre dette ved f.eks. ved at vælge 'System' &gt; 'Genoptag Afbrudt Proces' fra menulinien i hovedvinduet i VeraCrypt. Hvis du ønsker permanent at afbryde eller tilbageføre krypterings processen, vælg 'System' &gt; 'Dekrypter System Partition/Drev Permanent'.</string>
     <string lang="da" key="SYSTEM_DECRYPTION_DEFER_CONFIRM">Ønsker du at afbryde og udskyde processen med dekryptering af system partition/drev?\n\nBemærk: Du vil være i stand til at genoptage processen og den vil fortsætte fra det sted den blev stoppet. Du kan gøre dette ved f.eks. ved at vælge 'System' &gt; 'Genoptag Afbrudt Proces' fra menulinien i hovedvinduet i VeraCrypt. Hvis du ønsker at tilbageføre dekrypterings processen (og påbegynde kryptering), vælg 'System' &gt; 'Krypter System Partition/Drev'.</string>
@@ -970,7 +1049,7 @@
     <string lang="en" key="FAILED_TO_START_WIPING">Error: Failed to start the process of wiping.</string>
     <string lang="da" key="INCONSISTENCY_RESOLVED">Uoverensstemmelse løst.\n\n\n(Hvis du ønsker at rapportere en fejl i denne forbindelse, inkluder venligst følgende tekniske information i fejlrapporten: %hs)</string>
     <string lang="en" key="UNEXPECTED_STATE">Error: Unexpected state.\n\n\n(If you report a bug in connection with this, please include the following technical information in the bug report:\n%hs)</string>
-    <string lang="da" key="NOTHING_TO_RESUME">Der er ingen proces/opgave at genoptage.</string>
+    <string lang="en" key="NO_SYS_ENC_PROCESS_TO_RESUME">There is no interrupted process of encryption/decryption of the system partition/drive to resume.\n\nNote: If you want to resume an interrupted process of encryption/decryption of a non-system partition/volume, select 'Volumes' &gt; 'Resume Interrupted Process'.</string>
     <string lang="da" key="HIDVOL_PROT_BKG_TASK_WARNING">ADVARSEL: VeraCrypt baggrundsopgaver er slået fra. Efter du afslutter VeraCrypt, vil du ikke blive gjort opmærksom på om skade på det skjulte bind er undgået.\n\nBemærk: Du kan nårsomhelst lukke baggrundsopgaver ned ved at højreklikke på VeraCrypt ikonet i systembakken, og klikke på 'Afslut'.\n\nAktiver VeraCrypt Baggrundsopgaver?</string>
     <string lang="da" key="LANG_PACK_VERSION">Sprogpakke version:  %s</string>
     <string lang="da" key="CHECKING_FS">Kontrollerer fil systemet på VeraCrypt bindet tilsluttet som %hs...</string>
@@ -997,6 +1076,7 @@
     <string lang="en" key="SYS_LOADER_RESTORE_FAILED">Failed to restore the original system loader.\n\nPlease use your VeraCrypt Rescue Disk ('Repair Options' &gt; 'Restore original system loader') or Windows installation medium to replace the VeraCrypt Boot Loader with the Windows system loader.</string>
     <string lang="da" key="SYS_LOADER_UNAVAILABLE_FOR_RESCUE_DISK">Den originale system loader kan ikke gemmes på Nødhjælps Disk (mulig årsag: manglende backup fil).</string>
     <string lang="da" key="ERROR_MBR_PROTECTED">Kunne ikke skrive MBR sektor.\n\nDin BIOS er muligvis konfigureret til at beskytte MBR sektoren. Tjek din BIOS indstilling (tryk F2, Delete, eller Esc, efter du har tændt din computer) for MBR/antivirus beskyttelse.</string>
+    <string lang="en" key="BOOT_LOADER_FINGERPRINT_CHECK_FAILED">WARNING: The verification of VeraCrypt bootloader fingerprint failed!\nYour disk may have been tampered with by an attacker ("Evil Maid" attack).\n\nThis warning can also be triggered if you restored VeraCrypt boot loader using an Rescue Disk generated using a different VeraCrypt version.\n\nYou are advised to change your password immediately which will also restore the correct VeraCrypt bootloader. It is recommended to reinstall VeraCrypt and to take measures to avoid access to this machine by untrusted entities.</string>
     <string lang="en" key="BOOT_LOADER_VERSION_INCORRECT_PREFERENCES">The required version of the VeraCrypt Boot Loader is currently not installed. This may prevent some of the settings from being saved.</string>
     <string lang="en" key="CUSTOM_BOOT_LOADER_MESSAGE_HELP">Note: In some situations, you may wish to prevent a person (adversary) that is watching you start the computer from knowing that you use VeraCrypt. The above options allow you to do that by customizing the VeraCrypt boot loader screen. If you enable the first option, no texts will be displayed by the boot loader (not even when you enter the wrong password). The computer will appear to be "frozen" while you can type your password. In addition, a custom message can be displayed to mislead the adversary. For example, fake error messages such as "Missing operating system" (which is normally displayed by the Windows boot loader if it finds no Windows boot partition). It is, however, important to note that if the adversary can analyze the content of the hard drive, he can still find out that it contains the VeraCrypt boot loader.</string>
     <string lang="en" key="CUSTOM_BOOT_LOADER_MESSAGE_PROMPT">WARNING: Please keep in mind that if you enable this option, the VeraCrypt boot loader will not display any texts (not even when you enter the wrong password). The computer will appear to be "frozen" (unresponsive) while you can type your password (the cursor will NOT move and no asterisk will be displayed when you press a key).\n\nAre you sure you want to enable this option?</string>
@@ -1018,13 +1098,17 @@
     <string lang="en" key="EXTRA_BOOT_PARTITION_REMOVAL_INSTRUCTIONS">\nThe extra boot partition can be removed before installing Windows. To do so, follow these steps:\n\n1) Boot your Windows installation disc.\n\n2) In the Windows installer screen, click 'Install now' &gt; 'Custom (advanced)'.\n\n3) Click 'Drive Options'.\n\n4) Select the main system partition and delete it by clicking 'Delete' and 'OK'.\n\n5) Select the 'System Reserved' partition, click 'Extend', and increase its size so that the operating system can be installed to it.\n\n6) Click 'Apply' and 'OK'.\n\n7) Install Windows on the 'System Reserved' partition.\n\n\nShould an attacker ask why you removed the extra boot partition, you can answer that you wanted to prevent any possible data leaks to the unencrypted boot partition.\n\nNote: You can print this text by clicking the 'Print' button below. If you save a copy of this text or print it (strongly recommended, unless your printer stores copies of documents it prints on its internal drive), you should destroy any copies of it after removing the extra boot partition (otherwise, if such a copy was found, it might indicate that there is a hidden operating system on this computer).</string>
     <string lang="da" key="GAP_BETWEEN_SYS_AND_HIDDEN_OS_PARTITION">Advarsel: Der er uallokeret område mellem system partition og den første partition bag den. Efter du har oprettet det skjulte operativsystem, må du ikke oprette nogle nye partitioner i det uallokerede område. Ellers vil det skjulte operativsystem være umuligt at boote (indtil du sletter sådanne nyoprettede partitioner).</string>
     <string lang="da" key="ALGO_NOT_SUPPORTED_FOR_SYS_ENCRYPTION">Denne algoritme er for tiden ikke supporteret til system kryptering.</string>
+    <string lang="en" key="ALGO_NOT_SUPPORTED_FOR_TRUECRYPT_MODE">This algorithm is not supported for TrueCrypt mode.</string>
+    <string lang="en" key="PIM_NOT_SUPPORTED_FOR_TRUECRYPT_MODE">PIM (Personal Iterations Multiplier) not supported for TrueCrypt mode.</string>	  
+    <string lang="en" key="PIM_REQUIRE_LONG_PASSWORD">Password must contain 20 or more characters in order to use the specified PIM.\nShorter passwords can only be used if the PIM is 485 or greater.</string>
+    <string lang="en" key="BOOT_PIM_REQUIRE_LONG_PASSWORD">Pre-boot authentication Password must contain 20 or more characters in order to use the specified PIM.\nShorter passwords can only be used if the PIM is 98 or greater.</string>    
     <string lang="en" key="KEYFILES_NOT_SUPPORTED_FOR_SYS_ENCRYPTION">Keyfiles are currently not supported for system encryption.</string>
     <string lang="da" key="CANNOT_RESTORE_KEYBOARD_LAYOUT">Advarsel: VeraCrypt kunne ikke gendanne det originale keyboard layout. Dette kan medføre at du indtaster et kodeord ukorrekt.</string>
     <string lang="da" key="CANT_CHANGE_KEYB_LAYOUT_FOR_SYS_ENCRYPTION">Fejl: Kan ikke indstille keyboard layoutet for VeraCrypt til standard US keyboard layout.\n\nBemærk at kodeordet skal indtastes i før-boot miljøet (før Windows starter) hvor ikke-US Windows keyboard layouts ikke er tilgængelige. Derfor skal kodeordet altid skrives ved brug af standard US keyboard layout.</string>
     <string lang="da" key="ALT_KEY_CHARS_NOT_FOR_SYS_ENCRYPTION">Da VeraCrypt midlertidigt har ændret keyboard layout til standard US keyboard layout, det er ikke muligt at indtaste karakterer ved trykke på taster mens den højre Alt tast holdes nede. Derimod kan du indtaste de fleste af disse karakterer, ved at trykke de passende taster mens Shift tasten holdes nede.</string>
     <string lang="da" key="KEYB_LAYOUT_CHANGE_PREVENTED">VeraCrypt forhindrede ændring af keyboard layout.</string>
     <string lang="da" key="KEYB_LAYOUT_SYS_ENC_EXPLANATION">Bemærk: Kodeordet skal indtastes i før-boot miljøet (før Windows starter) hvor ikke-US Windows keyboard layouts ikke er tilgængelige. Derfor, bør kodeordet altid indtastes ved brug af standard US keyboard layout. Derimod er det vigtigt at bemærke at du IKKE behøver et rigtigt US keyboard. VeraCrypt sikrer automatisk at du roligt kan indtaste kodeordet (lige nu og i før-boot miljøet) selv om du ikke har et rigtigt US keyboard.</string>
-    <string lang="en" key="RESCUE_DISK_INFO">Before you can encrypt the partition/drive, you must create a VeraCrypt Rescue Disk (TRD), which serves the following purposes:\n\n- If the VeraCrypt Boot Loader, master key, or other critical data gets damaged, the TRD allows you to restore it (note, however, that you will still have to enter the correct password then).\n\n- If Windows gets damaged and cannot start, the TRD allows you to permanently decrypt the partition/drive before Windows starts.\n\n- The TRD will contain a backup of the present content of the first drive track (which typically contains a system loader or boot manager) and will allow you to restore it if necessary.\n\nThe VeraCrypt Rescue Disk ISO image will be created in the location specified below.</string>
+    <string lang="en" key="RESCUE_DISK_INFO">Before you can encrypt the partition/drive, you must create a VeraCrypt Rescue Disk (VRD), which serves the following purposes:\n\n- If the VeraCrypt Boot Loader, master key, or other critical data gets damaged, the VRD allows you to restore it (note, however, that you will still have to enter the correct password then).\n\n- If Windows gets damaged and cannot start, the VRD allows you to permanently decrypt the partition/drive before Windows starts.\n\n- The VRD will contain a backup of the present content of the first drive track (which typically contains a system loader or boot manager) and will allow you to restore it if necessary.\n\nThe VeraCrypt Rescue Disk ISO image will be created in the location specified below.</string>
     <string lang="en" key="RESCUE_DISK_WIN_ISOBURN_PRELAUNCH_NOTE">After you click OK, Microsoft Windows Disc Image Burner will be launched. Please use it to burn the VeraCrypt Rescue Disk ISO image to a CD or DVD.\n\nAfter you do so, return to the VeraCrypt Volume Creation Wizard and follow its instructions.</string>
     <string lang="en" key="RESCUE_DISK_BURN_INFO">The Rescue Disk image has been created and stored in this file:\n%hs\n\nNow you need to burn it to a CD or DVD.\n\n%lsAfter you burn the Rescue Disk, click Next to verify that it has been correctly burned.</string>
     <string lang="en" key="RESCUE_DISK_BURN_INFO_NO_CHECK">The Rescue Disk image has been created and stored in this file:\n%hs\n\nNow you should either burn the image to a CD/DVD or move it to a safe location for later use.\n\n%lsClick Next to continue.</string>
@@ -1102,6 +1186,7 @@
     <string lang="en" key="SYS_ENCRYPTION_PRETEST_RESULT_INFO">The pretest has been successfully completed.\n\nWARNING: Please note that if power supply is suddenly interrupted while encrypting existing data in place, or when the operating system crashes due to a software error or hardware malfunction while VeraCrypt is encrypting existing data in place, portions of the data will be corrupted or lost. Therefore, before you start encrypting, please make sure that you have backup copies of the files you want to encrypt. If you do not, please back up the files now (you can click Defer, back up the files, then run VeraCrypt again anytime, and select 'System' &gt; 'Resume Interrupted Process' to start encrypting).\n\nWhen ready, click Encrypt to start encrypting.</string>
     <string lang="en" key="SYSENC_ENCRYPTION_PAGE_INFO">You can click Pause or Defer anytime to interrupt the process of encryption or decryption, exit this wizard, restart or shut down your computer, and then resume the process, which will continue from the point it was stopped. To prevent slowdown when the system or applications write or read data from the system drive, VeraCrypt automatically waits until the data is written or read (see Status above) and then automatically continues encrypting or decrypting.</string>
     <string lang="en" key="NONSYS_INPLACE_ENC_ENCRYPTION_PAGE_INFO">\n\nYou can click Pause or Defer anytime to interrupt the process of encryption, exit this wizard, restart or shut down your computer, and then resume the process, which will continue from the point it was stopped. Note that the volume cannot be mounted until it has been fully encrypted.</string>
+    <string lang="en" key="NONSYS_INPLACE_DEC_DECRYPTION_PAGE_INFO">\n\nYou can click Pause or Defer anytime to interrupt the process of decryption, exit this wizard, restart or shut down the computer, and then resume the process, which will continue from the point where it was stopped. Note that the volume cannot be mounted until it has been fully decrypted.</string>
     <string lang="en" key="SYSENC_HIDDEN_OS_INITIAL_INFO_TITLE">Hidden System Started</string>
     <string lang="en" key="SYSENC_HIDDEN_OS_WIPE_INFO_TITLE">Original System</string>
     <string lang="en" key="SYSENC_HIDDEN_OS_WIPE_INFO">Windows creates (typically, without your knowledge or consent) various log files, temporary files, etc., on the system partition. It also saves the content of RAM to hibernation and paging files located on the system partition. Therefore, if an adversary analyzed files stored on the partition where the original system (of which the hidden system is a clone) resides, he might find out, for example, that you used the VeraCrypt wizard in the hidden-system-creation mode (which might indicate the existence of a hidden operating system on your computer).\n\nTo prevent such issues, VeraCrypt will, in the next steps, securely erase the entire content of the partition where the original system resides. Afterwards, in order to achieve plausible deniability, you will need to install a new system on the partition and encrypt it. Thus you will create the decoy system and the whole process of creation of the hidden operating system will be completed.</string>
@@ -1141,7 +1226,7 @@
     <string lang="en" key="HIDDEN_OS_CREATION_PREINFO_HELP">In the next steps, VeraCrypt will create the hidden operating system by copying the content of the system partition to the hidden volume (data being copied will be encrypted on the fly with an encryption key different from the one that will be used for the decoy operating system).\n\nPlease note that the process will be performed in the pre-boot environment (before Windows starts) and it may take a long time to complete; several hours or even several days (depending on the size of the system partition and on the performance of your computer).\n\nYou will be able to interrupt the process, shut down your computer, start the operating system and then resume the process. However, if you interrupt it, the entire process of copying the system will have to start from the beginning (because the content of the system partition must not change during cloning).</string>
     <string lang="da" key="CONFIRM_CANCEL_HIDDEN_OS_CREATION">Ønsker du at afbryde hele processen med at oprette det skjulte operativsystem?\n\nBemærk: Du vil IKKE være i stand til at fortsætte processen hvis du afbryder nu.</string>
     <string lang="da" key="CONFIRM_CANCEL_SYS_ENC_PRETEST">Ønsker du at afbryde system krypteringens indledende test?</string>
-    <string lang="en" key="BOOT_PRETEST_FAILED_RETRY">The VeraCrypt system encryption pretest failed. Do you want to try again?\n\nIf you select 'No', the pre-boot authentication component will be uninstalled.\n\nNotes:\n\n- If the VeraCrypt Boot Loader did not ask you to enter the password before Windows started, it is possible that your operating system does not boot from the drive on which it is installed. This is not supported.\n\n- If you used an encryption algorithm other than AES and the pretest failed (and you entered the password), it may have been caused by an inappropriately designed driver. Select 'No', and try encrypting the system partition/drive again, but use the AES encryption algorithm (which has the lowest memory requirements).\n\n- For more possible causes and solutions, see: http://www.veracrypt.org/docs/?s=troubleshooting</string>
+    <string lang="en" key="BOOT_PRETEST_FAILED_RETRY">The VeraCrypt system encryption pretest failed. Do you want to try again?\n\nIf you select 'No', the pre-boot authentication component will be uninstalled.\n\nNotes:\n\n- If the VeraCrypt Boot Loader did not ask you to enter the password before Windows started, it is possible that your operating system does not boot from the drive on which it is installed. This is not supported.\n\n- If you used an encryption algorithm other than AES and the pretest failed (and you entered the password), it may have been caused by an inappropriately designed driver. Select 'No', and try encrypting the system partition/drive again, but use the AES encryption algorithm (which has the lowest memory requirements).\n\n- For more possible causes and solutions, see: https://veracrypt.codeplex.com/wikipage?title=Troubleshooting</string>
     <string lang="da" key="SYS_DRIVE_NOT_ENCRYPTED">System partition/drev ser ikke ud til at være krypteret (hverken delvist eller helt).</string>
     <string lang="da" key="SETUP_FAILED_BOOT_DRIVE_ENCRYPTED">Det system partition/drev er krypteret (delvist eller helt).\n\nDekrypter venligst dit system partition/drev helt før du fortsætter. For at gøre dette, vælg 'System' &gt; 'Dekrypter System Partition/Drev Permanent' fra menulinien i VeraCrypt hovedvinduet.</string>
     <string lang="en" key="SETUP_FAILED_BOOT_DRIVE_ENCRYPTED_DOWNGRADE">When the system partition/drive is encrypted (partially or fully), you cannot downgrade VeraCrypt (but you can upgrade it or reinstall the same version).</string>
@@ -1158,6 +1243,8 @@
     <string lang="en" key="CONFIRM_SYSTEM_ENCRYPTION_MODE">You have selected the system partition/drive (or the boot partition), but the wizard mode you selected is suitable only for non-system partitions/drives.\n\nDo you want to set up pre-boot authentication (which means that you will need to enter your password each time before Windows boots/starts) and encrypt the system partition/drive?</string>
     <string lang="da" key="CONFIRM_DECRYPT_SYS_DEVICE">Er du sikker på du ønsker at dekryptere system partition/drev permanent?</string>
     <string lang="da" key="CONFIRM_DECRYPT_SYS_DEVICE_CAUTION">FORSIGTIG: Hvis du dekrypterer system partition/drev permantent, vil ukrypteret data blive skrevet der til.\n\nEr du helt sikker på du vil dekryptere system partition/drev permanent?</string>
+    <string lang="en" key="CONFIRM_DECRYPT_NON_SYS_DEVICE">Are you sure you want to permanently decrypt the following volume?</string>
+    <string lang="en" key="CONFIRM_DECRYPT_NON_SYS_DEVICE_CAUTION">CAUTION: If you permanently decrypt the VeraCrypt volume, unencrypted data will be written to the disk.\n\nAre you really sure you want to permanently decrypt the selected volume?</string>
     <string lang="en" key="CONFIRM_CASCADE_FOR_SYS_ENCRYPTION">Warning: If you use a cascade of ciphers for system encryption, you may encounter the following issues:\n\n1) The VeraCrypt Boot Loader is larger than normal and, therefore, there is not enough space in the first drive track for a backup of the VeraCrypt Boot Loader. Hence, whenever it gets damaged (which often happens, for example, during inappropriately designed anti-piracy activation procedures of certain programs), you will need to use the VeraCrypt Rescue Disk to boot or to repair the VeraCrypt Boot Loader.\n\n2) On some computers, resuming from hibernation takes longer.\n\nThese potential issues can be prevented by choosing a non-cascade encryption algorithm (e.g. AES).\n\nAre you sure you want to use a cascade of ciphers?</string>
     <string lang="da" key="NOTE_CASCADE_FOR_SYS_ENCRYPTION">Hvis du oplever nogle af de tidligere beskrevne problemer, dekrypter partition/drev (hvis det er krypteret) og prøv så at kryptere det igen ved brug af en ikke-kaskade krypterings algorithme (f.eks. AES).</string>
     <string lang="en" key="UPDATE_TC_IN_DECOY_OS_FIRST">WARNING: For safety and security reasons, you should update VeraCrypt on the decoy operating system before you update it on the hidden operating system.\n\nTo do so, boot the decoy system and run the VeraCrypt installer from within it. Then boot the hidden system and run the installer from within it as well.\n\nNote: The decoy system and the hidden system share a single boot loader. If you upgraded VeraCrypt only on the hidden system (but not on the decoy system), the decoy system would contain a VeraCrypt driver and VeraCrypt applications whose version numbers are different from the version number of the VeraCrypt Boot Loader. Such a discrepancy might indicate that there is a hidden operating system on this computer.\n\n\nDo you want to continue?</string>
@@ -1173,6 +1260,7 @@
     <string lang="en" key="ENABLE_BAD_SECTOR_ZEROING">Error: Content of one or more sectors on the disk cannot be read (probably due to a physical defect).\n\nThe process of in-place encryption can continue only when the sectors have been made readable again. VeraCrypt can attempt to make these sectors readable by writing zeros to the sectors (subsequently such all-zero blocks would be encrypted). However, note that any data stored in the unreadable sectors will be lost. If you want to avoid that, you can attempt to recover portions of the corrupted data using appropriate third-party tools.\n\nNote: In case of physically damaged sectors (as opposed to mere data corruption and checksum errors) most types of storage devices internally reallocate the sectors when data is attempted to be written to them (so the existing data in the damaged sectors may remain unencrypted on the drive).\n\nDo you want VeraCrypt to write zeroes to unreadable sectors?</string>
     <string lang="en" key="DISCARD_UNREADABLE_ENCRYPTED_SECTORS">Error: Content of one or more sectors on the disk cannot be read (probably due to a physical defect).\n\nTo be able to proceed with decryption, VeraCrypt will have to discard the content of the unreadable sectors (the content will be replaced with pseudorandom data). Please note that, before proceeding, you can attempt to recover portions of any corrupted data using appropriate third-party tools.\n\nDo you want VeraCrypt to discard data in the unreadable sectors now?</string>
     <string lang="en" key="ZEROED_BAD_SECTOR_COUNT">Note: VeraCrypt has replaced the content of %I64d unreadable sectors (%s) with encrypted all-zero plaintext blocks.</string>
+    <string lang="en" key="SKIPPED_BAD_SECTOR_COUNT">Note: VeraCrypt has replaced the content of %I64d unreadable sectors (%s) with pseudorandom data.</string>
     <string lang="en" key="ENTER_TOKEN_PASSWORD">Enter password/PIN for token '%s':</string>
     <string lang="en" key="PKCS11_LIB_LOCATION_HELP">In order to allow VeraCrypt to access a security token or smart card, you need to install a PKCS #11 software library for the token or smart card first. Such a library may be supplied with the device or it may be available for download from the website of the vendor or other third parties.\n\nAfter you install the library, you can either select it manually by clicking 'Select Library' or you can let VeraCrypt find and select it automatically by clicking 'Auto-Detect Library' (only the Windows system directory will be searched).</string>
     <string lang="en" key="SELECT_PKCS11_MODULE_HELP">Note: For the filename and location of the PKCS #11 library installed for your security token or smart card, please refer to the documentation supplied with the token, card, or third-party software.\n\nClick 'OK' to select the path and filename.</string>
@@ -1217,6 +1305,7 @@
     <string lang="en" key="CONFIRM_SETTING_DEGRADES_PERFORMANCE">WARNING: This setting may degrade performance.\n\nAre you sure you want to use this setting?</string>
     <string lang="en" key="HOST_DEVICE_REMOVAL_DISMOUNT_WARN_TITLE">Warning: VeraCrypt volume auto-dismounted</string>
     <string lang="en" key="HOST_DEVICE_REMOVAL_DISMOUNT_WARN">Before you physically remove or turn off a device containing a mounted volume, you should always dismount the volume in VeraCrypt first.\n\nUnexpected spontaneous dismount is usually caused by an intermittently failing cable, drive (enclosure), etc.</string>
+    <string lang="en" key="UNSUPPORTED_TRUECRYPT_FORMAT">This volume was created with TrueCrypt %x.%x but VeraCrypt supports only TrueCrypt volumes created with TrueCrypt 6.x/7.x series</string>
     <string lang="da" key="TEST">Test</string>
     <string lang="da" key="KEYFILE">Nøglefil</string>
     <string lang="da" key="VKEY_08">Backspace</string>

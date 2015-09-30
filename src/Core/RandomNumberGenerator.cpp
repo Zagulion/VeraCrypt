@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2009 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #ifndef TC_WINDOWS
@@ -65,45 +69,63 @@ namespace VeraCrypt
 		}
 	}
 
-	void RandomNumberGenerator::GetData (const BufferPtr &buffer, bool fast)
+	void RandomNumberGenerator::GetData (const BufferPtr &buffer, bool fast, bool allowAnyLength)
 	{
 		if (!Running)
 			throw NotInitialized (SRC_POS);
 
-		if (buffer.Size() > PoolSize)
+		if (!allowAnyLength && (buffer.Size() > PoolSize))
 			throw ParameterIncorrect (SRC_POS);
 
 		ScopeLock lock (AccessMutex);
+		size_t bufferLen = buffer.Size(), loopLen;
+		byte* pbBuffer = buffer.Get();
 
 		// Poll system for data
 		AddSystemDataToPool (fast);
 		HashMixPool();
 
-		// Transfer bytes from pool to output buffer
-		for (size_t i = 0; i < buffer.Size(); ++i)
+		while (bufferLen > 0)
 		{
-			buffer[i] += Pool[ReadOffset++];
+			if (bufferLen > PoolSize)
+			{
+				loopLen = PoolSize;
+				bufferLen -= PoolSize;
+			}
+			else
+			{
+				loopLen = bufferLen;
+				bufferLen = 0;
+			}
 
-			if (ReadOffset >= PoolSize)
-				ReadOffset = 0;
-		}
+			// Transfer bytes from pool to output buffer
+			for (size_t i = 0; i < loopLen; ++i)
+			{
+				pbBuffer[i] += Pool[ReadOffset++];
 
-		// Invert and mix the pool
-		for (size_t i = 0; i < Pool.Size(); ++i)
-		{
-			Pool[i] = ~Pool[i];
-		}
+				if (ReadOffset >= PoolSize)
+					ReadOffset = 0;
+			}
 
-		AddSystemDataToPool (true);
-		HashMixPool();
+			// Invert and mix the pool
+			for (size_t i = 0; i < Pool.Size(); ++i)
+			{
+				Pool[i] = ~Pool[i];
+			}
 
-		// XOR the current pool content into the output buffer to prevent pool state leaks
-		for (size_t i = 0; i < buffer.Size(); ++i)
-		{
-			buffer[i] ^= Pool[ReadOffset++];
+			AddSystemDataToPool (true);
+			HashMixPool();
 
-			if (ReadOffset >= PoolSize)
-				ReadOffset = 0;
+			// XOR the current pool content into the output buffer to prevent pool state leaks
+			for (size_t i = 0; i < loopLen; ++i)
+			{
+				pbBuffer[i] ^= Pool[ReadOffset++];
+
+				if (ReadOffset >= PoolSize)
+					ReadOffset = 0;
+			}
+			
+			pbBuffer += loopLen;
 		}
 	}
 

@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2011 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #ifndef TC_HEADER_NTDRIVER
@@ -58,8 +60,10 @@ typedef struct EXTENSION
 	ULONG SectorsPerTrack;		/* Partition info */
 	ULONG BytesPerSector;		/* Partition info */
 	UCHAR PartitionType;		/* Partition info */
-	
+
 	uint32 HostBytesPerSector;
+	uint32 HostBytesPerPhysicalSector;
+	ULONG BytesOffsetForSectorAlignment;
 
 	KEVENT keVolumeEvent;		/* Event structure used when setting up a device */
 
@@ -73,6 +77,9 @@ typedef struct EXTENSION
 	BOOL SystemFavorite;
 
 	WCHAR wszVolume[TC_MAX_PATH];	/*  DONT change this size without also changing MOUNT_LIST_STRUCT! */
+	WCHAR wszLabel[33];
+	BOOL bIsNTFS;
+	BOOL bDriverSetLabel;
 
 	LARGE_INTEGER fileCreationTime;
 	LARGE_INTEGER fileLastAccessTime;
@@ -169,6 +176,6 @@ void GetElapsedTimeInit (LARGE_INTEGER *lastPerfCounter);
 int64 GetElapsedTime (LARGE_INTEGER *lastPerfCounter);
 BOOL IsOSAtLeast (OSVersionEnum reqMinOS);
 
-#define TC_BUG_CHECK(status) KeBugCheckEx (SECURITY_SYSTEM, __LINE__, (ULONG_PTR) status, 0, 'TC')
+#define TC_BUG_CHECK(status) KeBugCheckEx (SECURITY_SYSTEM, __LINE__, (ULONG_PTR) status, 0, 'VC')
 
 #endif // TC_HEADER_NTDRIVER

@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "Common/Pkcs5.h"
@@ -12,7 +16,7 @@
 
 namespace VeraCrypt
 {
-	Pkcs5Kdf::Pkcs5Kdf ()
+	Pkcs5Kdf::Pkcs5Kdf (bool truecryptMode) : m_truecryptMode(truecryptMode)
 	{
 	}
 
@@ -20,14 +24,14 @@ namespace VeraCrypt
 	{
 	}
 
-	void Pkcs5Kdf::DeriveKey (const BufferPtr &key, const VolumePassword &password, const ConstBufferPtr &salt) const
+	void Pkcs5Kdf::DeriveKey (const BufferPtr &key, const VolumePassword &password, int pim, const ConstBufferPtr &salt) const
 	{
-		DeriveKey (key, password, salt, GetIterationCount());
+		DeriveKey (key, password, salt, GetIterationCount(pim));
 	}
 	
-	shared_ptr <Pkcs5Kdf> Pkcs5Kdf::GetAlgorithm (const wstring &name)
+	shared_ptr <Pkcs5Kdf> Pkcs5Kdf::GetAlgorithm (const wstring &name, bool truecryptMode)
 	{
-		foreach (shared_ptr <Pkcs5Kdf> kdf, GetAvailableAlgorithms())
+		foreach (shared_ptr <Pkcs5Kdf> kdf, GetAvailableAlgorithms(truecryptMode))
 		{
 			if (kdf->GetName() == name)
 				return kdf;
@@ -35,9 +39,9 @@ namespace VeraCrypt
 		throw ParameterIncorrect (SRC_POS);
 	}
 
-	shared_ptr <Pkcs5Kdf> Pkcs5Kdf::GetAlgorithm (const Hash &hash)
+	shared_ptr <Pkcs5Kdf> Pkcs5Kdf::GetAlgorithm (const Hash &hash, bool truecryptMode)
 	{
-		foreach (shared_ptr <Pkcs5Kdf> kdf, GetAvailableAlgorithms())
+		foreach (shared_ptr <Pkcs5Kdf> kdf, GetAvailableAlgorithms(truecryptMode))
 		{
 			if (typeid (*kdf->GetHash()) == typeid (hash))
 				return kdf;
@@ -46,14 +50,23 @@ namespace VeraCrypt
 		throw ParameterIncorrect (SRC_POS);
 	}
 
-	Pkcs5KdfList Pkcs5Kdf::GetAvailableAlgorithms ()
+	Pkcs5KdfList Pkcs5Kdf::GetAvailableAlgorithms (bool truecryptMode)
 	{
 		Pkcs5KdfList l;
-				
-		l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacSha512 ()));
-		l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacWhirlpool ()));
-		l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacSha256 ()));
-		l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacRipemd160 ()));
+
+		if (truecryptMode)
+		{
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacRipemd160 (true)));
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacSha512 (true)));
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacWhirlpool (true)));
+		}
+		else
+		{
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacSha512 (false)));
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacWhirlpool (false)));
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacSha256 ()));
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacRipemd160 (false)));
+		}
 
 		return l;
 	}

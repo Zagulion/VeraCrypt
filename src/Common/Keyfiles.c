@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2005-2009 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include <stdlib.h>
@@ -218,7 +222,7 @@ close:
 }
 
 
-BOOL KeyFilesApply (Password *password, KeyFile *firstKeyFile)
+BOOL KeyFilesApply (HWND hwndDlg, Password *password, KeyFile *firstKeyFile, const char* volumeFileName)
 {
 	BOOL status = TRUE;
 	KeyFile kfSubStruct;
@@ -252,8 +256,8 @@ BOOL KeyFilesApply (Password *password, KeyFile *firstKeyFile)
 				if (keyfileData.empty())
 				{
 					SetLastError (ERROR_HANDLE_EOF); 
-					handleWin32Error (MainDlg);
-					Error ("ERR_PROCESS_KEYFILE");
+					handleWin32Error (hwndDlg, SRC_POS);
+					Error ("ERR_PROCESS_KEYFILE", hwndDlg);
 					status = FALSE;
 					continue;
 				}
@@ -291,8 +295,8 @@ BOOL KeyFilesApply (Password *password, KeyFile *firstKeyFile)
 		// Determine whether it's a path or a file
 		if (stat (kf->FileName, &statStruct) != 0)
 		{
-			handleWin32Error (MainDlg);
-			Error ("ERR_PROCESS_KEYFILE");
+			handleWin32Error (hwndDlg, SRC_POS);
+			Error ("ERR_PROCESS_KEYFILE", hwndDlg);
 			status = FALSE;
 			continue;
 		}
@@ -305,8 +309,8 @@ BOOL KeyFilesApply (Password *password, KeyFile *firstKeyFile)
 			StringCbPrintfA (searchPath, sizeof (searchPath), "%s\\*.*", kf->FileName);
 			if ((searchHandle = _findfirst (searchPath, &fBuf)) == -1)
 			{
-				handleWin32Error (MainDlg);
-				Error ("ERR_PROCESS_KEYFILE_PATH");
+				handleWin32Error (hwndDlg, SRC_POS);
+				Error ("ERR_PROCESS_KEYFILE_PATH", hwndDlg);
 				status = FALSE;
 				continue;
 			}
@@ -318,13 +322,13 @@ BOOL KeyFilesApply (Password *password, KeyFile *firstKeyFile)
 				StringCbPrintfA (kfSub->FileName, sizeof(kfSub->FileName), "%s%c%s", kf->FileName,
 					'\\',
 					fBuf.name
-					);
+					);				
 
 				// Determine whether it's a path or a file
 				if (stat (kfSub->FileName, &statStruct) != 0)
 				{
-					handleWin32Error (MainDlg);
-					Error ("ERR_PROCESS_KEYFILE");
+					handleWin32Error (hwndDlg, SRC_POS);
+					Error ("ERR_PROCESS_KEYFILE", hwndDlg);
 					status = FALSE;
 					continue;
 				}
@@ -342,13 +346,20 @@ BOOL KeyFilesApply (Password *password, KeyFile *firstKeyFile)
 					continue;	 
 				}
 
+				CorrectFileName (kfSub->FileName);
+				if (volumeFileName && (_stricmp (volumeFileName, kfSub->FileName) == 0))
+				{
+					// skip if it is the current container file name
+					continue;
+				}
+
 				++keyfileCount;
 
 				// Apply keyfile to the pool
 				if (!KeyFileProcess (keyPool, kfSub))
 				{
-					handleWin32Error (MainDlg);
-					Error ("ERR_PROCESS_KEYFILE");
+					handleWin32Error (hwndDlg, SRC_POS);
+					Error ("ERR_PROCESS_KEYFILE", hwndDlg);
 					status = FALSE;
 				}
 
@@ -359,15 +370,15 @@ BOOL KeyFilesApply (Password *password, KeyFile *firstKeyFile)
 
 			if (keyfileCount == 0)
 			{
-				ErrorDirect ((wstring (GetString ("ERR_KEYFILE_PATH_EMPTY")) + L"\n\n" + SingleStringToWide (kf->FileName)).c_str());
+				ErrorDirect ((wstring (GetString ("ERR_KEYFILE_PATH_EMPTY")) + L"\n\n" + SingleStringToWide (kf->FileName)).c_str(), hwndDlg);
 				status = FALSE;
 			}
 		}
 		// Apply keyfile to the pool
 		else if (!KeyFileProcess (keyPool, kf))
 		{
-			handleWin32Error (MainDlg);
-			Error ("ERR_PROCESS_KEYFILE");
+			handleWin32Error (hwndDlg, SRC_POS);
+			Error ("ERR_PROCESS_KEYFILE", hwndDlg);
 			status = FALSE;
 		}
 	}
@@ -470,13 +481,25 @@ BOOL CALLBACK KeyFilesDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 			{
 				if (SelectMultipleFiles (hwndDlg, "SELECT_KEYFILE", kf->FileName, sizeof(kf->FileName),bHistory))
 				{
+					bool containerFileSkipped = false;
 					do
 					{
-						param->FirstKeyFile = KeyFileAdd (param->FirstKeyFile, kf);
-						LoadKeyList (hwndDlg, param->FirstKeyFile);
+						CorrectFileName (kf->FileName);
+						if (_stricmp (param->VolumeFileName, kf->FileName) == 0)
+							containerFileSkipped = true;
+						else
+						{
+							param->FirstKeyFile = KeyFileAdd (param->FirstKeyFile, kf);
+							LoadKeyList (hwndDlg, param->FirstKeyFile);
 
-						kf = (KeyFile *) malloc (sizeof (KeyFile));
+							kf = (KeyFile *) malloc (sizeof (KeyFile));
+						}
 					} while (SelectMultipleFilesNext (kf->FileName, sizeof(kf->FileName)));
+
+					if (containerFileSkipped)
+					{
+						Warning ("SELECTED_KEYFILE_IS_CONTAINER_FILE", hwndDlg);
+					}
 				}
 
 				free (kf);
@@ -557,6 +580,7 @@ BOOL CALLBACK KeyFilesDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 		if (lw == IDC_LINK_KEYFILES_INFO)
 		{
 			Applink ("keyfiles", TRUE, "");
+			return 1;
 		}
 
 		if (lw == IDOK)
@@ -574,6 +598,7 @@ BOOL CALLBACK KeyFilesDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 			EndDialog (hwndDlg, IDCLOSE);
 			return 1;
 		}
+		break;
 
 	case WM_DROPFILES:
 		{

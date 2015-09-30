@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2005 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include <windows.h>
@@ -15,6 +19,10 @@
 
 #include <Strsafe.h>
 
+#ifndef SRC_POS
+#define SRC_POS (__FUNCTION__ ":" TC_TO_STRING(__LINE__))
+#endif
+
 #define MAX_KEY_COMB_NAME_LEN	260
 
 TCHOTKEY	Hotkeys [NBR_HOTKEYS];
@@ -22,6 +30,7 @@ static TCHOTKEY	tmpHotkeys [NBR_HOTKEYS];
 
 static int nSelectedHotkeyId;
 static UINT currentVKeyCode;
+static BYTE vkeysDown[256];
 
 
 static void ScanAndProcessKey (UINT *vKeyCode, wchar_t *keyName)
@@ -33,9 +42,15 @@ static void ScanAndProcessKey (UINT *vKeyCode, wchar_t *keyName)
 	{
 		if (GetAsyncKeyState (vKey) < 0)
 		{
-			if (GetKeyName (vKey, keyName))	// If the key is allowed and its name has been resolved
-				*vKeyCode = vKey;
+			if (!vkeysDown [vKey])
+			{
+				vkeysDown [vKey] = 1;
+				if (GetKeyName (vKey, keyName))	// If the key is allowed and its name has been resolved
+					*vKeyCode = vKey;
+			}
 		}
+		else
+			vkeysDown [vKey] = 0;
 	}
 }
 
@@ -54,6 +69,56 @@ BOOL GetKeyName (UINT vKey, wchar_t *keyName)
 	{
 		// OEM-specific
 		StringCbPrintfW (keyName, MAX_KEY_COMB_NAME_LEN, L"OEM-%d", vKey);
+
+		// mapping taken from:
+		//	http://www.hotkeynet.com/ref/keynames.html
+		//	https://mojoware.googlecode.com/svn-history/r3/trunk/mojo_engine/cKeyboard.cpp
+		//	http://www.screenio.com/gui_screenio/gs_htmlhelp_subweb/download/SIMKEYS.cob
+		//
+		// These values seem to come from Nokia/Ericsson mobile device keys
+
+		switch (vKey)
+		{
+		case 0xE9: // OEMReset = 0xE9
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMReset)");
+			break;
+		case 0xEA: // OEMJump = 0xEA
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMJump)");
+			break;
+		case 0xEB: // OEMPA1 = 0xEB
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMPA1)");
+			break;
+		case 0xEC: // OEMPA2 = 0xEC
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMPA2)");
+			break;
+		case 0xED: // OEMPA3 = 0xED
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMPA3)");
+			break;
+		case 0xEE: // OEMWSCtrl = 0xEE
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMWSCtrl)");
+			break;
+		case 0xEF: // OEMCUSel = 0xEF
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMCUSel)");
+			break;
+		case 0xF0: // OEMATTN = 0xF0
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMATTN)");
+			break;
+		case 0xF1: // OEMFinish = 0xF1
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMFinish)");
+			break;
+		case 0xF2: // OEMCopy = 0xF2
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMCopy)");
+			break;
+		case 0xF3: // OEMAuto = 0xF3
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMAuto)");
+			break;
+		case 0xF4: // OEMENLW = 0xF4
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMENLW)");
+			break;
+		case 0xF5: // OEMBackTab = 0xF5
+			StringCbCatW (keyName, MAX_KEY_COMB_NAME_LEN, L" (OEMBackTab)");
+			break;
+		}
 	}
 	else if (vKey >= VK_F1 && vKey <= VK_F24)
 	{
@@ -270,30 +335,25 @@ static void DisplayHotkeyList (HWND hwndDlg)
 
 
 BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	HWND hList = GetDlgItem (hwndDlg, IDC_HOTKEY_LIST);
-	HWND hwndMainDlg = hwndDlg;
+{	
 	WORD lw = LOWORD (wParam);
 	WORD hw = HIWORD (wParam);
 	static BOOL bKeyScanOn;
 	static BOOL bTPlaySoundOnSuccessfulHkDismount;
 	static BOOL bTDisplayBalloonOnSuccessfulHkDismount;
 
-	while (GetParent (hwndMainDlg) != NULL)
-	{
-		hwndMainDlg = GetParent (hwndMainDlg);
-	}
-
 	switch (msg)
 	{
 	case WM_INITDIALOG:
 		{
 			LVCOLUMNW col;
+			HWND hList = GetDlgItem (hwndDlg, IDC_HOTKEY_LIST);
 
 			bKeyScanOn = FALSE;
 			nSelectedHotkeyId = -1;
 			currentVKeyCode = 0;
 			memcpy (tmpHotkeys, Hotkeys, sizeof(tmpHotkeys));
+			memset (vkeysDown, 0, sizeof(vkeysDown));
 
 			SendMessageW (hList,LVM_SETEXTENDEDLISTVIEWSTYLE,0,
 				LVS_EX_FULLROWSELECT|LVS_EX_HEADERDRAGDROP|LVS_EX_LABELTIP 
@@ -335,7 +395,7 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 
 	case WM_TIMER:
 		{
-			if (nSelectedHotkeyId > -1)
+			if ((nSelectedHotkeyId > -1) && (GetFocus () == GetDlgItem (hwndDlg, IDC_HOTKEY_KEY)))
 			{
 				wchar_t keyName [MAX_KEY_COMB_NAME_LEN];
 				UINT tmpVKeyCode;
@@ -350,20 +410,16 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 					SetWindowTextW (GetDlgItem (hwndDlg, IDC_HOTKEY_KEY), keyName);
 					EnableWindow (GetDlgItem (hwndDlg, IDC_HOTKEY_ASSIGN), TRUE);
 				}
+				else if ((currentVKeyCode != 0) && GetKeyName (currentVKeyCode, keyName))
+				{
+					SetWindowTextW (GetDlgItem (hwndDlg, IDC_HOTKEY_KEY), keyName);
+				}
 			}
 			return 1;
 		}
 
-	case WM_COMMAND:
 	case WM_NOTIFY:
-
-		if (lw == IDC_HOTKEY_KEY && hw == EN_CHANGE)
-		{
-			if (!bKeyScanOn && nSelectedHotkeyId < 0 && GetWindowTextLengthW (GetDlgItem (hwndDlg, IDC_HOTKEY_KEY)))
-				SetWindowTextW (GetDlgItem (hwndDlg, IDC_HOTKEY_KEY), L"");
-		}
-
-		if (msg == WM_NOTIFY && wParam == IDC_HOTKEY_LIST)
+		if (wParam == IDC_HOTKEY_LIST)
 		{
 			if (((LPNMHDR) lParam)->code == LVN_ITEMACTIVATE
 				|| ((LPNMHDR) lParam)->code == LVN_ITEMCHANGED && (((LPNMLISTVIEW) lParam)->uNewState & LVIS_FOCUSED))
@@ -371,6 +427,8 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 				LVITEM item;
 				memset(&item,0,sizeof(item));
 				nSelectedHotkeyId = ((LPNMLISTVIEW) lParam)->iItem;
+				currentVKeyCode = 0;
+				memset (vkeysDown, 0, sizeof(vkeysDown));
 				SetWindowTextW (GetDlgItem (hwndDlg, IDC_HOTKEY_KEY), GetString ("PRESS_A_KEY_TO_ASSIGN"));
 
 				EnableWindow (GetDlgItem (hwndDlg, IDC_HOTKEY_REMOVE), (tmpHotkeys[nSelectedHotkeyId].vKeyCode > 0));
@@ -379,6 +437,15 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 				bKeyScanOn = TRUE;
 				return 1;
 			}
+		}
+
+		return 0;
+
+	case WM_COMMAND:
+		if (lw == IDC_HOTKEY_KEY && hw == EN_CHANGE)
+		{
+			if (!bKeyScanOn && nSelectedHotkeyId < 0 && GetWindowTextLengthW (GetDlgItem (hwndDlg, IDC_HOTKEY_KEY)))
+				SetWindowTextW (GetDlgItem (hwndDlg, IDC_HOTKEY_KEY), L"");
 		}
 
 		if (lw == IDC_HOTKEY_ASSIGN)
@@ -403,7 +470,7 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 				// Check if it's not already assigned
 				if (ShortcutInUse (currentVKeyCode, modifiers, tmpHotkeys))
 				{
-					Error ("SHORTCUT_ALREADY_IN_USE");
+					Error ("SHORTCUT_ALREADY_IN_USE", hwndDlg);
 					return 1;
 				}
 
@@ -415,7 +482,7 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 					/* F1 is help and F12 is reserved for use by the debugger at all times */
 					if (modifiers == 0)
 					{
-						Error ("CANNOT_USE_RESERVED_KEY");
+						Error ("CANNOT_USE_RESERVED_KEY", hwndDlg);
 						return 1;
 					}
 					break;
@@ -427,13 +494,13 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 				if (!bOwnActiveShortcut
 					&& !RegisterHotKey (hwndDlg, nSelectedHotkeyId, modifiers, currentVKeyCode))
 				{
-					handleWin32Error(hwndDlg);
+					handleWin32Error(hwndDlg, SRC_POS);
 					return 1;
 				}
 				else
 				{
 					if (!bOwnActiveShortcut && !UnregisterHotKey (hwndDlg, nSelectedHotkeyId))
-						handleWin32Error(hwndDlg);
+						handleWin32Error(hwndDlg, SRC_POS);
 
 					tmpHotkeys[nSelectedHotkeyId].vKeyCode = currentVKeyCode;
 					tmpHotkeys[nSelectedHotkeyId].vKeyModifiers = modifiers;
@@ -443,6 +510,8 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 					EnableWindow (GetDlgItem (hwndDlg, IDC_HOTKEY_REMOVE), FALSE);
 					nSelectedHotkeyId = -1;
 					bKeyScanOn = FALSE;
+					currentVKeyCode = 0;
+					memset (vkeysDown, 0, sizeof(vkeysDown));
 				}
 			}
 			DisplayHotkeyList(hwndDlg);
@@ -460,6 +529,8 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 				EnableWindow (GetDlgItem (hwndDlg, IDC_HOTKEY_REMOVE), FALSE);
 				nSelectedHotkeyId = -1;
 				bKeyScanOn = FALSE;
+				currentVKeyCode = 0;
+				memset (vkeysDown, 0, sizeof(vkeysDown));
 				DisplayHotkeyList(hwndDlg);
 			}
 			return 1;
@@ -479,6 +550,8 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 			EnableWindow (GetDlgItem (hwndDlg, IDC_HOTKEY_REMOVE), FALSE);
 			nSelectedHotkeyId = -1;
 			bKeyScanOn = FALSE;
+			currentVKeyCode = 0;
+			memset (vkeysDown, 0, sizeof(vkeysDown));
 			DisplayHotkeyList(hwndDlg);
 			return 1;
 		}
@@ -502,6 +575,12 @@ BOOL CALLBACK HotkeysDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPar
 
 		if (lw == IDOK)
 		{
+			HWND hwndMainDlg = hwndDlg;
+
+			while (GetParent (hwndMainDlg) != NULL)
+			{
+				hwndMainDlg = GetParent (hwndMainDlg);
+			}
 			UnregisterAllHotkeys (hwndMainDlg, Hotkeys);
 			memcpy (Hotkeys, tmpHotkeys, sizeof(Hotkeys));
 			RegisterAllHotkeys (hwndMainDlg, Hotkeys);

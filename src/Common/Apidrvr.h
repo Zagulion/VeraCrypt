@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #pragma once
@@ -62,6 +64,7 @@
 #define TC_IOCTL_SET_SYSTEM_FAVORITE_VOLUME_DIRTY		TC_IOCTL (36)
 #define TC_IOCTL_REREAD_DRIVER_CONFIG					TC_IOCTL (37)
 #define TC_IOCTL_GET_SYSTEM_DRIVE_DUMP_CONFIG			TC_IOCTL (38)
+#define VC_IOCTL_GET_BOOT_LOADER_FINGERPRINT			TC_IOCTL (39)
 
 // Legacy IOCTLs used before version 5.0
 #define TC_IOCTL_LEGACY_GET_DRIVER_VERSION		466968
@@ -100,6 +103,15 @@ typedef struct
 	Password ProtectedHidVolPassword;	/* Password to the hidden volume to be protected against overwriting */
 	BOOL UseBackupHeader;
 	BOOL RecoveryMode;
+	int pkcs5_prf;
+	int ProtectedHidVolPkcs5Prf;
+	BOOL bTrueCryptMode;
+	uint32 BytesPerPhysicalSector;
+	int VolumePim;
+	int ProtectedHidVolPim;
+	wchar_t wszLabel[33]; // maximum label length is 32 for NTFS and 11 for FAT32
+	BOOL bIsNTFS; // output only
+	BOOL bDriverSetLabel;
 } MOUNT_STRUCT;
 
 typedef struct
@@ -114,9 +126,11 @@ typedef struct
 {
 	unsigned __int32 ulMountedDrives;	/* Bitfield of all mounted drive letters */
 	wchar_t wszVolume[26][TC_MAX_PATH];	/* Volume names of mounted volumes */
+	wchar_t wszLabel[26][33];	/* Labels of mounted volumes */
 	unsigned __int64 diskLength[26];
 	int ea[26];
 	int volumeType[26];	/* Volume type (e.g. PROP_VOL_TYPE_OUTER, PROP_VOL_TYPE_OUTER_VOL_WRITE_PREVENTED, etc.) */
+	BOOL truecryptMode[26];
 } MOUNT_LIST_STRUCT;
 
 typedef struct
@@ -138,6 +152,9 @@ typedef struct
 	unsigned __int64 totalBytesWritten;
 	int hiddenVolProtection;	/* Hidden volume protection status (e.g. HIDVOL_PROT_STATUS_NONE, HIDVOL_PROT_STATUS_ACTIVE, etc.) */
 	int volFormatVersion;
+	int volumePim;
+	wchar_t wszLabel[33];
+	BOOL bDriverSetLabel;
 } VOLUME_PROPERTIES_STRUCT;
 
 typedef struct
@@ -235,6 +252,8 @@ typedef struct
 typedef struct
 {
 	Password VolumePassword;
+	int pkcs5_prf;
+	int pim;
 } ReopenBootVolumeHeaderRequest;
 
 
@@ -243,6 +262,11 @@ typedef struct
 	char BootEncryptionAlgorithmName[256];
 	char BootPrfAlgorithmName[256];
 } GetBootEncryptionAlgorithmNameRequest;
+
+typedef struct
+{
+	byte Fingerprint[WHIRLPOOL_DIGESTSIZE + SHA512_DIGESTSIZE];
+} BootLoaderFingerprintRequest;
 
 typedef struct
 {
@@ -298,7 +322,7 @@ typedef struct
 
 #define NT_MOUNT_PREFIX DRIVER_STR("\\Device\\VeraCryptVolume")
 #define NT_ROOT_PREFIX DRIVER_STR("\\Device\\VeraCrypt")
-#define DOS_MOUNT_PREFIX DRIVER_STR("\\DosDevices\\")
+#define DOS_MOUNT_PREFIX DRIVER_STR("\\GLOBAL??\\") // Explicitely use Global MS-DOS device names to avoid security issues
 #define DOS_ROOT_PREFIX DRIVER_STR("\\DosDevices\\VeraCrypt")
 #define WIN32_ROOT_PREFIX DRIVER_STR("\\\\.\\VeraCrypt")
 
@@ -310,5 +334,6 @@ typedef struct
 #define TC_DRIVER_CONFIG_CACHE_BOOT_PASSWORD_FOR_SYS_FAVORITES		0x2
 #define TC_DRIVER_CONFIG_DISABLE_NONADMIN_SYS_FAVORITES_ACCESS		0x4
 #define TC_DRIVER_CONFIG_DISABLE_HARDWARE_ENCRYPTION				0x8
+#define TC_DRIVER_CONFIG_ENABLE_EXTENDED_IOCTL						0x10
 
 #endif		/* _WIN32 */

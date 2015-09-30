@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2005-2009 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "../Common/Dictionary.h"
@@ -22,11 +26,15 @@ static size_t DataPoolSize = 0;
 
 void AddDictionaryEntry (char *key, int intKey, void *value)
 {
-	if (key)
-		StringKeyMap[key] = value;
+	try
+	{
+		if (key)
+			StringKeyMap[key] = value;
 
-	if (intKey != 0)
-		IntKeyMap[intKey] = value;
+		if (intKey != 0)
+			IntKeyMap[intKey] = value;
+	}
+	catch (exception&) {}
 }
 
 

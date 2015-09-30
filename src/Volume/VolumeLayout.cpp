@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "Volume/EncryptionMode.h"
@@ -28,7 +32,6 @@ namespace VeraCrypt
 		layouts.push_back (shared_ptr <VolumeLayout> (new VolumeLayoutV2Normal ()));
 		layouts.push_back (shared_ptr <VolumeLayout> (new VolumeLayoutV1Normal ()));
 		layouts.push_back (shared_ptr <VolumeLayout> (new VolumeLayoutV2Hidden ()));
-		layouts.push_back (shared_ptr <VolumeLayout> (new VolumeLayoutV1Hidden ()));
 		layouts.push_back (shared_ptr <VolumeLayout> (new VolumeLayoutSystemEncryption ()));
 
 		if (type != VolumeType::Unknown)
@@ -82,35 +85,6 @@ namespace VeraCrypt
 	uint64 VolumeLayoutV1Normal::GetDataSize (uint64 volumeHostSize) const
 	{
 		return volumeHostSize - GetHeaderSize();
-	}
-
-
-	VolumeLayoutV1Hidden::VolumeLayoutV1Hidden ()
-	{
-		Type = VolumeType::Hidden;
-		HeaderOffset = -TC_HIDDEN_VOLUME_HEADER_OFFSET_LEGACY;
-		HeaderSize = TC_VOLUME_HEADER_SIZE_LEGACY;
-
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new AES ()));
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new Serpent ()));
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new Twofish ()));
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new AESTwofish ()));
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new AESTwofishSerpent ()));
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new SerpentAES ()));
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new SerpentTwofishAES ()));
-		SupportedEncryptionAlgorithms.push_back (shared_ptr <EncryptionAlgorithm> (new TwofishSerpent ()));
-
-		SupportedEncryptionModes.push_back (shared_ptr <EncryptionMode> (new EncryptionModeXTS ()));
-	}
-
-	uint64 VolumeLayoutV1Hidden::GetDataOffset (uint64 volumeHostSize) const
-	{
-		return volumeHostSize - GetDataSize (volumeHostSize) + HeaderOffset;
-	}
-
-	uint64 VolumeLayoutV1Hidden::GetDataSize (uint64 volumeHostSize) const
-	{
-		return Header->GetHiddenVolumeDataSize ();
 	}
 
 
@@ -226,12 +200,12 @@ namespace VeraCrypt
 		return volumeHostSize;
 	}
 
-	Pkcs5KdfList VolumeLayoutSystemEncryption::GetSupportedKeyDerivationFunctions () const
+	Pkcs5KdfList VolumeLayoutSystemEncryption::GetSupportedKeyDerivationFunctions (bool truecryptMode) const
 	{
 		Pkcs5KdfList l;
-
-		l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacSha256_Boot ()));
-		l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacRipemd160_1000 ()));
+		if (!truecryptMode)
+			l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacSha256_Boot ()));
+		l.push_back (shared_ptr <Pkcs5Kdf> (new Pkcs5HmacRipemd160_1000 (truecryptMode)));
 		return l;
 	}
 }

@@ -51,6 +51,7 @@ Requirements for Building VeraCrypt for Windows:
   header files (available at ftp://ftp.rsasecurity.com/pub/pkcs/pkcs-11/v2-20)
 - NASM assembler 2.08 or compatible
 - gzip compressor
+- upx packer (available at http://upx.sourceforge.net/)
 
 IMPORTANT:
 
@@ -123,6 +124,7 @@ Requirements for Building VeraCrypt for Linux and Mac OS X:
 - Apple Xcode (Mac OS X only)
 - NASM assembler 2.08 or compatible (x86/x64 architecture only)
 - pkg-config
+- makeself (Linux only)
 - wxWidgets 3.0 shared library and header files installed or
   wxWidgets 3.0 library source code (available at http://www.wxwidgets.org)
 - FUSE library and header files (available at http://fuse.sourceforge.net
@@ -160,12 +162,14 @@ Instructions for Building VeraCrypt for Linux and Mac OS X:
    'Main'.
 
 By default, a universal executable supporting both graphical and text user
-interface is built. To build a console-only executable, which requires no GUI
-library, use the 'NOGUI' parameter:
+interface (through the switch --text) is built.
+On Linux, a console-only executable, which requires no GUI library, can be
+built using the 'NOGUI' parameter:
 
    $ make NOGUI=1 WXSTATIC=1 WX_ROOT=/usr/src/wxWidgets wxbuild
    $ make NOGUI=1 WXSTATIC=1
    
+On MacOSX, building a console-only executable is not supported.
 
 Mac OS X specifics:
 -----------------------------------------------------------
@@ -232,7 +236,7 @@ Copyright Information
 ---------------------
 
 This software as a whole:
-Copyright (c) 2013 IDRIX. All rights reserved.
+Copyright (c) 2013-2015 IDRIX. All rights reserved.
 
 Portions of this software:
 Copyright (c) 2003-2012 TrueCrypt Developers Association. All rights reserved.
@@ -253,4 +257,5 @@ documentation, are the sole property of their respective owners.
 VI. Further Information
 =======================
 
-http://www.idrix.fr
+http://www.veracrypt.fr
+

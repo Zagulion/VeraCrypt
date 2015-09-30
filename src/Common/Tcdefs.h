@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #ifndef TCDEFS_H
@@ -15,15 +17,15 @@
 #define TC_APP_NAME						"VeraCrypt"
 
 // Version displayed to user 
-#define VERSION_STRING					"1.0e"
+#define VERSION_STRING					"1.15"
 
 // Version number to compare against driver
-#define VERSION_NUM						0x010e
+#define VERSION_NUM						0x0115
 
 // Release date
-#define TC_STR_RELEASE_DATE				"August 26, 2014"
-#define TC_RELEASE_DATE_YEAR			2014
-#define TC_RELEASE_DATE_MONTH			8
+#define TC_STR_RELEASE_DATE			"Septembre 26th, 2015"
+#define TC_RELEASE_DATE_YEAR			2015
+#define TC_RELEASE_DATE_MONTH			09
 
 #define BYTES_PER_KB                    1024LL
 #define BYTES_PER_MB                    1048576LL
@@ -123,9 +125,14 @@ void ThrowFatalException (int line);
 
 #	define TC_THROW_FATAL_EXCEPTION	ThrowFatalException (__LINE__)
 #elif defined (TC_WINDOWS_DRIVER)
-#	define TC_THROW_FATAL_EXCEPTION KeBugCheckEx (SECURITY_SYSTEM, __LINE__, 0, 0, 'TC')
+#	define TC_THROW_FATAL_EXCEPTION KeBugCheckEx (SECURITY_SYSTEM, __LINE__, 0, 0, 'VC')
 #else
 #	define TC_THROW_FATAL_EXCEPTION	*(char *) 0 = 0
+#endif
+
+#ifdef __COVERITY__
+#undef TC_THROW_FATAL_EXCEPTION
+#define TC_THROW_FATAL_EXCEPTION __coverity_panic__()
 #endif
 
 #ifdef TC_WINDOWS_DRIVER
@@ -134,8 +141,8 @@ void ThrowFatalException (int line);
 #include <ntddk.h>		/* Standard header file for nt drivers */
 #include <ntdddisk.h>		/* Standard I/O control codes  */
 
-#define TCalloc(size) ((void *) ExAllocatePoolWithTag( NonPagedPool, size, 'MMCT' ))
-#define TCfree(memblock) ExFreePoolWithTag( memblock, 'MMCT' )
+#define TCalloc(size) ((void *) ExAllocatePoolWithTag( NonPagedPool, size, 'MMCV' ))
+#define TCfree(memblock) ExFreePoolWithTag( memblock, 'MMCV' )
 
 #define DEVICE_DRIVER
 
@@ -215,7 +222,7 @@ typedef int BOOL;
 #endif
 
 #ifdef _WIN32
-#define burn(mem,size) do { volatile char *burnm = (volatile char *)(mem); int burnc = size; RtlSecureZeroMemory (mem, size); while (burnc--) *burnm++ = 0; } while (0)
+#define burn(mem,size) do { volatile char *burnm = (volatile char *)(mem); size_t burnc = size; RtlSecureZeroMemory (mem, size); while (burnc--) *burnm++ = 0; } while (0)
 #else
 #define burn(mem,size) do { volatile char *burnm = (volatile char *)(mem); int burnc = size; while (burnc--) *burnm++ = 0; } while (0)
 #endif
@@ -252,8 +259,8 @@ void EraseMemory (void *memory, int size);
 #define MAX_URL_LENGTH	2084 /* Internet Explorer limit. Includes the terminating null character. */
 
 #define TC_HOMEPAGE "http://www.idrix.fr/"
-#define TC_APPLINK "http://sourceforge.net/projects/veracrypt/"
-#define TC_APPLINK_SECURE "https://sourceforge.net/projects/veracrypt/"
+#define TC_APPLINK "https://veracrypt.codeplex.com"
+#define TC_APPLINK_SECURE "https://veracrypt.codeplex.com"
 
 enum
 {
@@ -295,7 +302,10 @@ enum
 	ERR_PARAMETER_INCORRECT					= 30,
 	ERR_SYS_HIDVOL_HEAD_REENC_MODE_WRONG	= 31,
 	ERR_NONSYS_INPLACE_ENC_INCOMPLETE		= 32,
-	ERR_USER_ABORT							= 33
+	ERR_USER_ABORT							= 33,
+	ERR_UNSUPPORTED_TRUECRYPT_FORMAT		= 34,
+	ERR_RAND_INIT_FAILED					= 35,
+	ERR_CAPI_INIT_FAILED					= 36
 };
 
 #endif 	// #ifndef TCDEFS_H

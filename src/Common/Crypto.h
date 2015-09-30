@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 /* Update the following when adding a new cipher or EA:
@@ -196,6 +198,8 @@ typedef struct CRYPTO_INFO_t
 {
 	int ea;									/* Encryption algorithm ID */
 	int mode;								/* Mode of operation (e.g., XTS) */
+	int pkcs5;								/* PRF algorithm */
+
 	unsigned __int8 ks[MAX_EXPANDED_KEY];	/* Primary key schedule (if it is a cascade, it conatins multiple concatenated keys) */
 	unsigned __int8 ks2[MAX_EXPANDED_KEY];	/* Secondary key schedule (if cascade, multiple concatenated) for XTS mode. */
 
@@ -210,6 +214,8 @@ typedef struct CRYPTO_INFO_t
 	unsigned __int8 k2[MASTER_KEYDATA_SIZE];				/* For XTS, this contains the secondary key (if cascade, multiple concatenated). For LRW (deprecated/legacy), it contains the tweak key. For CBC (deprecated/legacy), it contains the IV seed. */
 	unsigned __int8 salt[PKCS5_SALT_SIZE];
 	int noIterations;	
+	BOOL bTrueCryptMode;
+	int volumePim;
 
 	uint64 volume_creation_time;	// Legacy
 	uint64 header_creation_time;	// Legacy
@@ -240,9 +246,25 @@ typedef struct CRYPTO_INFO_t
 	UINT64_STRUCT EncryptedAreaLength;
 
 	uint32 HeaderFlags;
-	int pkcs5;
 
 } CRYPTO_INFO, *PCRYPTO_INFO;
+
+#ifdef _WIN32
+
+#pragma pack (push)
+#pragma pack(1)
+
+typedef struct BOOT_CRYPTO_HEADER_t
+{
+	__int16 ea;									/* Encryption algorithm ID */
+	__int16 mode;								/* Mode of operation (e.g., XTS) */
+	__int16 pkcs5;								/* PRF algorithm */
+
+} BOOT_CRYPTO_HEADER, *PBOOT_CRYPTO_HEADER;
+
+#pragma pack (pop)
+
+#endif
 
 PCRYPTO_INFO crypto_open (void);
 void crypto_loadkey (PKEY_INFO keyInfo, char *lpszUserKey, int nUserKeyLen);
@@ -275,7 +297,7 @@ void DecipherBlocks (int cipher, void *dataPtr, void *ks, size_t blockCount);
 int EAGetFirst ();
 int EAGetCount (void);
 int EAGetNext (int previousEA);
-char * EAGetName (char *buf, int ea);
+char * EAGetName (char *buf, int ea, int guiDisplay);
 int EAGetByName (char *name);
 int EAGetKeySize (int ea);
 int EAGetFirstMode (int ea);
@@ -300,6 +322,7 @@ const
 char *HashGetName (int hash_algo_id);
 
 #ifndef TC_WINDOWS_BOOT
+Hash *HashGet (int id);
 void HashGetName2 (char *buf, int hashId);
 BOOL HashIsDeprecated (int hashId);
 BOOL HashForSystemEncryption (int hashId);

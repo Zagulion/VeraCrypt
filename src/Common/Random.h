@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2009 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 
@@ -43,13 +45,24 @@ BOOL Randmix ( void );
 void RandaddBuf ( void *buf , int len );
 BOOL FastPoll ( void );
 BOOL SlowPoll ( void );
-BOOL RandpeekBytes ( unsigned char *buf , int len );
-BOOL RandgetBytes ( unsigned char *buf , int len, BOOL forceSlowPoll );
+BOOL RandpeekBytes ( void* hwndDlg, unsigned char *buf , int len );
+
+/* Get len random bytes from the pool (max. RNG_POOL_SIZE bytes per a single call) */
+BOOL RandgetBytes ( void* hwndDlg, unsigned char *buf , int len, BOOL forceSlowPoll );
+
+/* Get len random bytes from the pool.
+ *  If allowAnyLength is FALSE, then len must be less or equal to RNG_POOL_SIZE
+ *  If allowAnyLength is TRUE, then len can have any positive value
+ */
+BOOL RandgetBytesFull ( void* hwndDlg, unsigned char *buf , int len, BOOL forceSlowPoll , BOOL allowAnyLength);
 
 #ifdef _WIN32
 
 extern BOOL volatile bFastPollEnabled;
 extern BOOL volatile bRandmixEnabled;
+extern DWORD CryptoAPILastError;
+
+void RandAddInt64 ( unsigned __int64 x );
 
 LRESULT CALLBACK MouseProc ( int nCode , WPARAM wParam , LPARAM lParam );
 LRESULT CALLBACK KeyboardProc ( int nCode , WPARAM wParam , LPARAM lParam );

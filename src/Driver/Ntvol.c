@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #include "TCdefs.h"
@@ -80,7 +82,9 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 		PARTITION_INFORMATION pi;
 		PARTITION_INFORMATION_EX pix;
 		LARGE_INTEGER diskLengthInfo;
-		DISK_GEOMETRY dg;
+		DISK_GEOMETRY dg;    
+		STORAGE_PROPERTY_QUERY storagePropertyQuery = {0};
+		STORAGE_ACCESS_ALIGNMENT_DESCRIPTOR storageDescriptor = {0};
 
 		ntStatus = IoGetDeviceObjectPointer (&FullFileName,
 			FILE_READ_DATA | FILE_READ_ATTRIBUTES,
@@ -96,6 +100,21 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 
 		lDiskLength.QuadPart = dg.Cylinders.QuadPart * dg.SectorsPerTrack * dg.TracksPerCylinder * dg.BytesPerSector;
 		Extension->HostBytesPerSector = dg.BytesPerSector;
+
+		storagePropertyQuery.PropertyId = StorageAccessAlignmentProperty;
+		storagePropertyQuery.QueryType = PropertyStandardQuery;
+
+		/* IOCTL_STORAGE_QUERY_PROPERTY supported only on Vista and above */
+		if (NT_SUCCESS (TCSendHostDeviceIoControlRequestEx (DeviceObject, Extension, IOCTL_STORAGE_QUERY_PROPERTY, 
+			(char*) &storagePropertyQuery, sizeof(storagePropertyQuery), 
+			(char *) &storageDescriptor, sizeof (storageDescriptor))))
+		{
+			Extension->HostBytesPerPhysicalSector = storageDescriptor.BytesPerPhysicalSector;
+		}
+		else
+		{
+			Extension->HostBytesPerPhysicalSector = dg.BytesPerSector;
+		}
 
 		// Drive geometry is used only when IOCTL_DISK_GET_PARTITION_INFO fails
 		if (NT_SUCCESS (TCSendHostDeviceIoControlRequest (DeviceObject, Extension, IOCTL_DISK_GET_PARTITION_INFO_EX, (char *) &pix, sizeof (pix))))
@@ -144,6 +163,7 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 		}
 
 		Extension->HostBytesPerSector = mount->BytesPerSector;
+		Extension->HostBytesPerPhysicalSector = mount->BytesPerPhysicalSector;
 
 		if (Extension->HostBytesPerSector != TC_SECTOR_SIZE_FILE_HOSTED_VOLUME)
 			disableBuffering = FALSE;
@@ -319,10 +339,6 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 	{
 		Dump ("Trying to open volume type %d\n", volumeType);
 
-		if (mount->bPartitionInInactiveSysEncScope
-			&& volumeType == TC_VOLUME_TYPE_HIDDEN_LEGACY)
-			continue;		
-
 		/* Read the volume header */
 
 		if (!mount->bPartitionInInactiveSysEncScope
@@ -347,16 +363,6 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 					continue;
 
 				headerOffset.QuadPart = mount->UseBackupHeader ? lDiskLength.QuadPart - TC_HIDDEN_VOLUME_HEADER_OFFSET : TC_HIDDEN_VOLUME_HEADER_OFFSET;
-				break;
-
-			case TC_VOLUME_TYPE_HIDDEN_LEGACY:
-				if (mount->UseBackupHeader)
-					continue;
-
-				if (bRawDevice && Extension->HostBytesPerSector != TC_SECTOR_SIZE_LEGACY)
-					continue;
-
-				headerOffset.QuadPart = lDiskLength.QuadPart - TC_HIDDEN_VOLUME_HEADER_OFFSET_LEGACY;
 				break;
 			}
 
@@ -455,13 +461,16 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 
 		ReadVolumeHeaderRecoveryMode = mount->RecoveryMode;
 
-		if ((volumeType == TC_VOLUME_TYPE_HIDDEN || volumeType == TC_VOLUME_TYPE_HIDDEN_LEGACY) && mount->bProtectHiddenVolume)
+		if ((volumeType == TC_VOLUME_TYPE_HIDDEN) && mount->bProtectHiddenVolume)
 		{
 			mount->nReturnCode = ReadVolumeHeaderWCache (
 				FALSE,
 				mount->bCache,
 				readBuffer,
 				&mount->ProtectedHidVolPassword,
+				mount->ProtectedHidVolPkcs5Prf,
+				mount->ProtectedHidVolPim,
+				mount->bTrueCryptMode,
 				&tmpCryptoInfo);
 		}
 		else
@@ -471,6 +480,9 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 				mount->bCache,
 				readBuffer,
 				&mount->VolumePassword,
+				mount->pkcs5_prf,
+				mount->VolumePim,
+				mount->bTrueCryptMode,
 				&Extension->cryptoInfo);
 		}
 
@@ -575,14 +587,10 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 				break;
 
 			case TC_VOLUME_TYPE_HIDDEN:
-			case TC_VOLUME_TYPE_HIDDEN_LEGACY:
 
 				cryptoInfoPtr = mount->bProtectHiddenVolume ? tmpCryptoInfo : Extension->cryptoInfo;
 
-				if (volumeType == TC_VOLUME_TYPE_HIDDEN_LEGACY)
-					Extension->cryptoInfo->hiddenVolumeOffset = lDiskLength.QuadPart - cryptoInfoPtr->hiddenVolumeSize - TC_HIDDEN_VOLUME_HEADER_OFFSET_LEGACY;
-				else
-					Extension->cryptoInfo->hiddenVolumeOffset = cryptoInfoPtr->EncryptedAreaStart.Value;
+				Extension->cryptoInfo->hiddenVolumeOffset = cryptoInfoPtr->EncryptedAreaStart.Value;
 
 				Dump ("Hidden volume offset = %I64d\n", Extension->cryptoInfo->hiddenVolumeOffset);
 				Dump ("Hidden volume size = %I64d\n", cryptoInfoPtr->hiddenVolumeSize);
@@ -610,9 +618,6 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 					Extension->cryptoInfo->bProtectHiddenVolume = TRUE;
 					
 					Extension->cryptoInfo->hiddenVolumeProtectedSize = tmpCryptoInfo->hiddenVolumeSize;
-
-					if (volumeType == TC_VOLUME_TYPE_HIDDEN_LEGACY)
-						Extension->cryptoInfo->hiddenVolumeProtectedSize += TC_VOLUME_HEADER_SIZE_LEGACY;
 
 					Dump ("Hidden volume protection active: %I64d-%I64d (%I64d)\n", Extension->cryptoInfo->hiddenVolumeOffset, Extension->cryptoInfo->hiddenVolumeProtectedSize + Extension->cryptoInfo->hiddenVolumeOffset - 1, Extension->cryptoInfo->hiddenVolumeProtectedSize);
 				}
@@ -664,6 +669,9 @@ NTSTATUS TCOpenVolume (PDEVICE_OBJECT DeviceObject,
 				{
 					RtlStringCbCopyW (Extension->wszVolume, sizeof(Extension->wszVolume),pwszMountVolume);
 				}
+
+				memset (Extension->wszLabel, 0, sizeof (Extension->wszLabel));
+				RtlStringCbCopyW (Extension->wszLabel, sizeof(Extension->wszLabel), mount->wszLabel);
 			}
 
 			// If we are to protect a hidden volume we cannot exit yet, for we must also
@@ -743,7 +751,7 @@ error:
 
 void TCCloseVolume (PDEVICE_OBJECT DeviceObject, PEXTENSION Extension)
 {
-	if (DeviceObject);	/* Remove compiler warning */
+	UNREFERENCED_PARAMETER (DeviceObject);	/* Remove compiler warning */
 
 	if (Extension->hDeviceFile != NULL)
 	{
@@ -755,13 +763,19 @@ void TCCloseVolume (PDEVICE_OBJECT DeviceObject, PEXTENSION Extension)
 		ZwClose (Extension->hDeviceFile);
 	}
 	ObDereferenceObject (Extension->pfoDeviceFile);
-	crypto_close (Extension->cryptoInfo);
+	if (Extension->cryptoInfo)
+	{
+		crypto_close (Extension->cryptoInfo);
+		Extension->cryptoInfo = NULL;
+	}
 }
 
 
-NTSTATUS TCSendHostDeviceIoControlRequest (PDEVICE_OBJECT DeviceObject,
+NTSTATUS TCSendHostDeviceIoControlRequestEx (PDEVICE_OBJECT DeviceObject,
 			       PEXTENSION Extension,
 			       ULONG IoControlCode,
+					 void *InputBuffer,
+					 ULONG InputBufferSize,
 			       void *OutputBuffer,
 			       ULONG OutputBufferSize)
 {
@@ -769,13 +783,13 @@ NTSTATUS TCSendHostDeviceIoControlRequest (PDEVICE_OBJECT DeviceObject,
 	NTSTATUS ntStatus;
 	PIRP Irp;
 
-	if (DeviceObject);	/* Remove compiler warning */
+	UNREFERENCED_PARAMETER(DeviceObject);	/* Remove compiler warning */
 
 	KeClearEvent (&Extension->keVolumeEvent);
 
 	Irp = IoBuildDeviceIoControlRequest (IoControlCode,
 					     Extension->pFsdDevice,
-					     NULL, 0,
+					     InputBuffer, InputBufferSize,
 					     OutputBuffer, OutputBufferSize,
 					     FALSE,
 					     &Extension->keVolumeEvent,
@@ -800,6 +814,15 @@ NTSTATUS TCSendHostDeviceIoControlRequest (PDEVICE_OBJECT DeviceObject,
 	return ntStatus;
 }
 
+NTSTATUS TCSendHostDeviceIoControlRequest (PDEVICE_OBJECT DeviceObject,
+			       PEXTENSION Extension,
+			       ULONG IoControlCode,
+			       void *OutputBuffer,
+			       ULONG OutputBufferSize)
+{
+	return TCSendHostDeviceIoControlRequestEx (DeviceObject, Extension, IoControlCode, NULL, 0, OutputBuffer, OutputBufferSize);
+}
+
 NTSTATUS COMPLETE_IRP (PDEVICE_OBJECT DeviceObject,
 	      PIRP Irp,
 	      NTSTATUS IrpStatus,
@@ -808,7 +831,7 @@ NTSTATUS COMPLETE_IRP (PDEVICE_OBJECT DeviceObject,
 	Irp->IoStatus.Status = IrpStatus;
 	Irp->IoStatus.Information = IrpInformation;
 
-	if (DeviceObject);	/* Remove compiler warning */
+	UNREFERENCED_PARAMETER (DeviceObject);	/* Remove compiler warning */
 
 #if EXTRA_INFO
 	if (!NT_SUCCESS (IrpStatus))

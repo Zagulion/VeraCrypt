@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "System.h"
@@ -36,6 +40,11 @@
 
 namespace VeraCrypt
 {
+	DEFINE_EVENT_TYPE(wxEVT_COMMAND_UPDATE_VOLUME_LIST)
+	DEFINE_EVENT_TYPE(wxEVT_COMMAND_PREF_UPDATED)
+	DEFINE_EVENT_TYPE(wxEVT_COMMAND_OPEN_VOLUME_REQUEST)
+	DEFINE_EVENT_TYPE(wxEVT_COMMAND_SHOW_WARNING)
+
 	MainFrame::MainFrame (wxWindow* parent) : MainFrameBase (parent),
 		ListItemRightClickEventPending (false),
 		SelectedItemIndex (-1),
@@ -84,6 +93,12 @@ namespace VeraCrypt
 				Gui->ShowError (e);
 			}
 		}
+
+		Connect( wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnQuit ) );
+		Connect( wxID_ANY, wxEVT_COMMAND_UPDATE_VOLUME_LIST, wxCommandEventHandler( MainFrame::OnUpdateVolumeList ) );
+		Connect( wxID_ANY, wxEVT_COMMAND_PREF_UPDATED, wxCommandEventHandler( MainFrame::OnPreferencesUpdated ) );
+		Connect( wxID_ANY, wxEVT_COMMAND_OPEN_VOLUME_REQUEST, wxCommandEventHandler( MainFrame::OnOpenVolumeSystemRequest ) );
+
 	}
 
 	MainFrame::~MainFrame ()
@@ -100,6 +115,10 @@ namespace VeraCrypt
 		}
 #endif
 
+		Disconnect( wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame::OnQuit ) );
+		Disconnect( wxID_ANY, wxEVT_COMMAND_UPDATE_VOLUME_LIST, wxCommandEventHandler( MainFrame::OnUpdateVolumeList ) );
+		Disconnect( wxID_ANY, wxEVT_COMMAND_PREF_UPDATED, wxCommandEventHandler( MainFrame::OnPreferencesUpdated ) );
+		Disconnect( wxID_ANY, wxEVT_COMMAND_OPEN_VOLUME_REQUEST, wxCommandEventHandler( MainFrame::OnOpenVolumeSystemRequest ) );
 		Core->VolumeMountedEvent.Disconnect (this);
 		Core->VolumeDismountedEvent.Disconnect (this);
 		Gui->OpenVolumeSystemRequestEvent.Disconnect (this);
@@ -168,7 +187,10 @@ namespace VeraCrypt
 			return;
 		}
 #endif
-
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		ChangePasswordDialog dialog (this, volumePath, mode);
 		dialog.ShowModal();
 	}
@@ -343,7 +365,7 @@ namespace VeraCrypt
 		Core->VolumeMountedEvent.Connect (EventConnector <MainFrame> (this, &MainFrame::OnVolumeMounted));
 		Core->VolumeDismountedEvent.Connect (EventConnector <MainFrame> (this, &MainFrame::OnVolumeDismounted));
 		Gui->OpenVolumeSystemRequestEvent.Connect (EventConnector <MainFrame> (this, &MainFrame::OnOpenVolumeSystemRequestEvent));
-		Gui->PreferencesUpdatedEvent.Connect (EventConnector <MainFrame> (this, &MainFrame::OnPreferencesUpdated));
+		Gui->PreferencesUpdatedEvent.Connect (EventConnector <MainFrame> (this, &MainFrame::OnPreferencesUpdatedEvent));
 
 		// Drag & drop
 		class FileDropTarget : public wxFileDropTarget
@@ -612,6 +634,18 @@ namespace VeraCrypt
 		try
 		{
 			MountOptions mountOptions (GetPreferences().DefaultMountOptions);
+			if (CmdLine->ArgTrueCryptMode)
+			{
+				mountOptions.TrueCryptMode = CmdLine->ArgTrueCryptMode;
+			}
+			if (CmdLine->ArgHash)
+			{
+				mountOptions.Kdf = Pkcs5Kdf::GetAlgorithm (*CmdLine->ArgHash, mountOptions.TrueCryptMode);
+			}
+			if (CmdLine->ArgPim > 0)
+			{
+				mountOptions.Pim = CmdLine->ArgPim;
+			}
 
 			if (SlotListCtrl->GetSelectedItemCount() == 1)
 				mountOptions.SlotNumber = SelectedSlotNumber;
@@ -629,6 +663,19 @@ namespace VeraCrypt
 		try
 		{
 			MountOptions mountOptions (GetPreferences().DefaultMountOptions);
+			if (CmdLine->ArgTrueCryptMode)
+			{
+				mountOptions.TrueCryptMode = CmdLine->ArgTrueCryptMode;
+			}
+			if (CmdLine->ArgHash)
+			{
+				mountOptions.Kdf = Pkcs5Kdf::GetAlgorithm (*CmdLine->ArgHash, mountOptions.TrueCryptMode);
+			}
+			if (CmdLine->ArgPim > 0)
+			{
+				mountOptions.Pim = CmdLine->ArgPim;
+			}
+
 			Gui->MountAllFavoriteVolumes (mountOptions);
 		}
 		catch (exception &e)
@@ -651,6 +698,18 @@ namespace VeraCrypt
 		MountOptions mountOptions (GetPreferences().DefaultMountOptions);
 		mountOptions.SlotNumber = SelectedSlotNumber;
 		mountOptions.Path = GetSelectedVolumePath();
+		if (CmdLine->ArgTrueCryptMode)
+		{
+			mountOptions.TrueCryptMode = CmdLine->ArgTrueCryptMode;
+		}
+		if (CmdLine->ArgHash)
+		{
+			mountOptions.Kdf = Pkcs5Kdf::GetAlgorithm (*CmdLine->ArgHash, mountOptions.TrueCryptMode);
+		}
+		if (CmdLine->ArgPim > 0)
+		{
+			mountOptions.Pim = CmdLine->ArgPim;
+		}
 
 		try
 		{
@@ -665,6 +724,10 @@ namespace VeraCrypt
 
 	void MainFrame::OnAboutMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		AboutDialog dialog (this);
 		dialog.ShowModal();
 	}
@@ -713,6 +776,10 @@ namespace VeraCrypt
 
 	void MainFrame::OnBenchmarkMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		BenchmarkDialog dialog (this);
 		dialog.ShowModal();
 	}
@@ -814,8 +881,23 @@ namespace VeraCrypt
 
 	void MainFrame::OnDefaultKeyfilesMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		PreferencesDialog dialog (this);
 		dialog.SelectPage (dialog.DefaultKeyfilesPage);
+		dialog.ShowModal();
+	}
+
+	void MainFrame::OnDefaultMountParametersMenuItemSelected(wxCommandEvent& event)
+	{ 
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
+		PreferencesDialog dialog (this);
+		dialog.SelectPage (dialog.DefaultMountOptionsPage);
 		dialog.ShowModal();
 	}
 
@@ -851,6 +933,10 @@ namespace VeraCrypt
 
 	void MainFrame::OnEncryptionTestMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		EncryptionTestDialog dialog (this);
 		dialog.ShowModal();
 	}
@@ -868,6 +954,18 @@ namespace VeraCrypt
 			SetVolumePath (favorite.Path);
 
 			MountOptions mountOptions (GetPreferences().DefaultMountOptions);
+			if (CmdLine->ArgTrueCryptMode)
+			{
+				mountOptions.TrueCryptMode = CmdLine->ArgTrueCryptMode;
+			}
+			if (CmdLine->ArgHash)
+			{
+				mountOptions.Kdf = Pkcs5Kdf::GetAlgorithm (*CmdLine->ArgHash, mountOptions.TrueCryptMode);
+			}
+			if (CmdLine->ArgPim > 0)
+			{
+				mountOptions.Pim = CmdLine->ArgPim;
+			}
 			favorite.ToMountOptions (mountOptions);
 
 			shared_ptr <VolumeInfo> volume = Gui->MountVolume (mountOptions);
@@ -966,6 +1064,10 @@ namespace VeraCrypt
 
 	void MainFrame::OnHotkeysMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		PreferencesDialog dialog (this);
 		dialog.SelectPage (dialog.HotkeysPage);
 		dialog.ShowModal();
@@ -973,6 +1075,10 @@ namespace VeraCrypt
 
 	void MainFrame::OnLegalNoticesMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		LegalNoticesDialog dialog (this);
 		dialog.ShowModal();
 	}
@@ -1086,6 +1192,10 @@ namespace VeraCrypt
 	{
 		try
 		{
+#ifdef TC_MACOSX
+			if (Gui->IsInBackgroundMode())
+				Gui->SetBackgroundMode (false);
+#endif
 			SecurityTokenKeyfilesDialog dialog (this, false);
 			dialog.ShowModal();
 		}
@@ -1135,11 +1245,30 @@ namespace VeraCrypt
 
 	void MainFrame::OnPreferencesMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		PreferencesDialog dialog (this);
 		dialog.ShowModal();
 	}
 
-	void MainFrame::OnPreferencesUpdated (EventArgs &args)
+	void MainFrame::OnOpenVolumeSystemRequest (wxCommandEvent& event)
+	{
+		wstring* eventPath = (wstring*) event.GetClientData();
+		SetVolumePath (*eventPath);
+		delete eventPath;
+	}
+
+	void MainFrame::OnOpenVolumeSystemRequestEvent (EventArgs &args)
+	{
+		wstring* eventPath = new wstring (dynamic_cast <OpenVolumeSystemRequestEventArgs &> (args).mVolumePath);
+		wxCommandEvent* pEvent = new wxCommandEvent( wxEVT_COMMAND_OPEN_VOLUME_REQUEST,0);
+		pEvent->SetClientData(eventPath);
+		wxQueueEvent (this, pEvent);
+	}
+
+	void MainFrame::OnPreferencesUpdated (wxCommandEvent& event)
 	{
 		const UserPreferences &prefs = GetPreferences();
 
@@ -1169,6 +1298,10 @@ namespace VeraCrypt
 
 	void MainFrame::OnSecurityTokenPreferencesMenuItemSelected (wxCommandEvent& event)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		PreferencesDialog dialog (this);
 		dialog.SelectPage (dialog.SecurityTokensPage);
 		dialog.ShowModal();
@@ -1329,6 +1462,10 @@ namespace VeraCrypt
 		shared_ptr <VolumeInfo> selectedVolume = GetSelectedVolume();
 		if (selectedVolume)
 		{
+#ifdef TC_MACOSX
+			if (Gui->IsInBackgroundMode())
+				Gui->SetBackgroundMode (false);
+#endif
 			VolumePropertiesDialog dialog (this, *selectedVolume);
 			dialog.ShowModal();
 		}
@@ -1385,6 +1522,10 @@ namespace VeraCrypt
 
 	void MainFrame::OrganizeFavorites (const FavoriteVolumeList &favorites, size_t newItemCount)
 	{
+#ifdef TC_MACOSX
+		if (Gui->IsInBackgroundMode())
+			Gui->SetBackgroundMode (false);
+#endif
 		FavoriteVolumesDialog dialog (this, favorites, newItemCount);
 
 		if (dialog.ShowModal() == wxID_OK)
@@ -1468,6 +1609,7 @@ namespace VeraCrypt
 		}
 
 		VolumeInfoList protectionTriggeredVolumes;
+		SlotListCtrl->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
 		// Update list
 		long prevItemIndex = -1;
@@ -1489,7 +1631,7 @@ namespace VeraCrypt
 #endif
 				fields[ColumnPath] = volume->Path;
 				fields[ColumnSize] = Gui->SizeToString (volume->Size);
-				fields[ColumnType] = Gui->VolumeTypeToString (volume->Type, volume->Protection);
+				fields[ColumnType] = Gui->VolumeTypeToString (volume->Type, volume->TrueCryptMode, volume->Protection);
 				
 				if (volume->HiddenVolumeProtectionTriggered)
 				{

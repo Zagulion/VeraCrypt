@@ -1,10 +1,13 @@
 #
-# Copyright (c) 2008-2010 TrueCrypt Developers Association. All rights reserved.
+# Derived from source code of TrueCrypt 7.1a, which is
+# Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+# by the TrueCrypt License 3.0.
 #
-# Governed by the TrueCrypt License 3.0 the full text of which is contained in
-# the file License.txt included in TrueCrypt binary and source code distribution
-# packages.
-#
+# Modifications and additions to the original source code (contained in this file) 
+# and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+# and are governed by the Apache License 2.0 the full text of which is
+# contained in the file License.txt included in VeraCrypt binary and source
+# code distribution packages.
 
 PROJ = BootLoader
 .SILENT:
@@ -190,6 +193,10 @@ $(LIBS)
 	$(LD) $(LFLAGS) @$(PROJ).crf
 	del $(PROJ).crf $(PROJ).crf2
 
+# Compress the Rescue Disk botloader for Cascades and SHA2 since it is too big (size > 31232 bytes)
+!if DEFINED(RESCUE_DISK) && !DEFINED (SINGLE_CIPHER) && "$(SINGLE_PRF)" == "SHA2"
+	upx $(PROJ).$(TARGETEXT)
+!endif
 	gzip.exe -c -n --best $(PROJ).$(TARGETEXT) >$(PROJ).$(TARGETEXT).gz
 	-dd.exe conv=notrunc,sync bs=512 seek=5 if=$(PROJ).$(TARGETEXT).gz of=$(PROJ).flp 2>NUL:
 	cd ..

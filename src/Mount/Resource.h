@@ -20,6 +20,7 @@
 #define IDD_TOKEN_PREFERENCES           115
 #define IDD_SYSENC_SETTINGS             116
 #define IDD_FAVORITE_VOLUMES            117
+#define IDD_DEFAULT_MOUNT_PARAMETERS    118
 #define IDC_PREF_MOUNT_READONLY         1000
 #define IDC_PREF_MOUNT_REMOVABLE        1001
 #define IDC_VERIFY                      1002
@@ -35,7 +36,6 @@
 #define IDC_ENABLE_NEW_KEYFILES         1012
 #define IDC_PRESERVE_TIMESTAMPS         1013
 #define IDC_PREF_WIPE_CACHE_ON_EXIT     1014
-#define IDC_PKCS5_PRF_ID                1015
 #define IDC_PREF_CACHE_PASSWORDS        1016
 #define IDC_DIRECTORY                   1017
 #define IDC_PREF_DISMOUNT_LOGOFF        1018
@@ -77,7 +77,6 @@
 #define IDT_NEW                         1054
 #define IDT_NEW_PASSWORD                1055
 #define IDT_CONFIRM_PASSWORD            1056
-#define IDT_PKCS5_PRF                   1057
 #define IDT_PW_CACHE_OPTIONS            1058
 #define IDT_DEFAULT_MOUNT_OPTIONS       1059
 #define IDT_WINDOWS_RELATED_SETTING     1060
@@ -159,6 +158,20 @@
 #define IDC_FAV_VOL_OPTIONS_GROUP_BOX   1134
 #define IDC_FAVORITES_HELP_LINK         1135
 #define IDC_FAV_VOL_OPTIONS_GLOBAL_SETTINGS_BOX 1136
+#define IDC_PREF_DISMOUNT_SESSION_LOCKED 1137
+#define IDT_NEW_PKCS5_PRF               1138
+#define IDC_PKCS5_OLD_PRF_ID            1139
+#define IDC_TRUECRYPT_MODE              1140
+#define IDC_PREF_TEMP_CACHE_ON_MULTIPLE_MOUNT 1141
+#define IDT_OLD_PIM                     1142
+#define IDC_OLD_PIM                     1143
+#define IDC_OLD_PIM_HELP                1144
+#define IDC_NEW_PIM_ENABLE              1145
+#define IDC_SHOW_PIM                    1146
+#define IDC_FAVORITE_USE_LABEL_IN_EXPLORER 1147
+#define IDC_COPY_EXPANDER               1148
+#define IDT_DRIVER_OPTIONS              1149
+#define IDC_ENABLE_EXTENDED_IOCTL_SUPPORT 1150
 #define IDM_HELP                        40001
 #define IDM_ABOUT                       40002
 #define IDM_UNMOUNT_VOLUME              40003
@@ -222,15 +235,20 @@
 #define IDM_ADD_VOLUME_TO_SYSTEM_FAVORITES 40061
 #define IDM_PERFORMANCE_SETTINGS        40062
 #define IDM_ANALYZE_SYSTEM_CRASH        40063
+#define IDM_DONATE                      40064
+#define IDM_VOLUME_EXPANDER             40065
+#define IDM_DEFAULT_MOUNT_PARAMETERS    40066
+#define IDM_DECRYPT_NONSYS_VOL          40067
+#define IDM_VERIFY_RESCUE_DISK_ISO      40068
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        118
-#define _APS_NEXT_COMMAND_VALUE         40064
-#define _APS_NEXT_CONTROL_VALUE         1137
+#define _APS_NEXT_RESOURCE_VALUE        119
+#define _APS_NEXT_COMMAND_VALUE         40069
+#define _APS_NEXT_CONTROL_VALUE         1151
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

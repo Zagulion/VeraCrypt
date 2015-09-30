@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #include "Tcdefs.h"
@@ -408,19 +410,35 @@ BOOL EAInitMode (PCRYPTO_INFO ci)
 	return TRUE;
 }
 
+static void EAGetDisplayName(char *buf, int ea, int i)
+{
+	strcpy (buf, CipherGetName (i));
+	if (i = EAGetPreviousCipher(ea, i))
+	{
+		strcat (buf, "(");
+		EAGetDisplayName (&buf[strlen(buf)], ea, i);
+		strcat (buf, ")");
+	}
+}
 
 // Returns name of EA, cascaded cipher names are separated by hyphens
-char *EAGetName (char *buf, int ea)
+char *EAGetName (char *buf, int ea, int guiDisplay)
 {
-	int i = EAGetLastCipher(ea);
-	strcpy (buf, (i != 0) ? CipherGetName (i) : "?");
-
-	while (i = EAGetPreviousCipher(ea, i))
+	if (guiDisplay)
 	{
-		strcat (buf, "-");
-		strcat (buf, CipherGetName (i));
+		EAGetDisplayName (buf, ea, EAGetLastCipher(ea));
 	}
+	else
+	{
+		int i = EAGetLastCipher(ea);
+		strcpy (buf, (i != 0) ? CipherGetName (i) : "?");
 
+		while (i = EAGetPreviousCipher(ea, i))
+		{
+			strcat (buf, "-");
+			strcat (buf, CipherGetName (i));
+		}
+	}
 	return buf;
 }
 
@@ -432,8 +450,8 @@ int EAGetByName (char *name)
 
 	do
 	{
-		EAGetName (n, ea);
-		if (strcmp (n, name) == 0)
+		EAGetName (n, ea, 1);
+		if (_stricmp (n, name) == 0)
 			return ea;
 	}
 	while (ea = EAGetNext (ea));

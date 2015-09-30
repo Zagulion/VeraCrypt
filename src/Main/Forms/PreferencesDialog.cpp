@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2009 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "System.h"
@@ -48,6 +52,23 @@ namespace VeraCrypt
 		MountRemovableCheckBox->SetValidator (wxGenericValidator (&Preferences.DefaultMountOptions.Removable));
 
 		FilesystemOptionsTextCtrl->SetValue (Preferences.DefaultMountOptions.FilesystemOptions);
+		
+		TrueCryptModeCheckBox->SetValidator (wxGenericValidator (&Preferences.DefaultMountOptions.TrueCryptMode));
+		
+		int index, prfInitialIndex = 0;
+		Pkcs5PrfChoice->Append (LangString["AUTODETECTION"]);		
+
+		foreach_ref (const Pkcs5Kdf &kdf, Pkcs5Kdf::GetAvailableAlgorithms(false))
+		{
+			index = Pkcs5PrfChoice->Append (kdf.GetName());
+			if (Preferences.DefaultMountOptions.Kdf 
+				&& (Preferences.DefaultMountOptions.Kdf->GetName() == kdf.GetName())
+				)
+			{
+				prfInitialIndex = index;
+			}
+		}
+		Pkcs5PrfChoice->Select (prfInitialIndex);
 
 		// Keyfiles
 		TC_CHECK_BOX_VALIDATOR (UseKeyfiles);
@@ -342,12 +363,29 @@ namespace VeraCrypt
 #endif
 		if (!Validate())
 			return;
+			
+		shared_ptr <Pkcs5Kdf> selectedKdf;
+		if (Pkcs5PrfChoice->GetSelection () != 0)
+		{
+			try
+			{
+				selectedKdf = Pkcs5Kdf::GetAlgorithm (wstring (Pkcs5PrfChoice->GetStringSelection ()), TrueCryptModeCheckBox->IsChecked ());
+			}
+			catch (ParameterIncorrect&)
+			{
+				Gui->ShowWarning ("ALGO_NOT_SUPPORTED_FOR_TRUECRYPT_MODE");
+				return;
+			}
+		}
 
 		TransferDataFromWindow();
 
 		Preferences.DefaultMountOptions.Protection = MountReadOnlyCheckBox->IsChecked() ? VolumeProtection::ReadOnly : VolumeProtection::None;
 		Preferences.DefaultMountOptions.FilesystemOptions = FilesystemOptionsTextCtrl->GetValue();
 		Preferences.DefaultKeyfiles = *DefaultKeyfilesPanel->GetKeyfiles();
+		
+		Preferences.DefaultMountOptions.Kdf = selectedKdf;
+		Preferences.DefaultMountOptions.ProtectionKdf = selectedKdf;
 
 		bool securityTokenModuleChanged = (Preferences.SecurityTokenModule != wstring (Pkcs11ModulePathTextCtrl->GetValue()));
 		Preferences.SecurityTokenModule = wstring (Pkcs11ModulePathTextCtrl->GetValue());

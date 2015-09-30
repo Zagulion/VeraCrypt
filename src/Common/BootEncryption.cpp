@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "Tcdefs.h"
@@ -68,33 +72,63 @@ namespace VeraCrypt
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 		}
 
 		static void CopyFile (const string &sourceFile, const string &destinationFile)
 		{
 			Elevate();
+			DWORD result;
+			CComBSTR sourceFileBstr, destinationFileBstr;
+			BSTR bstr = A2WBSTR(sourceFile.c_str());
+			if (bstr)
+			{
+				sourceFileBstr.Attach (bstr);
 
-			DWORD result = ElevatedComInstance->CopyFile (CComBSTR (sourceFile.c_str()), CComBSTR (destinationFile.c_str()));
+				bstr = A2WBSTR(destinationFile.c_str());
+				if (bstr)
+				{
+					destinationFileBstr.Attach (bstr);
+					result = ElevatedComInstance->CopyFile (sourceFileBstr, destinationFileBstr);
+				}
+				else
+				{
+					result = ERROR_OUTOFMEMORY;
+				}
+			}
+			else
+			{
+				result = ERROR_OUTOFMEMORY;
+			}
 
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 		}
 
 		static void DeleteFile (const string &file)
 		{
 			Elevate();
-
-			DWORD result = ElevatedComInstance->DeleteFile (CComBSTR (file.c_str()));
+			CComBSTR fileBstr;
+			DWORD result;
+			BSTR bstr = A2WBSTR(file.c_str());
+			if (bstr)
+			{
+				fileBstr.Attach (bstr);
+				result = ElevatedComInstance->DeleteFile (fileBstr);
+			}
+			else
+			{
+				result = ERROR_OUTOFMEMORY;
+			}
 
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 		}
 
@@ -102,15 +136,25 @@ namespace VeraCrypt
 		{
 			Elevate();
 
-			CComBSTR bufferBstr;
+			DWORD result;
+			CComBSTR bufferBstr, fileBstr;
 			if (bufferBstr.AppendBytes ((const char *) buffer, size) != S_OK)
 				throw ParameterIncorrect (SRC_POS);
-			DWORD result = ElevatedComInstance->ReadWriteFile (write, device, CComBSTR (filePath.c_str()), &bufferBstr, offset, size, sizeDone);
+			BSTR bstr = A2WBSTR(filePath.c_str());
+			if (bstr)
+			{
+				fileBstr.Attach (bstr);
+				result = ElevatedComInstance->ReadWriteFile (write, device, fileBstr, &bufferBstr, offset, size, sizeDone);
+			}
+			else
+			{
+				result = ERROR_OUTOFMEMORY;
+			}
 
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 
 			if (!write)
@@ -127,13 +171,34 @@ namespace VeraCrypt
 		static void WriteLocalMachineRegistryDwordValue (char *keyPath, char *valueName, DWORD value)
 		{
 			Elevate();
+			DWORD result;
+			CComBSTR keyPathBstr, valueNameBstr;
+			BSTR bstr = A2WBSTR(keyPath);
+			if (bstr)
+			{
+				keyPathBstr.Attach (bstr);
 
-			DWORD result = ElevatedComInstance->WriteLocalMachineRegistryDwordValue (CComBSTR (keyPath), CComBSTR (valueName), value);
+				bstr = A2WBSTR(valueName);
+				if (bstr)
+				{
+					valueNameBstr.Attach (bstr);
+
+					result = ElevatedComInstance->WriteLocalMachineRegistryDwordValue (keyPathBstr, valueNameBstr, value);
+				}
+				else
+				{
+					result = ERROR_OUTOFMEMORY;
+				}
+			}
+			else
+			{
+				result = ERROR_OUTOFMEMORY;
+			}
 		
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 		}
 
@@ -145,7 +210,7 @@ namespace VeraCrypt
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 		}
 
@@ -157,7 +222,7 @@ namespace VeraCrypt
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 		}
 
@@ -179,7 +244,7 @@ namespace VeraCrypt
 			if (result != ERROR_SUCCESS)
 			{
 				SetLastError (result);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 		}
 
@@ -189,7 +254,7 @@ namespace VeraCrypt
 			if (IsAdmin())
 			{
 				SetLastError (ERROR_ACCESS_DENIED);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 
 			if (!ElevatedComInstance || ElevatedComInstanceThreadId != GetCurrentThreadId())
@@ -233,26 +298,27 @@ namespace VeraCrypt
 #endif // SETUP
 
 
-	File::File (string path, bool readOnly, bool create) : Elevated (false), FileOpen (false)
+	File::File (string path, bool readOnly, bool create) : Elevated (false), FileOpen (false), LastError(0)
 	{
 		Handle = CreateFile (path.c_str(),
 			readOnly ? GENERIC_READ : GENERIC_READ | GENERIC_WRITE,
 			FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, create ? CREATE_ALWAYS : OPEN_EXISTING,
 			FILE_FLAG_RANDOM_ACCESS | FILE_FLAG_WRITE_THROUGH, NULL);
 
-		try
+		if (Handle != INVALID_HANDLE_VALUE)
 		{
-			throw_sys_if (Handle == INVALID_HANDLE_VALUE);
+			FileOpen = true;
 		}
-		catch (SystemException &)
+		else 
 		{
-			if (GetLastError() == ERROR_ACCESS_DENIED && IsUacSupported())
+			LastError = GetLastError();
+			if (LastError == ERROR_ACCESS_DENIED && IsUacSupported())
+			{
 				Elevated = true;
-			else
-				throw;
+				FileOpen = true;
+			}
 		}
 
-		FileOpen = true;
 		FilePointerPosition = 0;
 		IsDevice = false;
 		Path = path;
@@ -260,18 +326,24 @@ namespace VeraCrypt
 
 	void File::Close ()
 	{
-		if (FileOpen)
+		if (Handle != INVALID_HANDLE_VALUE)
 		{
-			if (!Elevated)
-				CloseHandle (Handle);
-
-			FileOpen = false;
+			CloseHandle (Handle);
+			Handle = INVALID_HANDLE_VALUE;
 		}
+
+		FileOpen = false;
 	}
 
 	DWORD File::Read (byte *buffer, DWORD size)
 	{
 		DWORD bytesRead;
+
+		if (!FileOpen)
+		{
+			SetLastError (LastError);
+			throw SystemException (SRC_POS);
+		}
 
 		if (Elevated)
 		{
@@ -288,6 +360,12 @@ namespace VeraCrypt
 
 	void File::SeekAt (int64 position)
 	{
+		if (!FileOpen)
+		{
+			SetLastError (LastError);
+			throw SystemException (SRC_POS);
+		}
+
 		FilePointerPosition = position;
 
 		if (!Elevated)
@@ -301,6 +379,12 @@ namespace VeraCrypt
 	void File::Write (byte *buffer, DWORD size)
 	{
 		DWORD bytesWritten;
+
+		if (!FileOpen)
+		{
+			SetLastError (LastError);
+			throw SystemException (SRC_POS);
+		}
 
 		try
 		{
@@ -349,19 +433,20 @@ namespace VeraCrypt
 			FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
 			FILE_FLAG_RANDOM_ACCESS | FILE_FLAG_WRITE_THROUGH, NULL);
 
-		try
+		if (Handle != INVALID_HANDLE_VALUE)
 		{
-			throw_sys_if (Handle == INVALID_HANDLE_VALUE);
+			FileOpen = true;
 		}
-		catch (SystemException &)
+		else 
 		{
-			if (GetLastError() == ERROR_ACCESS_DENIED && IsUacSupported())
+			LastError = GetLastError ();
+			if (LastError == ERROR_ACCESS_DENIED && IsUacSupported())
+			{
 				Elevated = true;
-			else
-				throw;
+				FileOpen = true;
+			}
 		}
 
-		FileOpen = true;
 		FilePointerPosition = 0;
 		IsDevice = true;
 		Path = path;
@@ -393,7 +478,7 @@ namespace VeraCrypt
 	{
 		if (RescueIsoImage)
 			delete[] RescueIsoImage;
-
+				
 		Elevator::Release();
 	}
 
@@ -465,7 +550,7 @@ namespace VeraCrypt
 					}
 
 					throw ErrorException (wstring (GetString ("SYSTEM_PARTITION_NOT_ACTIVE"))
-						+ GetRemarksOnHiddenOS());
+						+ GetRemarksOnHiddenOS(), SRC_POS);
 				}
 
 				activePartitionFound = true;
@@ -500,7 +585,7 @@ namespace VeraCrypt
 			if (!candidateForHiddenOSFound)
 			{
 				throw ErrorException (wstring (GetString ("NO_PARTITION_FOLLOWS_BOOT_PARTITION"))
-					+ GetRemarksOnHiddenOS());
+					+ GetRemarksOnHiddenOS(), SRC_POS);
 			}
 
 			if (config.SystemPartition.Info.PartitionLength.QuadPart > TC_MAX_FAT_SECTOR_COUNT * TC_SECTOR_SIZE_BIOS)
@@ -508,19 +593,19 @@ namespace VeraCrypt
 				if ((double) candidatePartition.Info.PartitionLength.QuadPart / config.SystemPartition.Info.PartitionLength.QuadPart < MIN_HIDDENOS_DECOY_PARTITION_SIZE_RATIO_NTFS)
 				{
 					throw ErrorException (wstring (GetString ("PARTITION_TOO_SMALL_FOR_HIDDEN_OS_NTFS"))
-						+ GetRemarksOnHiddenOS());
+						+ GetRemarksOnHiddenOS(), SRC_POS);
 				}
 			}
 			else if ((double) candidatePartition.Info.PartitionLength.QuadPart / config.SystemPartition.Info.PartitionLength.QuadPart < MIN_HIDDENOS_DECOY_PARTITION_SIZE_RATIO_FAT)
 			{
 				throw ErrorException (wstring (GetString ("PARTITION_TOO_SMALL_FOR_HIDDEN_OS"))
-					+ GetRemarksOnHiddenOS());
+					+ GetRemarksOnHiddenOS(), SRC_POS);
 			}
 		}
 		else
 		{
 			// No active partition on the system drive
-			throw ErrorException ("SYSTEM_PARTITION_NOT_ACTIVE");
+			throw ErrorException ("SYSTEM_PARTITION_NOT_ACTIVE", SRC_POS);
 		}
 
 		HiddenOSCandidatePartition = candidatePartition;
@@ -635,7 +720,7 @@ namespace VeraCrypt
 			stringstream partPath;
 			partPath << "\\Device\\Harddisk" << driveNumber << "\\Partition" << partNumber;
 
-			DISK_PARTITION_INFO_STRUCT diskPartInfo;
+			DISK_PARTITION_INFO_STRUCT diskPartInfo = {0};
 			StringCbPrintfW (diskPartInfo.deviceName, sizeof (diskPartInfo.deviceName), L"%hs", partPath.str().c_str());
 
 			try
@@ -647,50 +732,60 @@ namespace VeraCrypt
 				continue;
 			}
 
-			Partition part;
-			part.DevicePath = partPath.str();
-			part.Number = partNumber;
-			part.Info = diskPartInfo.partInfo;
-			part.IsGPT = diskPartInfo.IsGPT;
-
-			// Mount point
-			wstringstream ws;
-			ws << partPath.str().c_str();
-			int driveNumber = GetDiskDeviceDriveLetter ((wchar_t *) ws.str().c_str());
-
-			if (driveNumber >= 0)
+			if (	(diskPartInfo.IsGPT == TRUE || diskPartInfo.IsGPT == FALSE)
+				&&	(diskPartInfo.IsDynamic == TRUE || diskPartInfo.IsDynamic == FALSE)
+				&&	(diskPartInfo.partInfo.BootIndicator == TRUE || diskPartInfo.partInfo.BootIndicator == FALSE)
+				&&	(diskPartInfo.partInfo.RecognizedPartition == TRUE || diskPartInfo.partInfo.RecognizedPartition == FALSE)
+				&&	(diskPartInfo.partInfo.RewritePartition == TRUE || diskPartInfo.partInfo.RewritePartition == FALSE)
+				&&	(diskPartInfo.partInfo.StartingOffset.QuadPart >= 0)
+				&&	(diskPartInfo.partInfo.PartitionLength.QuadPart >= 0)
+				)
 			{
-				part.MountPoint += (char) (driveNumber + 'A');
-				part.MountPoint += ":";
-			}
+				Partition part;
+				part.DevicePath = partPath.str();
+				part.Number = partNumber;
+				part.Info = diskPartInfo.partInfo;
+				part.IsGPT = diskPartInfo.IsGPT;
 
-			// Volume ID
-			wchar_t volumePath[TC_MAX_PATH];
-			if (ResolveSymbolicLink ((wchar_t *) ws.str().c_str(), volumePath, sizeof(volumePath)))
-			{
-				wchar_t volumeName[TC_MAX_PATH];
-				HANDLE fh = FindFirstVolumeW (volumeName, array_capacity (volumeName));
-				if (fh != INVALID_HANDLE_VALUE)
+				// Mount point
+				wstringstream ws;
+				ws << partPath.str().c_str();
+				int driveNumber = GetDiskDeviceDriveLetter ((wchar_t *) ws.str().c_str());
+
+				if (driveNumber >= 0)
 				{
-					do
-					{
-						wstring volumeNameStr = volumeName;
-						wchar_t devicePath[TC_MAX_PATH];
-
-						if (QueryDosDeviceW (volumeNameStr.substr (4, volumeNameStr.size() - 1 - 4).c_str(), devicePath, array_capacity (devicePath)) != 0
-							&& wcscmp (volumePath, devicePath) == 0)
-						{
-							part.VolumeNameId = volumeName;
-							break;
-						}
-
-					} while (FindNextVolumeW (fh, volumeName, array_capacity (volumeName)));
-
-					FindVolumeClose (fh);
+					part.MountPoint += (char) (driveNumber + 'A');
+					part.MountPoint += ":";
 				}
-			}
 
-			partList.push_back (part);
+				// Volume ID
+				wchar_t volumePath[TC_MAX_PATH];
+				if (ResolveSymbolicLink ((wchar_t *) ws.str().c_str(), volumePath, sizeof(volumePath)))
+				{
+					wchar_t volumeName[TC_MAX_PATH];
+					HANDLE fh = FindFirstVolumeW (volumeName, array_capacity (volumeName));
+					if (fh != INVALID_HANDLE_VALUE)
+					{
+						do
+						{
+							wstring volumeNameStr = volumeName;
+							wchar_t devicePath[TC_MAX_PATH];
+
+							if (QueryDosDeviceW (volumeNameStr.substr (4, volumeNameStr.size() - 1 - 4).c_str(), devicePath, array_capacity (devicePath)) != 0
+								&& wcscmp (volumePath, devicePath) == 0)
+							{
+								part.VolumeNameId = volumeName;
+								break;
+							}
+
+						} while (FindNextVolumeW (fh, volumeName, array_capacity (volumeName)));
+
+						FindVolumeClose (fh);
+					}
+				}
+
+				partList.push_back (part);
+			}
 		}
 
 		return partList;
@@ -735,6 +830,12 @@ namespace VeraCrypt
 		return version;
 	}
 
+	void BootEncryption::GetInstalledBootLoaderFingerprint (byte fingerprint[WHIRLPOOL_DIGESTSIZE + SHA512_DIGESTSIZE])
+	{
+		BootLoaderFingerprintRequest request;
+		CallDriver (VC_IOCTL_GET_BOOT_LOADER_FINGERPRINT, NULL, 0, &request, sizeof (request));
+		memcpy (fingerprint, request.Fingerprint, sizeof (request.Fingerprint));
+	}
 
 	// Note that this does not require admin rights (it just requires the driver to be running)
 	bool BootEncryption::IsBootLoaderOnDrive (char *devicePath)
@@ -793,6 +894,7 @@ namespace VeraCrypt
 	bool BootEncryption::SystemDriveContainsPartitionType (byte type)
 	{
 		Device device (GetSystemDriveConfiguration().DevicePath, true);
+		device.CheckOpened (SRC_POS);
 
 		byte mbrBuf[TC_SECTOR_SIZE_BIOS];
 		device.SeekAt (0);
@@ -1103,6 +1205,7 @@ namespace VeraCrypt
 		if (hiddenOSCreation)
 		{
 			Device device (GetSystemDriveConfiguration().DevicePath);
+			device.CheckOpened (SRC_POS);
 			byte headerSector[TC_SECTOR_SIZE_BIOS];
 
 			device.SeekAt (HiddenOSCandidatePartition.Info.StartingOffset.QuadPart + HiddenOSCandidatePartition.Info.PartitionLength.QuadPart - TC_VOLUME_HEADER_GROUP_SIZE + TC_VOLUME_HEADER_EFFECTIVE_SIZE);
@@ -1191,6 +1294,7 @@ namespace VeraCrypt
 	void BootEncryption::WriteBootSectorConfig (const byte newConfig[])
 	{
 		Device device (GetSystemDriveConfiguration().DevicePath);
+		device.CheckOpened (SRC_POS);
 		byte mbr[TC_SECTOR_SIZE_BIOS];
 
 		device.SeekAt (0);
@@ -1206,13 +1310,14 @@ namespace VeraCrypt
 		device.Read (mbrVerificationBuf, sizeof (mbr));
 
 		if (memcmp (mbr, mbrVerificationBuf, sizeof (mbr)) != 0)
-			throw ErrorException ("ERROR_MBR_PROTECTED");
+			throw ErrorException ("ERROR_MBR_PROTECTED", SRC_POS);
 	}
 
 
 	void BootEncryption::WriteBootSectorUserConfig (byte userConfig, const string &customUserMessage)
 	{
 		Device device (GetSystemDriveConfiguration().DevicePath);
+		device.CheckOpened (SRC_POS);
 		byte mbr[TC_SECTOR_SIZE_BIOS];
 
 		device.SeekAt (0);
@@ -1244,7 +1349,7 @@ namespace VeraCrypt
 		device.Read (mbrVerificationBuf, sizeof (mbr));
 
 		if (memcmp (mbr, mbrVerificationBuf, sizeof (mbr)) != 0)
-			throw ErrorException ("ERROR_MBR_PROTECTED");
+			throw ErrorException ("ERROR_MBR_PROTECTED", SRC_POS);
 	}
 
 
@@ -1288,11 +1393,19 @@ namespace VeraCrypt
 		request.WipeAlgorithm = wipeAlgorithm;
 		
 		if (Randinit() != ERR_SUCCESS)
-			throw ParameterIncorrect (SRC_POS);
+		{
+			if (CryptoAPILastError == ERROR_SUCCESS)
+				throw RandInitFailed (SRC_POS, GetLastError ());
+			else
+				throw CryptoApiFailed (SRC_POS, CryptoAPILastError);
+		}
+
+		/* force the display of the random enriching dialog */
+		SetRandomPoolEnrichedByUserStatus (FALSE);
 
 		UserEnrichRandomPool (ParentWindow);
 
-		if (!RandgetBytes (request.WipeKey, sizeof (request.WipeKey), TRUE))
+		if (!RandgetBytes (ParentWindow, request.WipeKey, sizeof (request.WipeKey), TRUE))
 			throw ParameterIncorrect (SRC_POS);
 
 		CallDriver (TC_IOCTL_START_DECOY_SYSTEM_WIPE, &request, sizeof (request), NULL, 0);
@@ -1323,10 +1436,19 @@ namespace VeraCrypt
 
 	void BootEncryption::WipeHiddenOSCreationConfig ()
 	{
-		if (IsHiddenOSRunning() || Randinit() != ERR_SUCCESS)
+		if (IsHiddenOSRunning())
 			throw ParameterIncorrect (SRC_POS);
 
+		if (Randinit() != ERR_SUCCESS)
+		{
+			if (CryptoAPILastError == ERROR_SUCCESS)
+				throw RandInitFailed (SRC_POS, GetLastError ());
+			else
+				throw CryptoApiFailed (SRC_POS, CryptoAPILastError);
+		}
+
 		Device device (GetSystemDriveConfiguration().DevicePath);
+		device.CheckOpened(SRC_POS);
 		byte mbr[TC_SECTOR_SIZE_BIOS];
 
 		device.SeekAt (0);
@@ -1345,7 +1467,7 @@ namespace VeraCrypt
 #endif
 
 		byte randData[PRAND_DISK_WIPE_PASSES];
-		if (!RandgetBytes (randData, sizeof (randData), FALSE))
+		if (!RandgetBytes (ParentWindow, randData, sizeof (randData), FALSE))
 			throw ParameterIncorrect (SRC_POS);
 
 		for (int wipePass = 0; wipePass < PRAND_DISK_WIPE_PASSES; wipePass++)
@@ -1380,11 +1502,18 @@ namespace VeraCrypt
 
 	void BootEncryption::InstallBootLoader (bool preserveUserConfig, bool hiddenOSCreation)
 	{
-		byte bootLoaderBuf[TC_BOOT_LOADER_AREA_SIZE - TC_BOOT_ENCRYPTION_VOLUME_HEADER_SIZE];
+		Device device (GetSystemDriveConfiguration().DevicePath);
+		device.CheckOpened (SRC_POS);
+
+		InstallBootLoader (device, preserveUserConfig, hiddenOSCreation);
+	}
+
+	void BootEncryption::InstallBootLoader (Device& device, bool preserveUserConfig, bool hiddenOSCreation)
+	{
+		byte bootLoaderBuf[TC_BOOT_LOADER_AREA_SIZE - TC_BOOT_ENCRYPTION_VOLUME_HEADER_SIZE] = {0};
 		CreateBootLoaderInMemory (bootLoaderBuf, sizeof (bootLoaderBuf), false, hiddenOSCreation);
 
 		// Write MBR
-		Device device (GetSystemDriveConfiguration().DevicePath);
 		byte mbr[TC_SECTOR_SIZE_BIOS];
 
 		device.SeekAt (0);
@@ -1410,13 +1539,50 @@ namespace VeraCrypt
 		device.Read (mbrVerificationBuf, sizeof (mbr));
 
 		if (memcmp (mbr, mbrVerificationBuf, sizeof (mbr)) != 0)
-			throw ErrorException ("ERROR_MBR_PROTECTED");
+			throw ErrorException ("ERROR_MBR_PROTECTED", SRC_POS);
 
 		// Write boot loader
 		device.SeekAt (TC_SECTOR_SIZE_BIOS);
 		device.Write (bootLoaderBuf + TC_SECTOR_SIZE_BIOS, sizeof (bootLoaderBuf) - TC_SECTOR_SIZE_BIOS);
 	}
 
+#ifndef SETUP
+	bool BootEncryption::CheckBootloaderFingerprint (bool bSilent)
+	{
+		byte bootLoaderBuf[TC_BOOT_LOADER_AREA_SIZE - TC_BOOT_ENCRYPTION_VOLUME_HEADER_SIZE] = {0};
+		byte fingerprint[WHIRLPOOL_DIGESTSIZE + SHA512_DIGESTSIZE];
+		byte expectedFingerprint[WHIRLPOOL_DIGESTSIZE + SHA512_DIGESTSIZE];
+		bool bRet = false;
+
+		try
+		{
+			// read bootloader fingerprint
+			GetInstalledBootLoaderFingerprint (fingerprint);
+
+			// compute expected fingerprint
+			CreateBootLoaderInMemory (bootLoaderBuf, sizeof (bootLoaderBuf), false, false);
+			::ComputeBootloaderFingerprint (bootLoaderBuf, sizeof (bootLoaderBuf), expectedFingerprint);
+
+			// compare values
+			if (0 == memcmp (fingerprint, expectedFingerprint, sizeof (expectedFingerprint)))
+			{
+				bRet = true;
+			}
+		}
+		catch (SystemException &e)
+		{
+			if (!bSilent && (GetLastError () != ERROR_INVALID_IMAGE_HASH))
+				e.Show (ParentWindow);
+		}
+		catch (Exception& e)
+		{
+			if (!bSilent)
+				e.Show (ParentWindow);
+		}
+
+		return bRet;
+	}
+#endif
 
 	string BootEncryption::GetSystemLoaderBackupPath ()
 	{
@@ -1539,6 +1705,7 @@ namespace VeraCrypt
 		else
 		{
 			Device bootDevice (GetSystemDriveConfiguration().DevicePath, true);
+			bootDevice.CheckOpened (SRC_POS);
 			bootDevice.SeekAt (TC_BOOT_VOLUME_HEADER_SECTOR_OFFSET);
 			bootDevice.Read (image + TC_CD_BOOTSECTOR_OFFSET + TC_BOOT_VOLUME_HEADER_SECTOR_OFFSET, TC_BOOT_ENCRYPTION_VOLUME_HEADER_SIZE);
 		}
@@ -1547,6 +1714,7 @@ namespace VeraCrypt
 		try
 		{
 			File sysBakFile (GetSystemLoaderBackupPath(), true);
+			sysBakFile.CheckOpened (SRC_POS);
 			sysBakFile.Read (image + TC_CD_BOOTSECTOR_OFFSET + TC_ORIG_BOOT_LOADER_BACKUP_SECTOR_OFFSET, TC_BOOT_LOADER_AREA_SIZE);
 			
 			image[TC_CD_BOOTSECTOR_OFFSET + TC_BOOT_SECTOR_CONFIG_OFFSET] |= TC_BOOT_CFG_FLAG_RESCUE_DISK_ORIG_SYS_LOADER;
@@ -1554,7 +1722,7 @@ namespace VeraCrypt
 		catch (Exception &e)
 		{
 			e.Show (ParentWindow);
-			Warning ("SYS_LOADER_UNAVAILABLE_FOR_RESCUE_DISK");
+			Warning ("SYS_LOADER_UNAVAILABLE_FOR_RESCUE_DISK", ParentWindow);
 		}
 		
 		// Boot loader backup
@@ -1574,18 +1742,20 @@ namespace VeraCrypt
 #endif
 
 
-	bool BootEncryption::IsCDDrivePresent ()
+	bool BootEncryption::IsCDRecorderPresent ()
 	{
-		for (char drive = 'Z'; drive >= 'C'; --drive)
+		ICDBurn* pICDBurn;
+		BOOL bHasRecorder = FALSE;
+
+		if (SUCCEEDED( CoCreateInstance (CLSID_CDBurn, NULL,CLSCTX_INPROC_SERVER,IID_ICDBurn,(LPVOID*)&pICDBurn)))
 		{
-			string path = "X:\\";
-			path[0] = drive;
-
-			if (GetDriveType (path.c_str()) == DRIVE_CDROM)
-				return true;
+			if (pICDBurn->HasRecordableDrive (&bHasRecorder) != S_OK)
+			{
+				bHasRecorder = FALSE;
+			}
+			pICDBurn->Release();
 		}
-
-		return false;
+		return bHasRecorder? true : false;
 	}
 
 
@@ -1598,19 +1768,26 @@ namespace VeraCrypt
 		{
 			try
 			{
-				string path = "X:";
-				path[0] = drive;
+				char rootPath[4] = { drive, ':', '\\', 0};
+				UINT driveType = GetDriveTypeA (rootPath);
+				// check that it is a CD/DVD drive or a removable media in case a bootable
+				// USB key was created from the rescue disk ISO file
+				if ((DRIVE_CDROM == driveType) || (DRIVE_REMOVABLE == driveType)) 
+				{
+					rootPath[2] = 0; // remove trailing backslash
 
-				Device driveDevice (path, true);
-				size_t verifiedSectorCount = (TC_CD_BOOTSECTOR_OFFSET + TC_ORIG_BOOT_LOADER_BACKUP_SECTOR_OFFSET + TC_BOOT_LOADER_AREA_SIZE) / 2048;
-				Buffer buffer ((verifiedSectorCount + 1) * 2048);
+					Device driveDevice (rootPath, true);
+					driveDevice.CheckOpened (SRC_POS);
+					size_t verifiedSectorCount = (TC_CD_BOOTSECTOR_OFFSET + TC_ORIG_BOOT_LOADER_BACKUP_SECTOR_OFFSET + TC_BOOT_LOADER_AREA_SIZE) / 2048;
+					Buffer buffer ((verifiedSectorCount + 1) * 2048);
 
-				DWORD bytesRead = driveDevice.Read (buffer.Ptr(), buffer.Size());
-				if (bytesRead != buffer.Size())
-					continue;
+					DWORD bytesRead = driveDevice.Read (buffer.Ptr(), (DWORD) buffer.Size());
+					if (bytesRead != buffer.Size())
+						continue;
 
-				if (memcmp (buffer.Ptr(), RescueIsoImage, buffer.Size()) == 0)
-					return true;
+					if (memcmp (buffer.Ptr(), RescueIsoImage, buffer.Size()) == 0)
+						return true;
+				}
 			}
 			catch (...) { }
 		}
@@ -1618,24 +1795,50 @@ namespace VeraCrypt
 		return false;
 	}
 
+	bool BootEncryption::VerifyRescueDiskIsoImage (const char* imageFile)
+	{
+		if (!RescueIsoImage)
+			throw ParameterIncorrect (SRC_POS);
+
+		try
+		{
+			File isoFile (imageFile, true);
+			isoFile.CheckOpened (SRC_POS);
+			size_t verifiedSectorCount = (TC_CD_BOOTSECTOR_OFFSET + TC_ORIG_BOOT_LOADER_BACKUP_SECTOR_OFFSET + TC_BOOT_LOADER_AREA_SIZE) / 2048;
+			Buffer buffer ((verifiedSectorCount + 1) * 2048);
+
+			DWORD bytesRead = isoFile.Read (buffer.Ptr(), (DWORD) buffer.Size());
+			if (	(bytesRead == buffer.Size()) 
+				&& (memcmp (buffer.Ptr(), RescueIsoImage, buffer.Size()) == 0)
+				)
+			{
+				return true;
+			}
+		}
+		catch (...) { }
+
+		return false;
+	}
+
 
 #ifndef SETUP
 
-	void BootEncryption::CreateVolumeHeader (uint64 volumeSize, uint64 encryptedAreaStart, Password *password, int ea, int mode, int pkcs5)
+	void BootEncryption::CreateVolumeHeader (uint64 volumeSize, uint64 encryptedAreaStart, Password *password, int ea, int mode, int pkcs5, int pim)
 	{
 		PCRYPTO_INFO cryptoInfo = NULL;
 
 		if (!IsRandomNumberGeneratorStarted())
 			throw ParameterIncorrect (SRC_POS);
 
-		throw_sys_if (CreateVolumeHeaderInMemory (TRUE, (char *) VolumeHeader, ea, mode, password, pkcs5, NULL, &cryptoInfo,
+		throw_sys_if (CreateVolumeHeaderInMemory (ParentWindow, TRUE, (char *) VolumeHeader, ea, mode, password, pkcs5, pim, NULL, &cryptoInfo,
 			volumeSize, 0, encryptedAreaStart, 0, TC_SYSENC_KEYSCOPE_MIN_REQ_PROG_VERSION, TC_HEADER_FLAG_ENCRYPTED_SYSTEM, TC_SECTOR_SIZE_BIOS, FALSE) != 0);
 
 		finally_do_arg (PCRYPTO_INFO*, &cryptoInfo, { crypto_close (*finally_arg); });
 
 		// Initial rescue disk assumes encryption of the drive has been completed (EncryptedAreaLength == volumeSize)
 		memcpy (RescueVolumeHeader, VolumeHeader, sizeof (RescueVolumeHeader));
-		ReadVolumeHeader (TRUE, (char *) RescueVolumeHeader, password, NULL, cryptoInfo);
+		if (0 != ReadVolumeHeader (TRUE, (char *) RescueVolumeHeader, password, pkcs5, pim, FALSE, NULL, cryptoInfo))
+			throw ParameterIncorrect (SRC_POS);
 
 		DecryptBuffer (RescueVolumeHeader + HEADER_ENCRYPTED_DATA_OFFSET, HEADER_ENCRYPTED_DATA_SIZE, cryptoInfo);
 
@@ -1663,6 +1866,7 @@ namespace VeraCrypt
 			throw ParameterIncorrect (SRC_POS);
 
 		Device device (GetSystemDriveConfiguration().DevicePath);
+		device.CheckOpened (SRC_POS);
 
 		device.SeekAt (TC_BOOT_VOLUME_HEADER_SECTOR_OFFSET);
 		device.Write ((byte *) VolumeHeader, sizeof (VolumeHeader));
@@ -1694,7 +1898,7 @@ namespace VeraCrypt
 	void BootEncryption::BackupSystemLoader ()
 	{
 		Device device (GetSystemDriveConfiguration().DevicePath, true);
-	
+		device.CheckOpened (SRC_POS);
 		byte bootLoaderBuf[TC_BOOT_LOADER_AREA_SECTOR_COUNT * TC_SECTOR_SIZE_BIOS];
 
 		device.SeekAt (0);
@@ -1705,7 +1909,7 @@ namespace VeraCrypt
 		{
 			if (memcmp (bootLoaderBuf + i, TC_APP_NAME, strlen (TC_APP_NAME)) == 0)
 			{
-				if (AskWarnNoYes ("TC_BOOT_LOADER_ALREADY_INSTALLED") == IDNO)
+				if (AskWarnNoYes ("TC_BOOT_LOADER_ALREADY_INSTALLED", ParentWindow) == IDNO)
 					throw UserAbort (SRC_POS);
 				return;
 			}
@@ -1721,11 +1925,12 @@ namespace VeraCrypt
 		byte bootLoaderBuf[TC_BOOT_LOADER_AREA_SECTOR_COUNT * TC_SECTOR_SIZE_BIOS];
 
 		File backupFile (GetSystemLoaderBackupPath(), true);
-		
+		backupFile.CheckOpened(SRC_POS);
 		if (backupFile.Read (bootLoaderBuf, sizeof (bootLoaderBuf)) != sizeof (bootLoaderBuf))
 			throw ParameterIncorrect (SRC_POS);
 
 		Device device (GetSystemDriveConfiguration().DevicePath);
+		device.CheckOpened (SRC_POS);
 
 		// Preserve current partition table
 		byte mbr[TC_SECTOR_SIZE_BIOS];
@@ -1779,7 +1984,7 @@ namespace VeraCrypt
 
 			size_t strSize = filter.size() + 1;
 			byte regKeyBuf[65536];
-			DWORD size = sizeof (regKeyBuf) - strSize;
+			DWORD size = (DWORD) (sizeof (regKeyBuf) - strSize);
 
 			// SetupInstallFromInfSection() does not support prepending of values so we have to modify the registry directly
 			StringCbCopyA ((char *) regKeyBuf, sizeof(regKeyBuf), filter.c_str());
@@ -1787,7 +1992,7 @@ namespace VeraCrypt
 			if (RegQueryValueEx (regKey, filterReg.c_str(), NULL, NULL, regKeyBuf + strSize, &size) != ERROR_SUCCESS)
 				size = 1;
 
-			SetLastError (RegSetValueEx (regKey, filterReg.c_str(), 0, REG_MULTI_SZ, regKeyBuf, strSize + size));
+			SetLastError (RegSetValueEx (regKey, filterReg.c_str(), 0, REG_MULTI_SZ, regKeyBuf, (DWORD) strSize + size));
 			throw_sys_if (GetLastError() != ERROR_SUCCESS);
 		}
 		else
@@ -1802,7 +2007,7 @@ namespace VeraCrypt
 							"[veracrypt_reg]\r\n"
 							"HKR,,\"" + filterReg + "\",0x0001" + string (registerFilter ? "0008" : "8002") + ",\"" + filter + "\"\r\n";
 
-			infFile.Write ((byte *) infTxt.c_str(), infTxt.size());
+			infFile.Write ((byte *) infTxt.c_str(), (DWORD) infTxt.size());
 			infFile.Close();
 
 			HINF hInf = SetupOpenInfFile (infFileName.c_str(), NULL, INF_STYLE_OLDNT | INF_STYLE_WIN4, NULL);
@@ -1841,33 +2046,30 @@ namespace VeraCrypt
 		}
 	}
 
-#ifndef SETUP
-
-	void BootEncryption::RegisterSystemFavoritesService (BOOL registerService)
+	void BootEncryption::RegisterSystemFavoritesService (BOOL registerService, BOOL noFileHandling)
 	{
-		if (!IsAdmin() && IsUacSupported())
-		{
-			Elevator::RegisterSystemFavoritesService (registerService);
-			return;
-		}
-
 		SC_HANDLE scm = OpenSCManager (NULL, NULL, SC_MANAGER_ALL_ACCESS);
 		throw_sys_if (!scm);
+		finally_do_arg (SC_HANDLE, scm, { CloseServiceHandle (finally_arg); });
 
-		string servicePath = GetServiceConfigPath (TC_APP_NAME ".exe");
+		string servicePath = GetServiceConfigPath (TC_APP_NAME ".exe", false);
+		string serviceLegacyPath = GetServiceConfigPath (TC_APP_NAME ".exe", true);
 
 		if (registerService)
 		{
 			try
 			{
-				RegisterSystemFavoritesService (FALSE);
+				RegisterSystemFavoritesService (FALSE, noFileHandling);
 			}
 			catch (...) { }
 
-			char appPath[TC_MAX_PATH];
-			throw_sys_if (!GetModuleFileName (NULL, appPath, sizeof (appPath)));
+			if (!noFileHandling)
+			{
+				char appPath[TC_MAX_PATH];
+				throw_sys_if (!GetModuleFileName (NULL, appPath, sizeof (appPath)));
 
-			throw_sys_if (!CopyFile (appPath, servicePath.c_str(), FALSE));
+				throw_sys_if (!CopyFile (appPath, servicePath.c_str(), FALSE));
+			}
 
 			SC_HANDLE service = CreateService (scm,
 				TC_SYSTEM_FAVORITES_SERVICE_NAME,
@@ -1902,7 +2104,7 @@ namespace VeraCrypt
 			{
 				try
 				{
-					RegisterSystemFavoritesService (false);
+					RegisterSystemFavoritesService (FALSE, noFileHandling);
 				}
 				catch (...) { }
 
@@ -1922,36 +2124,102 @@ namespace VeraCrypt
 			throw_sys_if (!DeleteService (service));
 			CloseServiceHandle (service);
 
-			DeleteFile (servicePath.c_str());
+			if (!noFileHandling)
+			{
+				DeleteFile (servicePath.c_str());
+				if (serviceLegacyPath != servicePath)
+					DeleteFile (serviceLegacyPath.c_str());
+			}
 		}
+	}
+
+	void BootEncryption::UpdateSystemFavoritesService ()
+	{
+		SC_HANDLE scm = OpenSCManager (NULL, NULL, SC_MANAGER_ALL_ACCESS);
+		throw_sys_if (!scm);
+
+		finally_do_arg (SC_HANDLE, scm, { CloseServiceHandle (finally_arg); });
+
+		string servicePath = GetServiceConfigPath (TC_APP_NAME ".exe", false);
+
+		// check if service exists
+		SC_HANDLE service = OpenService (scm, TC_SYSTEM_FAVORITES_SERVICE_NAME, SERVICE_ALL_ACCESS);
+		if (service)
+		{
+			// ensure that its parameters are correct
+			throw_sys_if (!ChangeServiceConfig (service,
+				SERVICE_WIN32_OWN_PROCESS,
+				SERVICE_AUTO_START,
+				SERVICE_ERROR_NORMAL,
+				(string ("\"") + servicePath + "\" " TC_SYSTEM_FAVORITES_SERVICE_CMDLINE_OPTION).c_str(),
+				TC_SYSTEM_FAVORITES_SERVICE_LOAD_ORDER_GROUP,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				TC_APP_NAME " System Favorites"));
+
+		}
+		else
+		{
+			RegisterSystemFavoritesService (TRUE, TRUE);
+		}
+	}
+
+	void BootEncryption::SetDriverConfigurationFlag (uint32 flag, bool state)
+	{
+		DWORD configMap = ReadDriverConfigurationFlags();
+
+		if (state)
+			configMap |= flag;
+		else
+			configMap &= ~flag;
+#ifdef SETUP
+		WriteLocalMachineRegistryDword ("SYSTEM\\CurrentControlSet\\Services\\veracrypt", TC_DRIVER_CONFIG_REG_VALUE_NAME, configMap);
+#else
+		WriteLocalMachineRegistryDwordValue ("SYSTEM\\CurrentControlSet\\Services\\veracrypt", TC_DRIVER_CONFIG_REG_VALUE_NAME, configMap);
+#endif
+	}
+
+#ifndef SETUP
+
+	void BootEncryption::RegisterSystemFavoritesService (BOOL registerService)
+	{
+		if (!IsAdmin() && IsUacSupported())
+		{
+			Elevator::RegisterSystemFavoritesService (registerService);
+			return;
+		}
+
+		RegisterSystemFavoritesService (registerService, FALSE);
 	}
 
 	void BootEncryption::CheckRequirements ()
 	{
 		if (nCurrentOS == WIN_2000)
-			throw ErrorException ("SYS_ENCRYPTION_UNSUPPORTED_ON_CURRENT_OS");
+			throw ErrorException ("SYS_ENCRYPTION_UNSUPPORTED_ON_CURRENT_OS", SRC_POS);
  
 		if (CurrentOSMajor == 6 && CurrentOSMinor == 0 && CurrentOSServicePack < 1)
-			throw ErrorException ("SYS_ENCRYPTION_UNSUPPORTED_ON_VISTA_SP0");
+			throw ErrorException ("SYS_ENCRYPTION_UNSUPPORTED_ON_VISTA_SP0", SRC_POS);
 
 		if (IsNonInstallMode())
-			throw ErrorException ("FEATURE_REQUIRES_INSTALLATION");
+			throw ErrorException ("FEATURE_REQUIRES_INSTALLATION", SRC_POS);
 
 		SystemDriveConfiguration config = GetSystemDriveConfiguration ();
 
 		if (config.SystemPartition.IsGPT)
-			throw ErrorException ("GPT_BOOT_DRIVE_UNSUPPORTED");
+			throw ErrorException ("GPT_BOOT_DRIVE_UNSUPPORTED", SRC_POS);
 
 		if (SystemDriveIsDynamic())
-			throw ErrorException ("SYSENC_UNSUPPORTED_FOR_DYNAMIC_DISK");
+			throw ErrorException ("SYSENC_UNSUPPORTED_FOR_DYNAMIC_DISK", SRC_POS);
 
 		if (config.InitialUnallocatedSpace < TC_BOOT_LOADER_AREA_SIZE)
-			throw ErrorException ("NO_SPACE_FOR_BOOT_LOADER");
+			throw ErrorException ("NO_SPACE_FOR_BOOT_LOADER", SRC_POS);
 
 		DISK_GEOMETRY geometry = GetDriveGeometry (config.DriveNumber);
 
 		if (geometry.BytesPerSector != TC_SECTOR_SIZE_BIOS)
-			throw ErrorException ("SYSENC_UNSUPPORTED_SECTOR_SIZE_BIOS");
+			throw ErrorException ("SYSENC_UNSUPPORTED_SECTOR_SIZE_BIOS", SRC_POS);
 
 		bool activePartitionFound = false;
 		if (!config.SystemPartition.IsGPT)
@@ -1971,7 +2239,7 @@ namespace VeraCrypt
 		{
 			static bool confirmed = false;
 
-			if (!confirmed && AskWarnNoYes ("WINDOWS_NOT_ON_BOOT_DRIVE_ERROR") == IDNO)
+			if (!confirmed && AskWarnNoYes ("WINDOWS_NOT_ON_BOOT_DRIVE_ERROR", ParentWindow) == IDNO)
 				throw UserAbort (SRC_POS);
 
 			confirmed = true;
@@ -2019,7 +2287,7 @@ namespace VeraCrypt
 				+ GetString ("LEAKS_OUTSIDE_SYSPART_UNIVERSAL_EXPLANATION")
 				+ L"\n\n\n"
 				+ GetString ("RESTRICT_PAGING_FILES_TO_SYS_PARTITION")
-				).c_str()) == IDYES)
+				).c_str(), ParentWindow) == IDYES)
 			{
 				RestrictPagingFilesToSystemPartition();
 				RestartComputer();
@@ -2027,7 +2295,7 @@ namespace VeraCrypt
 			}
 
 			throw ErrorException (wstring (GetString ("PAGING_FILE_NOT_ON_SYS_PARTITION")) 
-				+ GetString ("LEAKS_OUTSIDE_SYSPART_UNIVERSAL_EXPLANATION"));
+				+ GetString ("LEAKS_OUTSIDE_SYSPART_UNIVERSAL_EXPLANATION"), SRC_POS);
 		}
 
 		// User profile
@@ -2035,14 +2303,14 @@ namespace VeraCrypt
 		if (configPath && toupper (configPath[0]) != windowsDrive)
 		{
 			throw ErrorException (wstring (GetString ("USER_PROFILE_NOT_ON_SYS_PARTITION")) 
-				+ GetString ("LEAKS_OUTSIDE_SYSPART_UNIVERSAL_EXPLANATION"));
+				+ GetString ("LEAKS_OUTSIDE_SYSPART_UNIVERSAL_EXPLANATION"), SRC_POS);
 		}
 
 		// Temporary files
 		if (toupper (GetTempPath()[0]) != windowsDrive)
 		{
 			throw ErrorException (wstring (GetString ("TEMP_NOT_ON_SYS_PARTITION")) 
-				+ GetString ("LEAKS_OUTSIDE_SYSPART_UNIVERSAL_EXPLANATION"));
+				+ GetString ("LEAKS_OUTSIDE_SYSPART_UNIVERSAL_EXPLANATION"), SRC_POS);
 		}
 	}
 
@@ -2062,6 +2330,7 @@ namespace VeraCrypt
 		{
 			// Verify CRC of header salt
 			Device device (config.DevicePath, true);
+			device.CheckOpened (SRC_POS);
 			byte header[TC_BOOT_ENCRYPTION_VOLUME_HEADER_SIZE];
 
 			device.SeekAt (TC_BOOT_VOLUME_HEADER_SECTOR_OFFSET);
@@ -2109,12 +2378,12 @@ namespace VeraCrypt
 		catch (Exception &e)
 		{
 			e.Show (ParentWindow);
-			throw ErrorException ("SYS_LOADER_RESTORE_FAILED");
+			throw ErrorException ("SYS_LOADER_RESTORE_FAILED", SRC_POS);
 		}
 	}
 
 
-	int BootEncryption::ChangePassword (Password *oldPassword, Password *newPassword, int pkcs5, int wipePassCount)
+	int BootEncryption::ChangePassword (Password *oldPassword, int old_pkcs5, int old_pim, Password *newPassword, int pkcs5, int pim, int wipePassCount, HWND hwndDlg)
 	{
 		BootEncryptionStatus encStatus = GetStatus();
 
@@ -2125,6 +2394,7 @@ namespace VeraCrypt
 
 		char header[TC_BOOT_ENCRYPTION_VOLUME_HEADER_SIZE];
 		Device device (config.DevicePath);
+		device.CheckOpened (SRC_POS);
 
 		// Only one algorithm is currently supported
 		if (pkcs5 != 0)
@@ -2156,12 +2426,12 @@ namespace VeraCrypt
 
 		PCRYPTO_INFO cryptoInfo = NULL;
 		
-		int status = ReadVolumeHeader (!encStatus.HiddenSystem, header, oldPassword, &cryptoInfo, NULL);
+		int status = ReadVolumeHeader (!encStatus.HiddenSystem, header, oldPassword, old_pkcs5, old_pim, FALSE, &cryptoInfo, NULL);
 		finally_do_arg (PCRYPTO_INFO, cryptoInfo, { if (finally_arg) crypto_close (finally_arg); });
 
 		if (status != 0)
 		{
-			handleError (ParentWindow, status);
+			handleError (hwndDlg, status, SRC_POS);
 			return status;
 		}
 
@@ -2172,11 +2442,20 @@ namespace VeraCrypt
 			RandSetHashFunction (pkcs5);
 		}
 
-		throw_sys_if (Randinit () != 0);
+		if (Randinit() != 0)
+		{
+			if (CryptoAPILastError == ERROR_SUCCESS)
+				throw RandInitFailed (SRC_POS, GetLastError ());
+			else
+				throw CryptoApiFailed (SRC_POS, CryptoAPILastError);
+		}
 		finally_do ({ RandStop (FALSE); });
 
+		/* force the display of the random enriching dialog */
+		SetRandomPoolEnrichedByUserStatus (FALSE);
+
 		NormalCursor();
-		UserEnrichRandomPool (ParentWindow);
+		UserEnrichRandomPool (hwndDlg);
 		WaitCursor();
 
 		/* The header will be re-encrypted wipePassCount times to prevent adversaries from using 
@@ -2203,12 +2482,13 @@ namespace VeraCrypt
 				{
 					PCRYPTO_INFO tmpCryptoInfo = NULL;
 
-					status = CreateVolumeHeaderInMemory (!encStatus.HiddenSystem,
+					status = CreateVolumeHeaderInMemory (hwndDlg, !encStatus.HiddenSystem,
 						header,
 						cryptoInfo->ea,
 						cryptoInfo->mode,
 						newPassword,
 						cryptoInfo->pkcs5,
+						pim,
 						(char *) cryptoInfo->master_keydata,
 						&tmpCryptoInfo,
 						cryptoInfo->VolumeSize.Value,
@@ -2225,7 +2505,7 @@ namespace VeraCrypt
 
 					if (status != 0)
 					{
-						handleError (ParentWindow, status);
+						handleError (hwndDlg, status, SRC_POS);
 						return status;
 					}
 
@@ -2243,7 +2523,7 @@ namespace VeraCrypt
 		}
 		catch (Exception &e)
 		{
-			e.Show (ParentWindow);
+			e.Show (hwndDlg);
 			result = ERR_OS_ERROR;
 		}
 
@@ -2251,7 +2531,18 @@ namespace VeraCrypt
 		{
 			ReopenBootVolumeHeaderRequest reopenRequest;
 			reopenRequest.VolumePassword = *newPassword;
+			reopenRequest.pkcs5_prf = cryptoInfo->pkcs5;
+			reopenRequest.pim = pim;
 			finally_do_arg (ReopenBootVolumeHeaderRequest*, &reopenRequest, { burn (finally_arg, sizeof (*finally_arg)); });
+
+			try
+			{
+				// force update of bootloader if fingerprint doesn't match
+				if (!CheckBootloaderFingerprint (true))
+					InstallBootLoader (device, true);
+			}
+			catch (...)
+			{}
 
 			CallDriver (TC_IOCTL_REOPEN_BOOT_VOLUME_HEADER, &reopenRequest, sizeof (reopenRequest));
 		}
@@ -2311,7 +2602,7 @@ namespace VeraCrypt
 	}
 
 
-	void BootEncryption::PrepareInstallation (bool systemPartitionOnly, Password &password, int ea, int mode, int pkcs5, const string &rescueIsoImagePath)
+	void BootEncryption::PrepareInstallation (bool systemPartitionOnly, Password &password, int ea, int mode, int pkcs5, int pim, const string &rescueIsoImagePath)
 	{
 		BootEncryptionStatus encStatus = GetStatus();
 		if (encStatus.DriveMounted)
@@ -2328,18 +2619,19 @@ namespace VeraCrypt
 			Buffer sector (geometry.BytesPerSector);
 
 			Device device (config.DevicePath);
+			device.CheckOpened (SRC_POS);
 
 			try
 			{
 				device.SeekAt (config.DrivePartition.Info.PartitionLength.QuadPart - geometry.BytesPerSector);
-				device.Read (sector.Ptr(), sector.Size());
+				device.Read (sector.Ptr(), (DWORD) sector.Size());
 			}
 			catch (SystemException &e)
 			{
 				if (e.ErrorCode != ERROR_CRC)
 				{
 					e.Show (ParentWindow);
-					Error ("WHOLE_DRIVE_ENCRYPTION_PREVENTED_BY_DRIVERS");
+					Error ("WHOLE_DRIVE_ENCRYPTION_PREVENTED_BY_DRIVERS", ParentWindow);
 					throw UserAbort (SRC_POS);
 				}
 			}
@@ -2363,7 +2655,7 @@ namespace VeraCrypt
 
 		SelectedEncryptionAlgorithmId = ea;
 		SelectedPrfAlgorithmId = pkcs5;
-		CreateVolumeHeader (volumeSize, encryptedAreaStart, &password, ea, mode, pkcs5);
+		CreateVolumeHeader (volumeSize, encryptedAreaStart, &password, ea, mode, pkcs5, pim);
 		
 		if (!rescueIsoImagePath.empty())
 			CreateRescueIsoImage (true, rescueIsoImagePath);
@@ -2383,7 +2675,7 @@ namespace VeraCrypt
 		StringCbCopyA (pagingFiles, sizeof(pagingFiles), "X:\\pagefile.sys 0 0");
 		pagingFiles[0] = GetWindowsDirectory()[0];
 
-		throw_sys_if (!WriteLocalMachineRegistryMultiString ("System\\CurrentControlSet\\Control\\Session Manager\\Memory Management", "PagingFiles", pagingFiles, strlen (pagingFiles) + 2));
+		throw_sys_if (!WriteLocalMachineRegistryMultiString ("System\\CurrentControlSet\\Control\\Session Manager\\Memory Management", "PagingFiles", pagingFiles, (DWORD) strlen (pagingFiles) + 2));
 	}
 
 	void BootEncryption::WriteLocalMachineRegistryDwordValue (char *keyPath, char *valueName, DWORD value)
@@ -2395,18 +2687,6 @@ namespace VeraCrypt
 		}
 
 		throw_sys_if (!WriteLocalMachineRegistryDword (keyPath, valueName, value));
-	}
-
-	void BootEncryption::SetDriverConfigurationFlag (uint32 flag, bool state)
-	{
-		DWORD configMap = ReadDriverConfigurationFlags();
-
-		if (state)
-			configMap |= flag;
-		else
-			configMap &= ~flag;
-
-		WriteLocalMachineRegistryDwordValue ("SYSTEM\\CurrentControlSet\\Services\\veracrypt", TC_DRIVER_CONFIG_REG_VALUE_NAME, configMap);
 	}
 
 	void BootEncryption::StartDecryption (BOOL discardUnreadableEncryptedSectors)
@@ -2449,7 +2729,7 @@ namespace VeraCrypt
 			if (!IsUacSupported())
 			{
 				SetLastError (ERROR_ACCESS_DENIED);
-				throw SystemException();
+				throw SystemException(SRC_POS);
 			}
 			else
 				Elevator::CopyFile (sourceFile, destinationFile);

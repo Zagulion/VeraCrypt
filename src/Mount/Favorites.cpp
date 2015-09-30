@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "Tcdefs.h"
@@ -13,6 +17,7 @@
 #include "Dlgcode.h"
 #include "Language.h"
 #include "Mount.h"
+#include "Common/Resource.h"
 #include "Resource.h"
 #include "Xml.h"
 #include "Favorites.h"
@@ -38,7 +43,7 @@ namespace VeraCrypt
 
 		if (!DeviceIoControl (hDriver, TC_IOCTL_GET_VOLUME_PROPERTIES, &prop, sizeof (prop), &prop, sizeof (prop), &bytesReturned, NULL))
 		{
-			handleWin32Error (hwndDlg);
+			handleWin32Error (hwndDlg, SRC_POS);
 			return FALSE;
 		}
 
@@ -49,6 +54,12 @@ namespace VeraCrypt
 		favorite.Path = WideToSingleString ((wchar_t *) prop.wszVolume);
 		if (favorite.Path.find ("\\??\\") == 0)
 			favorite.Path = favorite.Path.substr (4);
+
+		if (wcslen (prop.wszLabel))
+		{
+			favorite.Label = prop.wszLabel;
+			favorite.UseLabelInExplorer = true;
+		}
 
 		if (IsVolumeDeviceHosted (favorite.Path.c_str()))
 		{
@@ -86,12 +97,13 @@ namespace VeraCrypt
 		favorite.Removable = prop.removable ? true : false;
 		favorite.SystemEncryption = prop.partitionInInactiveSysEncScope ? true : false;
 		favorite.OpenExplorerWindow = (bExplore == TRUE);
+		favorite.Pim = prop.volumePim;
 
 		if (favorite.VolumePathId.empty()
 			&& IsVolumeDeviceHosted (favorite.Path.c_str())
 			&& favorite.Path.find ("\\\\?\\Volume{") != 0)
 		{
-			Warning (favorite.Path.find ("\\Partition0") == string::npos ? "FAVORITE_ADD_PARTITION_TYPE_WARNING" : "FAVORITE_ADD_DRIVE_DEV_WARNING");
+			Warning (favorite.Path.find ("\\Partition0") == string::npos ? "FAVORITE_ADD_PARTITION_TYPE_WARNING" : "FAVORITE_ADD_DRIVE_DEV_WARNING", hwndDlg);
 		}
 
 		return OrganizeFavoriteVolumes (hwndDlg, systemFavorites, favorite);
@@ -135,7 +147,7 @@ namespace VeraCrypt
 						BootEncryptionStatus bootEncStatus = BootEncryption (hwndDlg).GetStatus();
 
 						if (!bootEncStatus.DriveMounted)
-							throw ErrorException ("SYS_FAVORITES_REQUIRE_PBA");
+							throw ErrorException ("SYS_FAVORITES_REQUIRE_PBA", SRC_POS);
 
 						ShowWindow (GetDlgItem(hwndDlg, IDC_FAVORITE_MOUNT_ON_LOGON), SW_HIDE);
 						ShowWindow (GetDlgItem(hwndDlg, IDC_FAVORITE_MOUNT_ON_ARRIVAL), SW_HIDE);
@@ -255,7 +267,7 @@ namespace VeraCrypt
 				if (SelectedItem != -1 && !Favorites.empty())
 					SetFavoriteVolume (hwndDlg, Favorites[SelectedItem], SystemFavoritesMode);
 
-				if (SaveFavoriteVolumes (Favorites, SystemFavoritesMode))
+				if (SaveFavoriteVolumes (hwndDlg, Favorites, SystemFavoritesMode))
 				{
 					if (!SystemFavoritesMode)
 					{
@@ -276,7 +288,7 @@ namespace VeraCrypt
 							{
 								if (favorite.MountOnArrival)
 								{
-									Warning ("FAVORITE_ARRIVAL_MOUNT_BACKGROUND_TASK_ERR");
+									Warning ("FAVORITE_ARRIVAL_MOUNT_BACKGROUND_TASK_ERR", hwndDlg);
 									break;
 								}
 							}
@@ -291,7 +303,7 @@ namespace VeraCrypt
 						SystemFavoriteVolumes = Favorites;
 
 					OnFavoriteVolumesUpdated();
-					LoadDriveLetters (GetDlgItem (MainDlg, IDC_DRIVELIST), 0);
+					LoadDriveLetters (hwndDlg, GetDlgItem (MainDlg, IDC_DRIVELIST), 0);
 
 					EndDialog (hwndDlg, IDOK);
 				}
@@ -344,10 +356,10 @@ namespace VeraCrypt
 
 					if (IsDlgButtonChecked (hwndDlg, IDC_FAVORITE_OPEN_EXPLORER_WIN_ON_MOUNT))
 					{
-						WarningDirect ((wstring (GetString ("SYS_FAVORITES_KEYBOARD_WARNING")) + L"\n\n" + GetString ("BOOT_PASSWORD_CACHE_KEYBOARD_WARNING")).c_str());
+						WarningDirect ((wstring (GetString ("SYS_FAVORITES_KEYBOARD_WARNING")) + L"\n\n" + GetString ("BOOT_PASSWORD_CACHE_KEYBOARD_WARNING")).c_str(), hwndDlg);
 
 						if (!IsServerOS() && !IsDlgButtonChecked (hwndDlg, IDC_FAVORITE_DISABLE_HOTKEY))
-							Info ("SYS_FAVORITES_ADMIN_ONLY_INFO");
+							Info ("SYS_FAVORITES_ADMIN_ONLY_INFO", hwndDlg);
 					}
 				}
 				return 1;
@@ -358,14 +370,17 @@ namespace VeraCrypt
 					// DISABLE_NONADMIN_SYS_FAVORITES_ACCESS
 
 					if (IsDlgButtonChecked (hwndDlg, IDC_FAVORITE_DISABLE_HOTKEY))
-						WarningDirect ((wstring (GetString ("SYS_FAVORITES_ADMIN_ONLY_WARNING")) + L"\n\n" + GetString ("SETTING_REQUIRES_REBOOT")).c_str());
+						WarningDirect ((wstring (GetString ("SYS_FAVORITES_ADMIN_ONLY_WARNING")) + L"\n\n" + GetString ("SETTING_REQUIRES_REBOOT")).c_str(), hwndDlg);
 					else
-						Warning ("SETTING_REQUIRES_REBOOT");
+						Warning ("SETTING_REQUIRES_REBOOT", hwndDlg);
 				}
 				return 1;
 
 			case IDC_FAVORITES_HELP_LINK:
 				Applink (SystemFavoritesMode ? "sysfavorites" : "favorites", TRUE, "");
+				return 1;
+			case IDC_SHOW_PIM:
+				HandleShowPasswordFieldAction (hwndDlg, IDC_SHOW_PIM, IDC_PIM, 0);
 				return 1;
 			}
 
@@ -466,20 +481,27 @@ namespace VeraCrypt
 	}
 
 
-	wstring GetFavoriteVolumeLabel (const string &volumePath)
+	wstring GetFavoriteVolumeLabel (const string &volumePath, bool& useInExplorer)
 	{
 		foreach (const FavoriteVolume &favorite, FavoriteVolumes)
 		{
 			if (favorite.Path == volumePath)
+			{
+				useInExplorer = favorite.UseLabelInExplorer;
 				return favorite.Label;
+			}
 		}
 
 		foreach (const FavoriteVolume &favorite, SystemFavoriteVolumes)
 		{
 			if (favorite.Path == volumePath)
+			{
+				useInExplorer = favorite.UseLabelInExplorer;
 				return favorite.Label;
+			}
 		}
 
+		useInExplorer = false;
 		return wstring();
 	}
 
@@ -501,7 +523,7 @@ namespace VeraCrypt
 	void LoadFavoriteVolumes (vector <FavoriteVolume> &favorites, bool systemFavorites, bool noUacElevation)
 	{
 		favorites.clear();
-		string favoritesFilePath = systemFavorites ? GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES) : GetConfigPath (TC_APPD_FILENAME_FAVORITE_VOLUMES);
+		string favoritesFilePath = systemFavorites ? GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES, false) : GetConfigPath (TC_APPD_FILENAME_FAVORITE_VOLUMES);
 
 		if (systemFavorites && !IsAdmin() && !noUacElevation)
 		{
@@ -510,7 +532,7 @@ namespace VeraCrypt
 			try
 			{
 				BootEncryption bootEnc (MainDlg);
-				bootEnc.CopyFileAdmin (GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES).c_str(), favoritesFilePath.c_str());
+				bootEnc.CopyFileAdmin (GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES, false).c_str(), favoritesFilePath.c_str());
 			}
 			catch (SystemException &e)
 			{
@@ -547,6 +569,16 @@ namespace VeraCrypt
 			XmlGetAttributeText (xml, "label", label, sizeof (label));
 			favorite.Label = Utf8StringToWide (label);
 
+			XmlGetAttributeText (xml, "pim", label, sizeof (label));
+			if (strlen(label) == 0)
+			{
+				/* support old attribute name before it was changed to PIM*/
+				XmlGetAttributeText (xml, "pin", label, sizeof (label));
+			}
+			favorite.Pim = strtol (label, NULL, 10);
+			if (favorite.Pim < 0)
+				favorite.Pim = 0;
+
 			char boolVal[2];
 			XmlGetAttributeText (xml, "readonly", boolVal, sizeof (boolVal));
 			if (boolVal[0])
@@ -575,6 +607,10 @@ namespace VeraCrypt
 			XmlGetAttributeText (xml, "mountOnLogOn", boolVal, sizeof (boolVal));
 			if (boolVal[0])
 				favorite.MountOnLogOn = (boolVal[0] == '1');
+
+			XmlGetAttributeText (xml, "useLabelInExplorer", boolVal, sizeof (boolVal));
+			if (boolVal[0])
+				favorite.UseLabelInExplorer = (boolVal[0] == '1') && !favorite.ReadOnly;
 
 			if (favorite.Path.find ("\\\\?\\Volume{") == 0 && favorite.Path.rfind ("}\\") == favorite.Path.size() - 2)
 			{
@@ -647,7 +683,7 @@ namespace VeraCrypt
 	}
 
 
-	static bool SaveFavoriteVolumes (const vector <FavoriteVolume> &favorites, bool systemFavorites)
+	bool SaveFavoriteVolumes (HWND hwndDlg, const vector <FavoriteVolume> &favorites, bool systemFavorites)
 	{
 		FILE *f;
 		int cnt = 0;
@@ -655,7 +691,7 @@ namespace VeraCrypt
 		f = fopen (GetConfigPath (systemFavorites ? TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES : TC_APPD_FILENAME_FAVORITE_VOLUMES), "w,ccs=UTF-8");
 		if (f == NULL)
 		{
-			handleWin32Error (MainDlg);
+			handleWin32Error (MainDlg, SRC_POS);
 			return false;
 		}
 
@@ -667,7 +703,7 @@ namespace VeraCrypt
 			char tq[2048];
 
 			if (systemFavorites && favorite.Path.find ("\\\\") == 0 && favorite.Path.find ("Volume{") == string::npos)
-				Warning ("SYSTEM_FAVORITE_NETWORK_PATH_ERR");
+				Warning ("SYSTEM_FAVORITE_NETWORK_PATH_ERR", hwndDlg);
 
 			XmlQuoteText (!favorite.VolumePathId.empty() ? favorite.VolumePathId.c_str() : favorite.Path.c_str(), tq, sizeof (tq));
 
@@ -675,6 +711,9 @@ namespace VeraCrypt
 
 			if (!favorite.Label.empty())
 				s += L" label=\"" + favorite.Label + L"\"";
+
+			if (favorite.Pim > 0)
+				s += L" pim=\"" + IntToWideString(favorite.Pim) + L"\"";
 
 			if (favorite.ReadOnly)
 				s += L" readonly=\"1\"";
@@ -697,6 +736,9 @@ namespace VeraCrypt
 			if (favorite.OpenExplorerWindow)
 				s += L" openExplorerWindow=\"1\"";
 
+			if (favorite.UseLabelInExplorer && !favorite.ReadOnly)
+				s += L" useLabelInExplorer=\"1\"";
+
 			s += L">" + SingleStringToWide (tq) + L"</volume>";
 
 			fwprintf (f, L"%ws", s.c_str());
@@ -706,7 +748,7 @@ namespace VeraCrypt
 		fputws (L"\n\t</favorites>", f);
 		XmlWriteFooterW (f);
 
-		if (!CheckFileStreamWriteErrors (f, systemFavorites ? TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES : TC_APPD_FILENAME_FAVORITE_VOLUMES))
+		if (!CheckFileStreamWriteErrors (hwndDlg, f, systemFavorites ? TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES : TC_APPD_FILENAME_FAVORITE_VOLUMES))
 		{
 			fclose (f);
 			return false;
@@ -722,7 +764,7 @@ namespace VeraCrypt
 
 			try
 			{
-				bootEnc.DeleteFileAdmin (GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES).c_str());
+				bootEnc.DeleteFileAdmin (GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES, false).c_str());
 			}
 			catch (UserAbort&) { return false; }
 			catch (...) { }
@@ -731,10 +773,10 @@ namespace VeraCrypt
 			{
 				if (cnt != 0)
 				{
-					bootEnc.CopyFileAdmin (GetConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES), GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES).c_str());
+					bootEnc.CopyFileAdmin (GetConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES), GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES, false).c_str());
 
 					if (!(ReadDriverConfigurationFlags() & TC_DRIVER_CONFIG_CACHE_BOOT_PASSWORD_FOR_SYS_FAVORITES))
-						Info ("SYS_FAVORITE_VOLUMES_SAVED");
+						Info ("SYS_FAVORITE_VOLUMES_SAVED", hwndDlg);
 				}
 			}
 			catch (Exception &e)
@@ -749,7 +791,7 @@ namespace VeraCrypt
 			{
 				try
 				{
-					bootEnc.DeleteFileAdmin (GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES).c_str());
+					bootEnc.DeleteFileAdmin (GetServiceConfigPath (TC_APPD_FILENAME_SYSTEM_FAVORITE_VOLUMES, false).c_str());
 				}
 				catch (...) { }
 			}
@@ -763,7 +805,16 @@ namespace VeraCrypt
 
 	static void SetControls (HWND hwndDlg, const FavoriteVolume &favorite, bool systemFavoritesMode, bool enable)
 	{
+		if (favorite.Pim > 0)
+		{
+			char szTmp[MAX_PIM + 1];
+			StringCbPrintfA (szTmp, sizeof(szTmp), "%d", favorite.Pim);
+			SetDlgItemText (hwndDlg, IDC_PIM, szTmp);
+		}
+		else
+			SetDlgItemText (hwndDlg, IDC_PIM, "");
 		SetDlgItemTextW (hwndDlg, IDC_FAVORITE_LABEL, favorite.Label.c_str());
+		SetCheckBox (hwndDlg, IDC_FAVORITE_USE_LABEL_IN_EXPLORER, favorite.UseLabelInExplorer);
 		SetCheckBox (hwndDlg, IDC_FAVORITE_MOUNT_ON_LOGON, favorite.MountOnLogOn);
 		SetCheckBox (hwndDlg, IDC_FAVORITE_MOUNT_ON_ARRIVAL, favorite.MountOnArrival);
 		SetCheckBox (hwndDlg, IDC_FAVORITE_MOUNT_READONLY, favorite.ReadOnly);
@@ -788,8 +839,12 @@ namespace VeraCrypt
 		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_MOVE_UP), enable);
 		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_MOVE_DOWN), enable);
 		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_REMOVE), enable);
+		EnableWindow (GetDlgItem (hwndDlg, IDT_PIM), enable);
+		EnableWindow (GetDlgItem (hwndDlg, IDC_PIM), enable);
+		EnableWindow (GetDlgItem (hwndDlg, IDC_PIM_HELP), enable);
 		EnableWindow (GetDlgItem (hwndDlg, IDT_FAVORITE_LABEL), enable);
 		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_LABEL), enable);
+		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_USE_LABEL_IN_EXPLORER), enable);
 		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_MOUNT_ON_LOGON), enable && !systemFavoritesMode);
 		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_MOUNT_ON_ARRIVAL), enable && !systemFavoritesMode);
 		EnableWindow (GetDlgItem (hwndDlg, IDC_FAVORITE_MOUNT_READONLY), enable);
@@ -815,6 +870,9 @@ namespace VeraCrypt
 		else
 			favorite.Label.clear();
 
+		favorite.Pim = GetPim (hwndDlg, IDC_PIM);
+		favorite.UseLabelInExplorer = (IsDlgButtonChecked (hwndDlg, IDC_FAVORITE_USE_LABEL_IN_EXPLORER) != 0);
+
 		favorite.ReadOnly = (IsDlgButtonChecked (hwndDlg, IDC_FAVORITE_MOUNT_READONLY) != 0);
 		favorite.Removable = (IsDlgButtonChecked (hwndDlg, IDC_FAVORITE_MOUNT_REMOVABLE) != 0);
 
@@ -834,20 +892,20 @@ namespace VeraCrypt
 
 			if (!favorite.Label.empty())
 			{
-				ErrorDirect ((GetString (partition ? "FAVORITE_LABEL_PARTITION_TYPE_ERR" : "FAVORITE_LABEL_DEVICE_PATH_ERR") + wstring (L"\n\n") + SingleStringToWide (favorite.Path)).c_str());
+				ErrorDirect ((GetString (partition ? "FAVORITE_LABEL_PARTITION_TYPE_ERR" : "FAVORITE_LABEL_DEVICE_PATH_ERR") + wstring (L"\n\n") + SingleStringToWide (favorite.Path)).c_str(), hwndDlg);
 				favorite.Label.clear();
 			}
 
 			if (favorite.MountOnArrival)
 			{
-				ErrorDirect ((GetString (partition ? "FAVORITE_ARRIVAL_MOUNT_PARTITION_TYPE_ERR" : "FAVORITE_ARRIVAL_MOUNT_DEVICE_PATH_ERR") + wstring (L"\n\n") + SingleStringToWide (favorite.Path)).c_str());
+				ErrorDirect ((GetString (partition ? "FAVORITE_ARRIVAL_MOUNT_PARTITION_TYPE_ERR" : "FAVORITE_ARRIVAL_MOUNT_DEVICE_PATH_ERR") + wstring (L"\n\n") + SingleStringToWide (favorite.Path)).c_str(), hwndDlg);
 				favorite.MountOnArrival = false;
 			}
 		}
 
 		if (favorite.MountOnArrival && favorite.Path.find ("\\\\") == 0 && favorite.Path.find ("Volume{") == string::npos)
 		{
-			Error ("FAVORITE_ARRIVAL_MOUNT_NETWORK_PATH_ERR");
+			Error ("FAVORITE_ARRIVAL_MOUNT_NETWORK_PATH_ERR", hwndDlg);
 			favorite.MountOnArrival = false;
 		}
 	}

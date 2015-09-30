@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #include <stdlib.h>
@@ -30,6 +32,10 @@
 #include "Format/Tcformat.h"
 
 #include <Strsafe.h>
+
+#ifndef SRC_POS
+#define SRC_POS (__FUNCTION__ ":" TC_TO_STRING(__LINE__))
+#endif
 
 int FormatWriteBufferSize = 1024 * 1024;
 static uint32 FormatSectorSize = 0;
@@ -93,6 +99,7 @@ int TCFormatVolume (volatile FORMAT_VOL_PARAMETERS *volParams)
 	uint64 dataOffset, dataAreaSize;
 	LARGE_INTEGER offset;
 	BOOL bFailedRequiredDASD = FALSE;
+	HWND hwndDlg = volParams->hwndDlg;
 
 	FormatSectorSize = volParams->sectorSize;
 
@@ -100,7 +107,7 @@ int TCFormatVolume (volatile FORMAT_VOL_PARAMETERS *volParams)
 		|| FormatSectorSize > TC_MAX_VOLUME_SECTOR_SIZE
 		|| FormatSectorSize % ENCRYPTION_DATA_UNIT_SIZE != 0)
 	{
-		Error ("SECTOR_SIZE_UNSUPPORTED");
+		Error ("SECTOR_SIZE_UNSUPPORTED", hwndDlg);
 		return ERR_DONT_REPORT; 
 	}
 
@@ -139,12 +146,13 @@ int TCFormatVolume (volatile FORMAT_VOL_PARAMETERS *volParams)
 
 	VirtualLock (header, sizeof (header));
 
-	nStatus = CreateVolumeHeaderInMemory (FALSE,
+	nStatus = CreateVolumeHeaderInMemory (hwndDlg, FALSE,
 				     header,
 				     volParams->ea,
 					 FIRST_MODE_OF_OPERATION_ID,
 				     volParams->password,
 				     volParams->pkcs5,
+					  volParams->pim,
 					 NULL,
 				     &cryptoInfo,
 					 dataAreaSize,
@@ -179,7 +187,7 @@ begin_format:
 		{
 			if ((dev = DismountDrive (devName, volParams->volumePath)) == INVALID_HANDLE_VALUE)
 			{
-				Error ("FORMAT_CANT_DISMOUNT_FILESYS");
+				Error ("FORMAT_CANT_DISMOUNT_FILESYS", hwndDlg);
 				nStatus = ERR_DONT_REPORT; 
 				goto error;
 			}
@@ -276,7 +284,7 @@ begin_format:
 				dev = CreateFile (devName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 				if (dev != INVALID_HANDLE_VALUE)
 				{
-					if (IDNO == MessageBoxW (volParams->hwndDlg, GetString ("DEVICE_IN_USE_FORMAT"), lpszTitle, MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2))
+					if (!volParams->bForceOperation && (Silent || (IDNO == MessageBoxW (volParams->hwndDlg, GetString ("DEVICE_IN_USE_FORMAT"), lpszTitle, MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2))))
 					{
 						nStatus = ERR_DONT_REPORT; 
 						goto error;
@@ -284,8 +292,8 @@ begin_format:
 				}
 				else
 				{
-					handleWin32Error (volParams->hwndDlg);
-					Error ("CANT_ACCESS_VOL");
+					handleWin32Error (volParams->hwndDlg, SRC_POS);
+					Error ("CANT_ACCESS_VOL", hwndDlg);
 					nStatus = ERR_DONT_REPORT; 
 					goto error;
 				}
@@ -317,7 +325,7 @@ begin_format:
 
 		if (DeviceIoControl (dev, FSCTL_IS_VOLUME_MOUNTED, NULL, 0, NULL, 0, &dwResult, NULL))
 		{
-			Error ("FORMAT_CANT_DISMOUNT_FILESYS");
+			Error ("FORMAT_CANT_DISMOUNT_FILESYS", hwndDlg);
 			nStatus = ERR_DONT_REPORT; 
 			goto error;
 		}
@@ -373,7 +381,7 @@ begin_format:
 			bTimeStampValid = TRUE;
 	}
 
-	KillTimer (volParams->hwndDlg, TIMER_ID_RANDVIEW);
+	if (volParams->hwndDlg && volParams->bGuiMode) KillTimer (volParams->hwndDlg, TIMER_ID_RANDVIEW);
 
 	/* Volume header */
 
@@ -474,7 +482,7 @@ begin_format:
 			goto error;
 		}
 
-		nStatus = FormatNoFs (startSector, num_sectors, dev, cryptoInfo, volParams->quickFormat);
+		nStatus = FormatNoFs (hwndDlg, startSector, num_sectors, dev, cryptoInfo, volParams->quickFormat);
 
 		if (volParams->bDevice)
 			StopFormatWriteThread();
@@ -507,7 +515,7 @@ begin_format:
 			goto error;
 		}
 
-		nStatus = FormatFat (startSector, &ft, (void *) dev, cryptoInfo, volParams->quickFormat);
+		nStatus = FormatFat (hwndDlg, startSector, &ft, (void *) dev, cryptoInfo, volParams->quickFormat);
 
 		if (volParams->bDevice)
 			StopFormatWriteThread();
@@ -531,12 +539,13 @@ begin_format:
 		goto error;
 	}
 
-	nStatus = CreateVolumeHeaderInMemory (FALSE,
+	nStatus = CreateVolumeHeaderInMemory (hwndDlg, FALSE,
 		header,
 		volParams->ea,
 		FIRST_MODE_OF_OPERATION_ID,
 		volParams->password,
 		volParams->pkcs5,
+		volParams->pim,
 		cryptoInfo->master_keydata,
 		&cryptoInfo,
 		dataAreaSize,
@@ -557,7 +566,7 @@ begin_format:
 	// Fill reserved header sectors (including the backup header area) with random data
 	if (!volParams->hiddenVol)
 	{
-		nStatus = WriteRandomDataToReservedHeaderAreas (dev, cryptoInfo, dataAreaSize, FALSE, FALSE);
+		nStatus = WriteRandomDataToReservedHeaderAreas (hwndDlg, dev, cryptoInfo, dataAreaSize, FALSE, FALSE);
 
 		if (nStatus != ERR_SUCCESS)
 			goto error;
@@ -609,8 +618,11 @@ error:
 
 		if (driveNo == -1)
 		{
-			MessageBoxW (volParams->hwndDlg, GetString ("NO_FREE_DRIVES"), lpszTitle, ICON_HAND);
-			MessageBoxW (volParams->hwndDlg, GetString ("FORMAT_NTFS_STOP"), lpszTitle, ICON_HAND);
+			if (!Silent)
+			{
+				MessageBoxW (volParams->hwndDlg, GetString ("NO_FREE_DRIVES"), lpszTitle, ICON_HAND);
+				MessageBoxW (volParams->hwndDlg, GetString ("FORMAT_NTFS_STOP"), lpszTitle, ICON_HAND);
+			}
 
 			nStatus = ERR_NO_FREE_DRIVES;
 			goto fv_end;
@@ -623,27 +635,30 @@ error:
 		mountOptions.PartitionInInactiveSysEncScope = FALSE;
 		mountOptions.UseBackupHeader = FALSE;
 
-		if (MountVolume (volParams->hwndDlg, driveNo, volParams->volumePath, volParams->password, FALSE, TRUE, &mountOptions, FALSE, TRUE) < 1)
+		if (MountVolume (volParams->hwndDlg, driveNo, volParams->volumePath, volParams->password, volParams->pkcs5, volParams->pim, FALSE, FALSE, TRUE, &mountOptions, FALSE, TRUE) < 1)
 		{
-			MessageBoxW (volParams->hwndDlg, GetString ("CANT_MOUNT_VOLUME"), lpszTitle, ICON_HAND);
-			MessageBoxW (volParams->hwndDlg, GetString ("FORMAT_NTFS_STOP"), lpszTitle, ICON_HAND);
+			if (!Silent)
+			{
+				MessageBoxW (volParams->hwndDlg, GetString ("CANT_MOUNT_VOLUME"), lpszTitle, ICON_HAND);
+				MessageBoxW (volParams->hwndDlg, GetString ("FORMAT_NTFS_STOP"), lpszTitle, ICON_HAND);
+			}
 			nStatus = ERR_VOL_MOUNT_FAILED;
 			goto fv_end;
 		}
 
-		if (!IsAdmin () && IsUacSupported ())
+		if (!Silent && !IsAdmin () && IsUacSupported ())
 			retCode = UacFormatNtfs (volParams->hwndDlg, driveNo, volParams->clusterSize);
 		else
 			retCode = FormatNtfs (driveNo, volParams->clusterSize);
 
 		if (retCode != TRUE)
 		{
-			if (!UnmountVolume (volParams->hwndDlg, driveNo, FALSE))
+			if (!UnmountVolumeAfterFormatExCall (volParams->hwndDlg, driveNo) && !Silent)
 				MessageBoxW (volParams->hwndDlg, GetString ("CANT_DISMOUNT_VOLUME"), lpszTitle, ICON_HAND);
 
 			if (dataAreaSize <= TC_MAX_FAT_SECTOR_COUNT * FormatSectorSize)
 			{
-				if (AskErrYesNo ("FORMAT_NTFS_FAILED_ASK_FAT") == IDYES)
+				if (AskErrYesNo ("FORMAT_NTFS_FAILED_ASK_FAT", hwndDlg) == IDYES)
 				{
 					// NTFS format failed and the user wants to try FAT format immediately
 					volParams->fileSystem = FILESYS_FAT;
@@ -654,13 +669,13 @@ error:
 				}
 			}
 			else
-				Error ("FORMAT_NTFS_FAILED");
+				Error ("FORMAT_NTFS_FAILED", hwndDlg);
 
 			nStatus = ERR_DONT_REPORT;
 			goto fv_end;
 		}
 
-		if (!UnmountVolume (volParams->hwndDlg, driveNo, FALSE))
+		if (!UnmountVolumeAfterFormatExCall (volParams->hwndDlg, driveNo) && !Silent)
 			MessageBoxW (volParams->hwndDlg, GetString ("CANT_DISMOUNT_VOLUME"), lpszTitle, ICON_HAND);
 	}
 
@@ -677,7 +692,7 @@ fv_end:
 }
 
 
-int FormatNoFs (unsigned __int64 startSector, __int64 num_sectors, void * dev, PCRYPTO_INFO cryptoInfo, BOOL quickFormat)
+int FormatNoFs (HWND hwndDlg, unsigned __int64 startSector, __int64 num_sectors, void * dev, PCRYPTO_INFO cryptoInfo, BOOL quickFormat)
 {
 	int write_buf_cnt = 0;
 	char sector[TC_MAX_VOLUME_SECTOR_SIZE], *write_buf;
@@ -719,11 +734,11 @@ int FormatNoFs (unsigned __int64 startSector, __int64 num_sectors, void * dev, P
 		deniability of hidden volumes. */
 
 		// Temporary master key
-		if (!RandgetBytes (temporaryKey, EAGetKeySize (cryptoInfo->ea), FALSE))
+		if (!RandgetBytes (hwndDlg, temporaryKey, EAGetKeySize (cryptoInfo->ea), FALSE))
 			goto fail;
 
 		// Temporary secondary key (XTS mode)
-		if (!RandgetBytes (cryptoInfo->k2, sizeof cryptoInfo->k2, FALSE))
+		if (!RandgetBytes (hwndDlg, cryptoInfo->k2, sizeof cryptoInfo->k2, FALSE))
 			goto fail;
 
 		retVal = EAInit (cryptoInfo->ea, temporaryKey, cryptoInfo->ks);
@@ -786,13 +801,64 @@ fail:
 }
 
 
-volatile BOOLEAN FormatExResult;
+volatile BOOLEAN FormatExError;
 
 BOOLEAN __stdcall FormatExCallback (int command, DWORD subCommand, PVOID parameter)
 {
-	if (command == FMIFS_DONE)
-		FormatExResult = *(BOOLEAN *) parameter;
-	return TRUE;
+	if (FormatExError)
+		return FALSE;
+
+	switch(command) {
+	case FMIFS_PROGRESS:
+		break;
+	case FMIFS_STRUCTURE_PROGRESS:
+		break;
+	case FMIFS_DONE:
+		if(*(BOOLEAN*)parameter == FALSE) {
+			FormatExError = TRUE;
+		}
+		break;
+	case FMIFS_DONE_WITH_STRUCTURE:
+		break;
+	case FMIFS_INCOMPATIBLE_FILE_SYSTEM:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_ACCESS_DENIED:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_MEDIA_WRITE_PROTECTED:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_VOLUME_IN_USE:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_DEVICE_NOT_READY:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_CANT_QUICK_FORMAT:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_BAD_LABEL:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_OUTPUT:
+		break;
+	case FMIFS_CLUSTER_SIZE_TOO_BIG:
+	case FMIFS_CLUSTER_SIZE_TOO_SMALL:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_VOLUME_TOO_BIG:
+	case FMIFS_VOLUME_TOO_SMALL:
+		FormatExError = TRUE;
+		break;
+	case FMIFS_NO_MEDIA_IN_DRIVE:
+		FormatExError = TRUE;
+		break;
+	default:
+		FormatExError = TRUE;
+		break;
+	}
+	return (FormatExError? FALSE : TRUE);
 }
 
 BOOL FormatNtfs (int driveNo, int clusterSize)
@@ -823,20 +889,21 @@ BOOL FormatNtfs (int driveNo, int clusterSize)
 
 	StringCbCatW (dir, sizeof(dir), L":\\");
 
-	FormatExResult = FALSE;
-
+	FormatExError = TRUE;
+	
 	// Windows sometimes fails to format a volume (hosted on a removable medium) as NTFS.
 	// It often helps to retry several times.
-	for (i = 0; i < 50 && FormatExResult != TRUE; i++)
+	for (i = 0; i < 50 && FormatExError; i++)
 	{
+		FormatExError = FALSE;
 		FormatEx (dir, FMIFS_HARDDISK, L"NTFS", L"", TRUE, clusterSize * FormatSectorSize, FormatExCallback);
 	}
 
 	// The device may be referenced for some time after FormatEx() returns
-	Sleep (2000);
+	Sleep (4000);
 
 	FreeLibrary (hModule);
-	return FormatExResult;
+	return FormatExError? FALSE : TRUE;
 }
 
 
@@ -890,7 +957,7 @@ static void __cdecl FormatWriteThreadProc (void *arg)
 	{
 		if (WaitForSingleObject (WriteBufferFullEvent, INFINITE) == WAIT_FAILED)
 		{
-			handleWin32Error (NULL);
+			handleWin32Error (NULL, SRC_POS);
 			break;
 		}
 
@@ -904,7 +971,7 @@ static void __cdecl FormatWriteThreadProc (void *arg)
 
 		if (!SetEvent (WriteBufferEmptyEvent))
 		{
-			handleWin32Error (NULL);
+			handleWin32Error (NULL, SRC_POS);
 			break;
 		}
 	}

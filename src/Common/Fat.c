@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #include <stdlib.h>
@@ -60,7 +62,7 @@ GetFatParams (fatparams * ft)
 		if (ft->cluster_size == 0)
 			ft->cluster_size = 1;
 
-		if (ft->cluster_size * ft->sector_size > TC_MAX_FAT_CLUSTER_SIZE)
+		if (((unsigned __int64) ft->cluster_size * ft->sector_size) > TC_MAX_FAT_CLUSTER_SIZE)
 			ft->cluster_size = TC_MAX_FAT_CLUSTER_SIZE / ft->sector_size;
 
 		if (ft->cluster_size > 128)
@@ -85,7 +87,7 @@ GetFatParams (fatparams * ft)
 	ft->size_fat = 12;
 	ft->reserved = 2;
 	fatsecs = ft->num_sectors - (ft->size_root_dir + ft->sector_size - 1) / ft->sector_size - ft->reserved;
-	ft->cluster_count = (int) (((__int64) fatsecs * ft->sector_size) / (ft->cluster_size * ft->sector_size));
+	ft->cluster_count = (int) (((unsigned __int64) fatsecs * ft->sector_size) / ((unsigned __int64) ft->cluster_size * ft->sector_size));
 	ft->fat_length = (((ft->cluster_count * 3 + 1) >> 1) + ft->sector_size - 1) / ft->sector_size;
 
 	if (ft->cluster_count >= 4085) // FAT16
@@ -108,7 +110,7 @@ GetFatParams (fatparams * ft)
 
 			fatsecs = ft->num_sectors - ft->reserved;
 			ft->size_root_dir = ft->cluster_size * ft->sector_size;
-			ft->cluster_count = (int) (((__int64) fatsecs * ft->sector_size) / (ft->cluster_size * ft->sector_size));
+			ft->cluster_count = (int) (((unsigned __int64) fatsecs * ft->sector_size) / (ft->cluster_size * ft->sector_size));
 			ft->fat_length = (ft->cluster_count * 4 + ft->sector_size - 1) / ft->sector_size;
 
 		// Align data area on TC_MAX_VOLUME_SECTOR_SIZE
@@ -253,7 +255,7 @@ static void PutFSInfo (unsigned char *sector, fatparams *ft)
 
 
 int
-FormatFat (unsigned __int64 startSector, fatparams * ft, void * dev, PCRYPTO_INFO cryptoInfo, BOOL quickFormat)
+FormatFat (void* hwndDlgPtr, unsigned __int64 startSector, fatparams * ft, void * dev, PCRYPTO_INFO cryptoInfo, BOOL quickFormat)
 {
 	int write_buf_cnt = 0;
 	char sector[TC_MAX_VOLUME_SECTOR_SIZE], *write_buf;
@@ -261,6 +263,7 @@ FormatFat (unsigned __int64 startSector, fatparams * ft, void * dev, PCRYPTO_INF
 	int x, n;
 	int retVal;
 	char temporaryKey[MASTER_KEYDATA_SIZE];
+	HWND hwndDlg = (HWND) hwndDlgPtr;
 
 	LARGE_INTEGER startOffset;
 	LARGE_INTEGER newOffset;
@@ -281,7 +284,8 @@ FormatFat (unsigned __int64 startSector, fatparams * ft, void * dev, PCRYPTO_INF
 
 	memset (sector, 0, ft->sector_size);
 
-	RandgetBytes (ft->volume_id, sizeof (ft->volume_id), FALSE);
+	if (!RandgetBytes (hwndDlg, ft->volume_id, sizeof (ft->volume_id), FALSE))
+		goto fail;
 
 	PutBoot (ft, (unsigned char *) sector);
 	if (WriteSector (dev, sector, write_buf, &write_buf_cnt, &nSecNo,
@@ -399,11 +403,11 @@ FormatFat (unsigned __int64 startSector, fatparams * ft, void * dev, PCRYPTO_INF
 		within the volume). */
 
 		// Temporary master key
-		if (!RandgetBytes (temporaryKey, EAGetKeySize (cryptoInfo->ea), FALSE))
+		if (!RandgetBytes (hwndDlg, temporaryKey, EAGetKeySize (cryptoInfo->ea), FALSE))
 			goto fail;
 
 		// Temporary secondary key (XTS mode)
-		if (!RandgetBytes (cryptoInfo->k2, sizeof cryptoInfo->k2, FALSE))		
+		if (!RandgetBytes (hwndDlg, cryptoInfo->k2, sizeof cryptoInfo->k2, FALSE))		
 			goto fail;
 
 		retVal = EAInit (cryptoInfo->ea, temporaryKey, cryptoInfo->ks);

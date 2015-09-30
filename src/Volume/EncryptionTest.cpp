@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "Cipher.h"
@@ -791,17 +795,17 @@ namespace VeraCrypt
 		ConstBufferPtr salt (saltData, sizeof (saltData));
 		Buffer derivedKey (4);
 
-		Pkcs5HmacRipemd160 pkcs5HmacRipemd160;
+		Pkcs5HmacRipemd160 pkcs5HmacRipemd160(false);
 		pkcs5HmacRipemd160.DeriveKey (derivedKey, password, salt, 5);
 		if (memcmp (derivedKey.Ptr(), "\x7a\x3d\x7c\x03", 4) != 0)
 			throw TestFailed (SRC_POS);
 
-		Pkcs5HmacSha512 pkcs5HmacSha512;
+		Pkcs5HmacSha512 pkcs5HmacSha512(false);
 		pkcs5HmacSha512.DeriveKey (derivedKey, password, salt, 5);
 		if (memcmp (derivedKey.Ptr(), "\x13\x64\xae\xf8", 4) != 0)
 			throw TestFailed (SRC_POS);
 
-		Pkcs5HmacWhirlpool pkcs5HmacWhirlpool;
+		Pkcs5HmacWhirlpool pkcs5HmacWhirlpool(false);
 		pkcs5HmacWhirlpool.DeriveKey (derivedKey, password, salt, 5);
 		if (memcmp (derivedKey.Ptr(), "\x50\x7c\x36\x6f", 4) != 0)
 			throw TestFailed (SRC_POS);

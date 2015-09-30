@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "System.h"
@@ -60,20 +64,42 @@ namespace VeraCrypt
 
 	void BenchmarkDialog::OnBenchmarkButtonClick (wxCommandEvent& event)
 	{
+		list <BenchmarkResult> results;
+
+		wxBusyCursor busy;
+		Buffer buffer ((size_t) Gui->GetSelectedData <size_t> (BufferSizeChoice));
+			
+		BenchmarkThreadRoutine routine(this, results, buffer);
+		Gui->ExecuteWaitThreadRoutine (this, &routine);
+
+		BenchmarkListCtrl->DeleteAllItems();
+
+		foreach (const BenchmarkResult &result, results)
+		{
+			vector <wstring> fields (BenchmarkListCtrl->GetColumnCount());
+					
+			fields[ColumnAlgorithm] = result.AlgorithmName;
+			fields[ColumnEncryption] = Gui->SpeedToString (result.EncryptionSpeed);
+			fields[ColumnDecryption] = Gui->SpeedToString (result.DecryptionSpeed);
+			fields[ColumnMean] = Gui->SpeedToString (result.MeanSpeed);
+
+			Gui->AppendToListCtrl (BenchmarkListCtrl, fields);
+		}
+		
+		BenchmarkListCtrl->SetColumnWidth(0, wxLIST_AUTOSIZE);
+	}
+	
+	void BenchmarkDialog::DoBenchmark (list<BenchmarkResult>& results, Buffer& buffer)
+	{
 		try
 		{
-			list <BenchmarkResult> results;
-
-			wxBusyCursor busy;
-			Buffer buffer ((size_t) Gui->GetSelectedData <size_t> (BufferSizeChoice));
-
 			EncryptionAlgorithmList encryptionAlgorithms = EncryptionAlgorithm::GetAvailableAlgorithms();
 			foreach (shared_ptr <EncryptionAlgorithm> ea, encryptionAlgorithms)
 			{
 				if (!ea->IsDeprecated())
 				{
 					BenchmarkResult result;
-					result.AlgorithmName = ea->GetName();
+					result.AlgorithmName = ea->GetName(true);
 
 					Buffer key (ea->GetKeySize());
 					ea->SetKey (key);
@@ -135,19 +161,6 @@ namespace VeraCrypt
 				}
 			}
 
-			BenchmarkListCtrl->DeleteAllItems();
-
-			foreach (const BenchmarkResult &result, results)
-			{
-				vector <wstring> fields (BenchmarkListCtrl->GetColumnCount());
-					
-				fields[ColumnAlgorithm] = result.AlgorithmName;
-				fields[ColumnEncryption] = Gui->SpeedToString (result.EncryptionSpeed);
-				fields[ColumnDecryption] = Gui->SpeedToString (result.DecryptionSpeed);
-				fields[ColumnMean] = Gui->SpeedToString (result.MeanSpeed);
-
-				Gui->AppendToListCtrl (BenchmarkListCtrl, fields);
-			}
 		}
 		catch (exception &e)
 		{

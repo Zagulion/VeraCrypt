@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2011 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include "Crc.h"
@@ -60,6 +64,7 @@ static void PrintMainMenu ()
 		return;
 
 	Print ("    Keyboard Controls:\r\n");
+	Print ("    [F5]   Hide/Show Password and PIM\r\n");
 	Print ("    [Esc]  ");
 
 #ifndef TC_WINDOWS_BOOT_RESCUE_DISK_MODE
@@ -144,11 +149,14 @@ static int AskSelection (const char *options[], size_t optionCount)
 }
 
 
-static byte AskPassword (Password &password)
+static byte AskPassword (Password &password, int& pim)
 {
 	size_t pos = 0;
 	byte scanCode;
 	byte asciiCode;
+	byte hidePassword = 1;
+
+	pim = 0;
 
 	Print ("Enter password");
 	Print (PreventNormalSystemBoot ? " for hidden system:\r\n" : ": ");
@@ -164,7 +172,7 @@ static byte AskPassword (Password &password)
 			PrintEndl();
 
 			password.Length = pos;
-			return scanCode;
+			break;
 
 		case TC_BIOS_KEY_BACKSPACE:
 			if (pos > 0)
@@ -178,6 +186,10 @@ static byte AskPassword (Password &password)
 			}
 			continue;
 
+		case TC_BIOS_KEY_F5:
+			hidePassword ^= 0x01;
+			continue;
+
 		default:
 			if (scanCode == TC_BIOS_KEY_ESC || IsMenuKey (scanCode))
 			{
@@ -189,6 +201,9 @@ static byte AskPassword (Password &password)
 			}
 		}
 
+		if (TC_BIOS_KEY_ENTER == scanCode)
+			break;
+
 		if (!IsPrintable (asciiCode) || pos == MAX_PASSWORD)
 		{
 			Beep();
@@ -196,10 +211,70 @@ static byte AskPassword (Password &password)
 		}
 
 		password.Text[pos++] = asciiCode;
+		if (hidePassword) asciiCode = '*';
 		if (pos < MAX_PASSWORD)
-			PrintChar ('*');
+			PrintChar (asciiCode);
 		else
-			PrintCharAtCursor ('*');
+			PrintCharAtCursor (asciiCode);
+	}
+
+	pos = 0;
+	Print ("PIM: ");
+
+	while (true)
+	{
+		asciiCode = GetKeyboardChar (&scanCode);
+
+		switch (scanCode)
+		{
+		case TC_BIOS_KEY_ENTER:
+			ClearBiosKeystrokeBuffer();
+			PrintEndl();
+
+			return TC_BIOS_KEY_ENTER;
+
+		case TC_BIOS_KEY_BACKSPACE:
+			if (pos > 0)
+			{
+				if (pos < MAX_PIM)
+					PrintBackspace();
+				else
+					PrintCharAtCursor (' ');
+
+				--pos;
+				pim /= 10;
+			}
+			continue;
+
+		case TC_BIOS_KEY_F5:
+			hidePassword ^= 0x01;
+			continue;
+
+		default:
+			if (scanCode == TC_BIOS_KEY_ESC || IsMenuKey (scanCode))
+			{
+				burn (password.Text, sizeof (password.Text));
+				ClearBiosKeystrokeBuffer();
+
+				PrintEndl();
+				return scanCode;
+			}
+		}
+
+		if (!IsDigit (asciiCode) || pos == MAX_PIM)
+		{
+			Beep();
+			continue;
+		}
+
+		pim = 10*pim + (asciiCode - '0');
+		pos++;
+		
+		if (hidePassword) asciiCode = '*';
+		if (pos < MAX_PIM)
+			PrintChar (asciiCode);
+		else
+			PrintCharAtCursor (asciiCode);
 	}
 }
 
@@ -230,7 +305,7 @@ static void ExecuteBootSector (byte drive, byte *sectorBuffer)
 }
 
 
-static bool OpenVolume (byte drive, Password &password, CRYPTO_INFO **cryptoInfo, uint32 *headerSaltCrc32, bool skipNormal, bool skipHidden)
+static bool OpenVolume (byte drive, Password &password, int pim, CRYPTO_INFO **cryptoInfo, uint32 *headerSaltCrc32, bool skipNormal, bool skipHidden)
 {
 	int volumeType;
 	bool hiddenVolume;
@@ -261,7 +336,7 @@ static bool OpenVolume (byte drive, Password &password, CRYPTO_INFO **cryptoInfo
 		if (ReadSectors (SectorBuffer, drive, headerSec, 1) != BiosResultSuccess)
 			continue;
 
-		if (ReadVolumeHeader (!hiddenVolume, (char *) SectorBuffer, &password, cryptoInfo, nullptr) == ERR_SUCCESS)
+		if (ReadVolumeHeader (!hiddenVolume, (char *) SectorBuffer, &password, pim, cryptoInfo, nullptr) == ERR_SUCCESS)
 		{
 			// Prevent opening a non-system hidden volume
 			if (hiddenVolume && !((*cryptoInfo)->HeaderFlags & TC_HEADER_FLAG_ENCRYPTED_SYSTEM))
@@ -315,21 +390,25 @@ static bool CheckMemoryRequirements ()
 static bool MountVolume (byte drive, byte &exitKey, bool skipNormal, bool skipHidden)
 {
 	BootArguments *bootArguments = (BootArguments *) TC_BOOT_LOADER_ARGS_OFFSET;
-	int incorrectPasswordCount = 0;
+	int incorrectPasswordCount = 0, pim = 0;
 
 	EraseMemory (bootArguments, sizeof (*bootArguments));
 
 	// Open volume header
 	while (true)
 	{
-		exitKey = AskPassword (bootArguments->BootPassword);
+		exitKey = AskPassword (bootArguments->BootPassword, pim);
 
 		if (exitKey != TC_BIOS_KEY_ENTER)
 			return false;
 
-		if (OpenVolume (BootDrive, bootArguments->BootPassword, &BootCryptoInfo, &bootArguments->HeaderSaltCrc32, skipNormal, skipHidden))
-			break;
+		Print ("Verifying password...");
 
+		if (OpenVolume (BootDrive, bootArguments->BootPassword, pim, &BootCryptoInfo, &bootArguments->HeaderSaltCrc32, skipNormal, skipHidden))
+		{
+			Print ("OK\r\n");
+			break;
+		}
 		if (GetShiftFlags() & TC_BIOS_SHIFTMASK_CAPSLOCK)
 			Print ("Warning: Caps Lock is on.\r\n");
 
@@ -351,6 +430,7 @@ static bool MountVolume (byte drive, byte &exitKey, bool skipNormal, bool skipHi
 	bootArguments->BootLoaderVersion = VERSION_NUM;
 	bootArguments->CryptoInfoOffset = (uint16) BootCryptoInfo;
 	bootArguments->CryptoInfoLength = sizeof (*BootCryptoInfo);
+	bootArguments->Flags = (((uint32)pim) << 16);
 
 	if (BootCryptoInfo->hiddenVolume)
 		bootArguments->HiddenSystemPartitionStart = PartitionFollowingActive.StartSector << TC_LB_SIZE_BIT_SHIFT_DIVISOR;
@@ -799,7 +879,7 @@ askBadSectorSkip:
 		CRYPTO_INFO *headerCryptoInfo = crypto_open();
 		while (ReadSectors (SectorBuffer, drive, headerSector, 1) != BiosResultSuccess);
 
-		if (ReadVolumeHeader (TRUE, (char *) SectorBuffer, &bootArguments->BootPassword, NULL, headerCryptoInfo) == 0)
+		if (ReadVolumeHeader (TRUE, (char *) SectorBuffer, &bootArguments->BootPassword, (int) (bootArguments->Flags >> 16), NULL, headerCryptoInfo) == 0)
 		{
 			DecryptBuffer (SectorBuffer + HEADER_ENCRYPTED_DATA_OFFSET, HEADER_ENCRYPTED_DATA_SIZE, headerCryptoInfo);
 
@@ -952,7 +1032,8 @@ static void RepairMenu ()
 						uint32 masterKeyScheduleCrc;
 
 						Password password;
-						byte exitKey = AskPassword (password);
+						int pim;
+						byte exitKey = AskPassword (password, pim);
 
 						if (exitKey != TC_BIOS_KEY_ENTER)
 							goto abort;
@@ -963,7 +1044,7 @@ static void RepairMenu ()
 						ReleaseSectorBuffer();
 
 						// Restore volume header only if the current one cannot be used
-						if (OpenVolume (TC_FIRST_BIOS_DRIVE, password, &cryptoInfo, nullptr, false, true))
+						if (OpenVolume (TC_FIRST_BIOS_DRIVE, password, pim, &cryptoInfo, nullptr, false, true))
 						{
 							validHeaderPresent = true;
 							masterKeyScheduleCrc = GetCrc32 (cryptoInfo->ks, sizeof (cryptoInfo->ks));
@@ -973,7 +1054,7 @@ static void RepairMenu ()
 						AcquireSectorBuffer();
 						CopyMemory (TC_BOOT_LOADER_BUFFER_SEGMENT, 0, SectorBuffer, TC_LB_SIZE);
 
-						if (ReadVolumeHeader (TRUE, (char *) SectorBuffer, &password, &cryptoInfo, nullptr) == 0)
+						if (ReadVolumeHeader (TRUE, (char *) SectorBuffer, &password, pim, &cryptoInfo, nullptr) == 0)
 						{
 							if (validHeaderPresent)
 							{

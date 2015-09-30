@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #ifndef TC_HEADER_DLGCODE
@@ -77,6 +79,8 @@ enum
 #define TC_APPD_FILENAME_POST_INSTALL_TASK_TUTORIAL			"Post-Install Task - Tutorial"
 #define TC_APPD_FILENAME_POST_INSTALL_TASK_RELEASE_NOTES	"Post-Install Task - Release Notes"
 
+#define VC_FILENAME_RENAMED_SUFFIX				"_old"
+
 #ifndef USER_DEFAULT_SCREEN_DPI
 #define USER_DEFAULT_SCREEN_DPI 96
 #endif
@@ -128,9 +132,14 @@ extern WipeAlgorithmId nWipeMode;
 extern BOOL bSysPartitionSelected;
 extern BOOL bSysDriveSelected;
 
+extern char SysPartitionDevicePath [TC_MAX_PATH];
+extern char SysDriveDevicePath [TC_MAX_PATH];
+extern char bCachedSysDevicePathsValid;
+
 extern BOOL bHyperLinkBeingTracked;
 extern BOOL bInPlaceEncNonSysPending;
 
+extern BOOL PimEnable;
 extern BOOL	KeyFilesEnable;
 extern KeyFile	*FirstKeyFile;
 extern KeyFilesDlgParam		defaultKeyFilesParam;
@@ -226,11 +235,12 @@ void UpperCaseCopy ( char *lpszDest , size_t cbDest, const char *lpszSource );
 void CreateFullVolumePath ( char *lpszDiskFile , size_t cbDiskFile, const char *lpszFileName , BOOL *bDevice );
 int FakeDosNameForDevice ( const char *lpszDiskFile , char *lpszDosDevice , size_t cbDosDevice, char *lpszCFDevice , size_t cbCFDevice, BOOL bNameOnly );
 int RemoveFakeDosName ( char *lpszDiskFile , char *lpszDosDevice );
+void AbortProcessDirect ( wchar_t *abortMsg );
 void AbortProcess ( char *stringId );
 void AbortProcessSilent ( void );
 void *err_malloc ( size_t size );
 char *err_strdup ( char *lpszText );
-DWORD handleWin32Error ( HWND hwndDlg );
+DWORD handleWin32Error ( HWND hwndDlg, const char* srcPos );
 BOOL IsDiskReadError (DWORD error);
 BOOL IsDiskWriteError (DWORD error);
 BOOL IsDiskError (DWORD error);
@@ -285,17 +295,19 @@ BOOL LoadSysEncSettings (HWND hwndDlg);
 int LoadNonSysInPlaceEncSettings (WipeAlgorithmId *wipeAlgorithm);
 void RemoveNonSysInPlaceEncNotifications (void);
 void SavePostInstallTasksSettings (int command);
-void DoPostInstallTasks (void);
+void DoPostInstallTasks (HWND hwndDlg);
 void InitOSVersionInfo ();
 void InitApp ( HINSTANCE hInstance, char *lpszCommandLine );
+void FinalizeApp (void);
 void InitHelpFileName (void);
 BOOL OpenDevice (const char *lpszPath, OPEN_TEST_STRUCT *driver, BOOL detectFilesystem);
 void NotifyDriverOfPortableMode (void);
 int GetAvailableFixedDisks ( HWND hComboBox , char *lpszRootPath );
 int GetAvailableRemovables ( HWND hComboBox , char *lpszRootPath );
 int IsSystemDevicePath (const char *path, HWND hwndDlg, BOOL bReliableRequired);
+int IsNonSysPartitionOnSysDrive (const char *path);
 BOOL CALLBACK RawDevicesDlgProc ( HWND hwndDlg , UINT msg , WPARAM wParam , LPARAM lParam );
-BOOL TextInfoDialogBox (int nID);
+INT_PTR TextInfoDialogBox (int nID);
 BOOL CALLBACK TextInfoDialogBoxDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 char * GetLegalNotices ();
 BOOL CALLBACK BenchmarkDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -308,14 +320,16 @@ void ResetCipherTest ( HWND hwndDlg , int idTestCipher );
 void ResetCurrentDirectory ();
 BOOL BrowseFiles (HWND hwndDlg, char *stringId, char *lpszFileName, BOOL keepHistory, BOOL saveMode, wchar_t *browseFilter);
 BOOL BrowseDirectories (HWND hWnd, char *lpszTitle, char *dirName);
-void handleError ( HWND hwndDlg , int code );
-BOOL CheckFileStreamWriteErrors (FILE *file, const char *fileName);
+void handleError ( HWND hwndDlg , int code, const char* srcPos );
+BOOL CheckFileStreamWriteErrors (HWND hwndDlg, FILE *file, const char *fileName);
 void LocalizeDialog ( HWND hwnd, char *stringId );
 void OpenVolumeExplorerWindow (int driveNo);
 static BOOL CALLBACK CloseVolumeExplorerWindowsEnum( HWND hwnd, LPARAM driveNo);
 BOOL CloseVolumeExplorerWindows (HWND hwnd, int driveNo);
+BOOL UpdateDriveCustomLabel (int driveNo, wchar_t* effectiveLabel, BOOL bSetValue);
 BOOL CheckCapsLock (HWND hwnd, BOOL quiet);
 BOOL CheckFileExtension (char *fileName);
+void CorrectFileName (char* fileName);
 void IncreaseWrongPwdRetryCount (int count);
 void ResetWrongPwdRetryCount (void);
 BOOL WrongPwdRetryCountOverLimit (void);
@@ -325,8 +339,9 @@ BOOL IsDriveAvailable (int driveNo);
 BOOL IsDeviceMounted (char *deviceName);
 int DriverUnmountVolume (HWND hwndDlg, int nDosDriveNo, BOOL forced);
 void BroadcastDeviceChange (WPARAM message, int nDosDriveNo, DWORD driveMap);
-int MountVolume (HWND hwndDlg, int driveNo, char *volumePath, Password *password, BOOL cachePassword, BOOL sharedAccess,  const MountOptions* const mountOptions, BOOL quiet, BOOL bReportWrongPassword);
+int MountVolume (HWND hwndDlg, int driveNo, char *volumePath, Password *password, int pkcs5, int pim, BOOL truecryptMode, BOOL cachePassword, BOOL sharedAccess,  const MountOptions* const mountOptions, BOOL quiet, BOOL bReportWrongPassword);
 BOOL UnmountVolume (HWND hwndDlg , int nDosDriveNo, BOOL forceUnmount);
+BOOL UnmountVolumeAfterFormatExCall (HWND hwndDlg, int nDosDriveNo);
 BOOL IsPasswordCacheEmpty (void);
 BOOL IsMountedVolume (const char *volname);
 int GetMountedVolumeDriveNo (char *volname);
@@ -339,13 +354,14 @@ int FileSystemAppearsEmpty (const char *devicePath);
 __int64 GetStatsFreeSpaceOnPartition (const char *devicePath, float *percent, __int64 *occupiedBytes, BOOL silent);
 __int64 GetDeviceSize (const char *devicePath);
 HANDLE DismountDrive (char *devName, char *devicePath);
-int64 FindString (const char *buf, const char *str, int64 bufLen, size_t strLen, int64 startOffset);
+int64 FindString (const char *buf, const char *str, int64 bufLen, int64 strLen, int64 startOffset);
 BOOL FileExists (const char *filePathPtr);
 __int64 FindStringInFile (const char *filePath, const char *str, int strLen);
 BOOL TCCopyFile (char *sourceFileName, char *destinationFile);
-BOOL SaveBufferToFile (const char *inputBuffer, const char *destinationFile, DWORD inputLength, BOOL bAppend);
+BOOL TCCopyFileW (wchar_t *sourceFileName, wchar_t *destinationFile);
+BOOL SaveBufferToFile (const char *inputBuffer, const char *destinationFile, DWORD inputLength, BOOL bAppend, BOOL bRenameIfFailed);
 BOOL TCFlushFile (FILE *f);
-BOOL PrintHardCopyTextUTF16 (wchar_t *text, char *title, int byteLen);
+BOOL PrintHardCopyTextUTF16 (wchar_t *text, char *title, size_t byteLen);
 void GetSpeedString (unsigned __int64 speed, wchar_t *str, size_t cbStr);
 BOOL IsNonInstallMode ();
 BOOL DriverUnload ();
@@ -367,49 +383,53 @@ __int64 GetFileSize64 (const char *path);
 BOOL LoadInt16 (char *filePath, int *result, __int64 fileOffset);
 BOOL LoadInt32 (char *filePath, unsigned __int32 *result, __int64 fileOffset);
 char *LoadFile (const char *fileName, DWORD *size);
-char *LoadFileBlock (char *fileName, __int64 fileOffset, size_t count);
+char *LoadFileBlock (char *fileName, __int64 fileOffset, DWORD count);
 char *GetModPath (char *path, int maxSize);
 char *GetConfigPath (char *fileName);
 char *GetProgramConfigPath (char *fileName);
 char GetSystemDriveLetter (void);
 void OpenPageHelp (HWND hwndDlg, int nPage);
 void TaskBarIconDisplayBalloonTooltip (HWND hwnd, wchar_t *headline, wchar_t *text, BOOL warning);
-void InfoBalloon (char *headingStringId, char *textStringId);
-void InfoBalloonDirect (wchar_t *headingString, wchar_t *textString);
-void WarningBalloon (char *headingStringId, char *textStringId);
-void WarningBalloonDirect (wchar_t *headingString, wchar_t *textString);
-int Info (char *stringId);
-int InfoTopMost (char *stringId);
-int InfoDirect (const wchar_t *msg);
-int Warning (char *stringId);
-int WarningTopMost (char *stringId);
-int WarningDirect (const wchar_t *warnMsg);
-int Error (char *stringId);
-int ErrorDirect (const wchar_t *errMsg);
-int ErrorTopMost (char *stringId);
-int AskYesNo (char *stringId);
-int AskYesNoString (const wchar_t *str);
-int AskYesNoTopmost (char *stringId);
-int AskNoYes (char *stringId);
-int AskOkCancel (char *stringId);
-int AskWarnYesNo (char *stringId);
-int AskWarnYesNoString (const wchar_t *string);
-int AskWarnYesNoTopmost (char *stringId);
-int AskWarnYesNoStringTopmost (const wchar_t *string);
-int AskWarnNoYes (char *stringId);
-int AskWarnNoYesString (const wchar_t *string);
-int AskWarnNoYesTopmost (char *stringId);
-int AskWarnOkCancel (char *stringId);
-int AskWarnCancelOk (char *stringId);
-int AskErrYesNo (char *stringId);
-int AskErrNoYes (char *stringId);
-int AskMultiChoice (void *strings[], BOOL bBold);
+void InfoBalloon (char *headingStringId, char *textStringId, HWND hwnd);
+void InfoBalloonDirect (wchar_t *headingString, wchar_t *textString, HWND hwnd);
+void WarningBalloon (char *headingStringId, char *textStringId, HWND hwnd);
+void WarningBalloonDirect (wchar_t *headingString, wchar_t *textString, HWND hwnd);
+int Info (char *stringId, HWND hwnd);
+int InfoTopMost (char *stringId, HWND hwnd);
+int InfoDirect (const wchar_t *msg, HWND hwnd);
+int Warning (char *stringId, HWND hwnd);
+int WarningTopMost (char *stringId, HWND hwnd);
+int WarningDirect (const wchar_t *warnMsg, HWND hwnd);
+int Error (char *stringId, HWND hwnd);
+int ErrorRetryCancel (char *stringId, HWND hwnd);
+int ErrorDirect (const wchar_t *errMsg, HWND hwnd);
+int ErrorTopMost (char *stringId, HWND hwnd);
+int AskYesNo (char *stringId, HWND hwnd);
+int AskYesNoString (const wchar_t *str, HWND hwnd);
+int AskYesNoTopmost (char *stringId, HWND hwnd);
+int AskNoYes (char *stringId, HWND hwnd);
+int AskNoYesString (const wchar_t *string, HWND hwnd);
+int AskOkCancel (char *stringId, HWND hwnd);
+int AskWarnYesNo (char *stringId, HWND hwnd);
+int AskWarnYesNoString (const wchar_t *string, HWND hwnd);
+int AskWarnYesNoTopmost (char *stringId, HWND hwnd);
+int AskWarnYesNoStringTopmost (const wchar_t *string, HWND hwnd);
+int AskWarnNoYes (char *stringId, HWND hwnd);
+int AskWarnNoYesString (const wchar_t *string, HWND hwnd);
+int AskWarnNoYesTopmost (char *stringId, HWND hwnd);
+int AskWarnOkCancel (char *stringId, HWND hwnd);
+int AskWarnCancelOk (char *stringId, HWND hwnd);
+int AskErrYesNo (char *stringId, HWND hwnd);
+int AskErrNoYes (char *stringId, HWND hwnd);
+int AskMultiChoice (void *strings[], BOOL bBold, HWND hwnd);
 BOOL ConfigWriteBegin ();
-BOOL ConfigWriteEnd ();
+BOOL ConfigWriteEnd (HWND hwnd);
 BOOL ConfigWriteString (char *configKey, char *configValue);
 BOOL ConfigWriteInt (char *configKey, int configValue);
 int ConfigReadInt (char *configKey, int defaultValue);
 char *ConfigReadString (char *configKey, char *defaultValue, char *str, int maxLen);
+void ConfigReadCompareInt(char *configKey, int defaultValue, int* pOutputValue, BOOL bOnlyCheckModified, BOOL* pbModified);
+void ConfigReadCompareString (char *configKey, char *defaultValue, char *str, int maxLen, BOOL bOnlyCheckModified, BOOL *pbModified);
 void RestoreDefaultKeyFilesParam (void);
 BOOL LoadDefaultKeyFilesParam (void);
 void Debug (char *format, ...);
@@ -423,7 +443,7 @@ BOOL EnableWow64FsRedirection (BOOL enable);
 BOOL RestartComputer (void);
 void Applink (char *dest, BOOL bSendOS, char *extraOutput);
 char *RelativePath2Absolute (char *szFileName);
-void HandleDriveNotReadyError ();
+void HandleDriveNotReadyError (HWND hwnd);
 BOOL CALLBACK CloseTCWindowsEnum( HWND hwnd, LPARAM lParam);
 BOOL CALLBACK FindTCWindowEnum (HWND hwnd, LPARAM lParam);
 BYTE *MapResource (char *resourceType, int resourceId, PDWORD size);
@@ -443,24 +463,27 @@ int GetTextGfxWidth (HWND hwndDlgItem, const wchar_t *text, HFONT hFont);
 int GetTextGfxHeight (HWND hwndDlgItem, const wchar_t *text, HFONT hFont);
 BOOL ToHyperlink (HWND hwndDlg, UINT ctrlId);
 BOOL ToCustHyperlink (HWND hwndDlg, UINT ctrlId, HFONT hFont);
+void DisableCloseButton (HWND hwndDlg);
+void EnableCloseButton (HWND hwndDlg);
 void ToBootPwdField (HWND hwndDlg, UINT ctrlId);
 void AccommodateTextField (HWND hwndDlg, UINT ctrlId, BOOL bFirstUpdate, HFONT hFont);
 BOOL GetDriveLabel (int driveNo, wchar_t *label, int labelSize);
+BOOL GetSysDevicePaths (HWND hwndDlg);
 BOOL DoDriverInstall (HWND hwndDlg);
-int OpenVolume (OpenVolumeContext *context, const char *volumePath, Password *password, BOOL write, BOOL preserveTimestamps, BOOL useBackupHeader);
+int OpenVolume (OpenVolumeContext *context, const char *volumePath, Password *password, int pkcs5_prf, int pim, BOOL truecryptMode, BOOL write, BOOL preserveTimestamps, BOOL useBackupHeader);
 void CloseVolume (OpenVolumeContext *context);
-int ReEncryptVolumeHeader (char *buffer, BOOL bBoot, CRYPTO_INFO *cryptoInfo, Password *password, BOOL wipeMode);
+int ReEncryptVolumeHeader (HWND hwndDlg, char *buffer, BOOL bBoot, CRYPTO_INFO *cryptoInfo, Password *password, int pim, BOOL wipeMode);
 BOOL IsPagingFileActive (BOOL checkNonWindowsPartitionsOnly);
 BOOL IsPagingFileWildcardActive ();
 BOOL DisablePagingFile ();
 BOOL CALLBACK SecurityTokenPasswordDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK SecurityTokenKeyfileDlgProc (HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
-BOOL InitSecurityTokenLibrary ();
+BOOL InitSecurityTokenLibrary (HWND hwndDlg);
 BOOL FileHasReadOnlyAttribute (const char *path);
 BOOL IsFileOnReadOnlyFilesystem (const char *path);
-void CheckFilesystem (int driveNo, BOOL fixErrors);
+void CheckFilesystem (HWND hwndDlg, int driveNo, BOOL fixErrors);
 BOOL BufferContainsString (const byte *buffer, size_t bufferSize, const char *str);
-int AskNonSysInPlaceEncryptionResume ();
+int AskNonSysInPlaceEncryptionResume (HWND hwndDlg, BOOL* pbDecrypt);
 BOOL RemoveDeviceWriteProtection (HWND hwndDlg, char *devicePath);
 void EnableElevatedCursorChange (HWND parent);
 BOOL DisableFileCompression (HANDLE file);
@@ -468,6 +491,9 @@ BOOL VolumePathExists (const char *volumePath);
 BOOL IsWindowsIsoBurnerAvailable ();
 BOOL LaunchWindowsIsoBurner (HWND hwnd, const char *isoPath);
 BOOL IsApplicationInstalled (const char *appName);
+int GetPim (HWND hwndDlg, UINT ctrlId);
+void SetPim (HWND hwndDlg, UINT ctrlId, int pim);
+void HandleShowPasswordFieldAction (HWND hwndDlg, UINT checkBoxId, UINT edit1Id, UINT edit2Id);
 
 #ifdef __cplusplus
 }
@@ -511,6 +537,12 @@ struct HostDevice
 	std::vector <HostDevice> Partitions;
 };
 
+struct RawDevicesDlgParam
+{
+	std::vector <HostDevice> devices;
+	char *pszFileName;
+};
+
 BOOL BrowseFilesInDir (HWND hwndDlg, char *stringId, char *initialDir, char *lpszFileName, BOOL keepHistory, BOOL saveMode, wchar_t *browseFilter, const wchar_t *initialFileName = NULL, const wchar_t *defaultExtension = NULL);
 std::wstring SingleStringToWide (const std::string &singleString);
 std::wstring Utf8StringToWide (const std::string &utf8String);
@@ -522,11 +554,21 @@ std::string ToUpperCase (const std::string &str);
 std::wstring GetWrongPasswordErrorMessage (HWND hwndDlg);
 std::string GetWindowsEdition ();
 std::string FitPathInGfxWidth (HWND hwnd, HFONT hFont, LONG width, const std::string &path);
-std::string GetServiceConfigPath (const char *fileName);
+std::string GetServiceConfigPath (const char *fileName, bool useLegacy);
 std::string VolumeGuidPathToDevicePath (std::string volumeGuidPath);
 std::string HarddiskVolumePathToPartitionPath (const std::string &harddiskVolumePath);
 std::string FindLatestFileOrDirectory (const std::string &directory, const char *namePattern, bool findDirectory, bool findFile);
 std::string GetUserFriendlyVersionString (int version);
+std::string IntToString (int val);
+std::wstring IntToWideString (int val);
+inline std::wstring AppendSrcPos (const wchar_t* msg, const char* srcPos)
+{
+	return std::wstring (msg) + L"\n\nSource: " + SingleStringToWide (srcPos);
+}
+
+// Display a wait dialog while calling the provided callback with the given parameter
+typedef void (CALLBACK* WaitThreadProc)(void* pArg, HWND hWaitDlg);
+void ShowWaitDialog(HWND hwnd, BOOL bUseHwndAsParent, WaitThreadProc callback, void* pArg);
 
 #endif // __cplusplus
 

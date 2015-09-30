@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #include "Tcdefs.h"
@@ -35,6 +37,7 @@
 
 #ifdef _WIN32
 #include <Strsafe.h>
+#include "../Boot/Windows/BootCommon.h"
 #endif
 
 /* Volume header v5 structure (used since TrueCrypt 7.0): */
@@ -163,7 +166,7 @@ typedef struct
 
 BOOL ReadVolumeHeaderRecoveryMode = FALSE;
 
-int ReadVolumeHeader (BOOL bBoot, char *encryptedHeader, Password *password, PCRYPTO_INFO *retInfo, CRYPTO_INFO *retHeaderCryptoInfo)
+int ReadVolumeHeader (BOOL bBoot, char *encryptedHeader, Password *password, int selected_pkcs5_prf, int pim, BOOL truecryptMode, PCRYPTO_INFO *retInfo, CRYPTO_INFO *retHeaderCryptoInfo)
 {
 	char header[TC_VOLUME_HEADER_EFFECTIVE_SIZE];
 	KEY_INFO keyInfo;
@@ -184,6 +187,14 @@ int ReadVolumeHeader (BOOL bBoot, char *encryptedHeader, Password *password, PCR
 	LONG outstandingWorkItemCount = 0;
 	int i;
 
+	if (truecryptMode)
+	{
+		// SHA-256 not supported in TrueCrypt mode
+		if (selected_pkcs5_prf == SHA256)
+			return ERR_PARAMETER_INCORRECT;
+		pkcs5PrfCount--; // don't count SHA-256 in case of TrueCrypt mode
+	}
+
 	if (retHeaderCryptoInfo != NULL)
 	{
 		cryptoInfo = retHeaderCryptoInfo;
@@ -198,7 +209,8 @@ int ReadVolumeHeader (BOOL bBoot, char *encryptedHeader, Password *password, PCR
 			return ERR_OUTOFMEMORY;
 	}
 
-	if (encryptionThreadCount > 1)
+	/* use thread pool only if no PRF was specified */
+	if ((selected_pkcs5_prf == 0) && (encryptionThreadCount > 1))
 	{
 		keyDerivationWorkItems = TCalloc (sizeof (KeyDerivationWorkItem) * pkcs5PrfCount);
 		if (!keyDerivationWorkItems)
@@ -241,7 +253,15 @@ int ReadVolumeHeader (BOOL bBoot, char *encryptedHeader, Password *password, PCR
 	// Test all available PKCS5 PRFs
 	for (enqPkcs5Prf = FIRST_PRF_ID; enqPkcs5Prf <= LAST_PRF_ID || queuedWorkItems > 0; ++enqPkcs5Prf)
 	{	
-		if (encryptionThreadCount > 1)
+		// if a PRF is specified, we skip all other PRFs
+		if (selected_pkcs5_prf != 0 && enqPkcs5Prf != selected_pkcs5_prf)
+			continue;
+
+		// skip SHA-256 in case of TrueCrypt mode
+		if (truecryptMode && (enqPkcs5Prf == SHA256))
+			continue;
+
+		if ((selected_pkcs5_prf == 0) && (encryptionThreadCount > 1))
 		{
 			// Enqueue key derivation on thread pool
 			if (queuedWorkItems < encryptionThreadCount && enqPkcs5Prf <= LAST_PRF_ID)
@@ -257,7 +277,7 @@ int ReadVolumeHeader (BOOL bBoot, char *encryptedHeader, Password *password, PCR
 
 						EncryptionThreadPoolBeginKeyDerivation (&keyDerivationCompletedEvent, &noOutstandingWorkItemEvent,
 							&item->KeyReady, &outstandingWorkItemCount, enqPkcs5Prf, keyInfo.userKey,
-							keyInfo.keyLength, keyInfo.salt, get_pkcs5_iteration_count (enqPkcs5Prf, bBoot), item->DerivedKey);
+							keyInfo.keyLength, keyInfo.salt, get_pkcs5_iteration_count (enqPkcs5Prf, pim, truecryptMode, bBoot), item->DerivedKey);
 						
 						++queuedWorkItems;
 						break;
@@ -279,7 +299,7 @@ int ReadVolumeHeader (BOOL bBoot, char *encryptedHeader, Password *password, PCR
 					if (!item->Free && InterlockedExchangeAdd (&item->KeyReady, 0) == TRUE)
 					{
 						pkcs5_prf = item->Pkcs5Prf;
-						keyInfo.noIterations = get_pkcs5_iteration_count (pkcs5_prf, bBoot);
+						keyInfo.noIterations = get_pkcs5_iteration_count (pkcs5_prf, pim, truecryptMode, bBoot);
 						memcpy (dk, item->DerivedKey, sizeof (dk));
 
 						item->Free = TRUE;
@@ -297,7 +317,7 @@ KeyReady:	;
 		else
 		{
 			pkcs5_prf = enqPkcs5Prf;
-			keyInfo.noIterations = get_pkcs5_iteration_count (enqPkcs5Prf, bBoot);
+			keyInfo.noIterations = get_pkcs5_iteration_count (enqPkcs5Prf, pim, truecryptMode, bBoot);
 
 			switch (pkcs5_prf)
 			{
@@ -381,8 +401,10 @@ KeyReady:	;
 
 				DecryptBuffer (header + HEADER_ENCRYPTED_DATA_OFFSET, HEADER_ENCRYPTED_DATA_SIZE, cryptoInfo);
 
-				// Magic 'VERA'
-				if (GetHeaderField32 (header, TC_HEADER_OFFSET_MAGIC) != 0x56455241)
+				// Magic 'VERA' or 'TRUE' depending if we are in TrueCrypt mode or not
+				if ((truecryptMode && GetHeaderField32 (header, TC_HEADER_OFFSET_MAGIC) != 0x54525545)
+					|| (!truecryptMode && GetHeaderField32 (header, TC_HEADER_OFFSET_MAGIC) != 0x56455241)
+					)
 					continue;
 
 				// Header version
@@ -402,7 +424,17 @@ KeyReady:	;
 
 				// Required program version
 				cryptoInfo->RequiredProgramVersion = GetHeaderField16 (header, TC_HEADER_OFFSET_REQUIRED_VERSION);
-				cryptoInfo->LegacyVolume = cryptoInfo->RequiredProgramVersion < 0x10b;
+				if (truecryptMode)
+				{
+					if (cryptoInfo->RequiredProgramVersion < 0x600 || cryptoInfo->RequiredProgramVersion > 0x71a)
+					{
+						status = ERR_UNSUPPORTED_TRUECRYPT_FORMAT | (((int)cryptoInfo->RequiredProgramVersion) << 16);
+						goto err;
+					}
+					cryptoInfo->LegacyVolume = FALSE;
+				}
+				else
+					cryptoInfo->LegacyVolume = cryptoInfo->RequiredProgramVersion < 0x10b;
 
 				// Check CRC of the key set
 				if (!ReadVolumeHeaderRecoveryMode
@@ -412,7 +444,7 @@ KeyReady:	;
 				// Now we have the correct password, cipher, hash algorithm, and volume type
 
 				// Check the version required to handle this volume
-				if (cryptoInfo->RequiredProgramVersion > VERSION_NUM)
+				if (!truecryptMode && (cryptoInfo->RequiredProgramVersion > VERSION_NUM))
 				{
 					status = ERR_NEW_VERSION_REQUIRED;
 					goto err;
@@ -464,6 +496,8 @@ KeyReady:	;
 					{
 						cryptoInfo->pkcs5 = pkcs5_prf;
 						cryptoInfo->noIterations = keyInfo.noIterations;
+						cryptoInfo->bTrueCryptMode = truecryptMode;
+						cryptoInfo->volumePim = pim;
 						goto ret;
 					}
 
@@ -485,6 +519,8 @@ KeyReady:	;
 				memcpy (cryptoInfo->salt, keyInfo.salt, PKCS5_SALT_SIZE);
 				cryptoInfo->pkcs5 = pkcs5_prf;
 				cryptoInfo->noIterations = keyInfo.noIterations;
+				cryptoInfo->bTrueCryptMode = truecryptMode;
+				cryptoInfo->volumePim = pim;
 
 				// Init the cipher with the decrypted master key
 				status = EAInit (cryptoInfo->ea, keyInfo.master_keydata + primaryKeyOffset, cryptoInfo->ks);
@@ -529,7 +565,7 @@ ret:
 	VirtualUnlock (&dk, sizeof (dk));
 #endif
 
-	if (encryptionThreadCount > 1)
+	if ((selected_pkcs5_prf == 0) && (encryptionThreadCount > 1))
 	{
 		TC_WAIT_EVENT (noOutstandingWorkItemEvent);
 
@@ -545,9 +581,45 @@ ret:
 	return status;
 }
 
+#ifdef _WIN32
+void ComputeBootloaderFingerprint (byte *bootLoaderBuf, unsigned int bootLoaderSize, byte* fingerprint)
+{
+	// compute Whirlpool+SHA512 fingerprint of bootloader including MBR
+	// we skip user configuration fields:
+	// TC_BOOT_SECTOR_OUTER_VOLUME_BAK_HEADER_CRC_OFFSET = 402
+	//  => TC_BOOT_SECTOR_OUTER_VOLUME_BAK_HEADER_CRC_SIZE = 4
+	// TC_BOOT_SECTOR_USER_MESSAGE_OFFSET     = 406
+	//  => TC_BOOT_SECTOR_USER_MESSAGE_MAX_LENGTH = 24
+	// TC_BOOT_SECTOR_USER_CONFIG_OFFSET      = 438
+	//
+	// we have: TC_BOOT_SECTOR_USER_MESSAGE_OFFSET = TC_BOOT_SECTOR_OUTER_VOLUME_BAK_HEADER_CRC_OFFSET + TC_BOOT_SECTOR_OUTER_VOLUME_BAK_HEADER_CRC_SIZE
+
+	WHIRLPOOL_CTX whirlpool;
+	sha512_ctx sha2;
+	
+	WHIRLPOOL_init (&whirlpool);
+	sha512_begin (&sha2);
+
+	WHIRLPOOL_add (bootLoaderBuf, TC_BOOT_SECTOR_OUTER_VOLUME_BAK_HEADER_CRC_OFFSET * 8, &whirlpool);
+	sha512_hash (bootLoaderBuf, TC_BOOT_SECTOR_OUTER_VOLUME_BAK_HEADER_CRC_OFFSET, &sha2);
+
+	WHIRLPOOL_add (bootLoaderBuf + TC_BOOT_SECTOR_USER_MESSAGE_OFFSET + TC_BOOT_SECTOR_USER_MESSAGE_MAX_LENGTH, (TC_BOOT_SECTOR_USER_CONFIG_OFFSET - (TC_BOOT_SECTOR_USER_MESSAGE_OFFSET + TC_BOOT_SECTOR_USER_MESSAGE_MAX_LENGTH)) * 8, &whirlpool);
+	sha512_hash (bootLoaderBuf + TC_BOOT_SECTOR_USER_MESSAGE_OFFSET + TC_BOOT_SECTOR_USER_MESSAGE_MAX_LENGTH, (TC_BOOT_SECTOR_USER_CONFIG_OFFSET - (TC_BOOT_SECTOR_USER_MESSAGE_OFFSET + TC_BOOT_SECTOR_USER_MESSAGE_MAX_LENGTH)), &sha2);
+
+	WHIRLPOOL_add (bootLoaderBuf + TC_BOOT_SECTOR_USER_CONFIG_OFFSET + 1, (TC_MAX_MBR_BOOT_CODE_SIZE - (TC_BOOT_SECTOR_USER_CONFIG_OFFSET + 1)) * 8, &whirlpool);
+	sha512_hash (bootLoaderBuf + TC_BOOT_SECTOR_USER_CONFIG_OFFSET + 1, (TC_MAX_MBR_BOOT_CODE_SIZE - (TC_BOOT_SECTOR_USER_CONFIG_OFFSET + 1)), &sha2);
+
+	WHIRLPOOL_add (bootLoaderBuf + TC_SECTOR_SIZE_BIOS, (bootLoaderSize - TC_SECTOR_SIZE_BIOS) * 8, &whirlpool);
+	sha512_hash (bootLoaderBuf + TC_SECTOR_SIZE_BIOS, (bootLoaderSize - TC_SECTOR_SIZE_BIOS), &sha2);
+
+	WHIRLPOOL_finalize (&whirlpool, fingerprint);
+	sha512_end (&fingerprint [WHIRLPOOL_DIGESTSIZE], &sha2);
+}
+#endif
+
 #else // TC_WINDOWS_BOOT
 
-int ReadVolumeHeader (BOOL bBoot, char *header, Password *password, PCRYPTO_INFO *retInfo, CRYPTO_INFO *retHeaderCryptoInfo)
+int ReadVolumeHeader (BOOL bBoot, char *header, Password *password, int pim, PCRYPTO_INFO *retInfo, CRYPTO_INFO *retHeaderCryptoInfo)
 {
 #ifdef TC_WINDOWS_BOOT_SINGLE_CIPHER_MODE
 	char dk[32 * 2];			// 2 * 256-bit key
@@ -557,6 +629,9 @@ int ReadVolumeHeader (BOOL bBoot, char *header, Password *password, PCRYPTO_INFO
 
 	PCRYPTO_INFO cryptoInfo;
 	int status = ERR_SUCCESS;
+	uint32 iterations = pim;
+	iterations <<= 16;
+	iterations |= bBoot;
 
 	if (retHeaderCryptoInfo != NULL)
 		cryptoInfo = retHeaderCryptoInfo;
@@ -566,10 +641,10 @@ int ReadVolumeHeader (BOOL bBoot, char *header, Password *password, PCRYPTO_INFO
 	// PKCS5 PRF
 #ifdef TC_WINDOWS_BOOT_SHA2
 	derive_key_sha256 (password->Text, (int) password->Length, header + HEADER_SALT_OFFSET,
-		PKCS5_SALT_SIZE, bBoot, dk, sizeof (dk));
+		PKCS5_SALT_SIZE, iterations, dk, sizeof (dk));
 #else
 	derive_key_ripemd160 (password->Text, (int) password->Length, header + HEADER_SALT_OFFSET,
-		PKCS5_SALT_SIZE, bBoot, dk, sizeof (dk));
+		PKCS5_SALT_SIZE, iterations, dk, sizeof (dk));
 #endif
 
 	// Mode of operation
@@ -713,8 +788,8 @@ ret:
 #endif
 
 // Creates a volume header in memory
-int CreateVolumeHeaderInMemory (BOOL bBoot, char *header, int ea, int mode, Password *password,
-		   int pkcs5_prf, char *masterKeydata, PCRYPTO_INFO *retInfo,
+int CreateVolumeHeaderInMemory (HWND hwndDlg, BOOL bBoot, char *header, int ea, int mode, Password *password,
+		   int pkcs5_prf, int pim, char *masterKeydata, PCRYPTO_INFO *retInfo,
 		   unsigned __int64 volumeSize, unsigned __int64 hiddenVolumeSize,
 		   unsigned __int64 encryptedAreaStart, unsigned __int64 encryptedAreaLength, uint16 requiredProgramVersion, uint32 headerFlags, uint32 sectorSize, BOOL bWipeMode)
 {
@@ -751,7 +826,7 @@ int CreateVolumeHeaderInMemory (BOOL bBoot, char *header, int ea, int mode, Pass
 			bytesNeeded = EAGetKeySize (ea) * 2;	// Size of primary + secondary key(s)
 		}
 
-		if (!RandgetBytes (keyInfo.master_keydata, bytesNeeded, TRUE))
+		if (!RandgetBytes (hwndDlg, keyInfo.master_keydata, bytesNeeded, TRUE))
 			return ERR_CIPHER_INIT_WEAK_KEY;
 	}
 	else
@@ -763,19 +838,22 @@ int CreateVolumeHeaderInMemory (BOOL bBoot, char *header, int ea, int mode, Pass
 	// User key 
 	memcpy (keyInfo.userKey, password->Text, nUserKeyLen);
 	keyInfo.keyLength = nUserKeyLen;
-	keyInfo.noIterations = get_pkcs5_iteration_count (pkcs5_prf, bBoot);
+	keyInfo.noIterations = get_pkcs5_iteration_count (pkcs5_prf, pim, FALSE, bBoot);
 
 	// User selected encryption algorithm
 	cryptoInfo->ea = ea;
 
 	// User selected PRF
 	cryptoInfo->pkcs5 = pkcs5_prf;
+	cryptoInfo->bTrueCryptMode = FALSE;
+	cryptoInfo->noIterations = keyInfo.noIterations;
+	cryptoInfo->volumePim = pim;
 
 	// Mode of operation
 	cryptoInfo->mode = mode;
 
 	// Salt for header key derivation
-	if (!RandgetBytes (keyInfo.salt, PKCS5_SALT_SIZE, !bWipeMode))
+	if (!RandgetBytes (hwndDlg, keyInfo.salt, PKCS5_SALT_SIZE, !bWipeMode))
 		return ERR_CIPHER_INIT_WEAK_KEY; 
 
 	// PBKDF2 (PKCS5) is used to derive primary header key(s) and secondary header key(s) (XTS) from the password/keyfiles
@@ -1070,7 +1148,7 @@ BOOL WriteEffectiveVolumeHeader (BOOL device, HANDLE fileHandle, byte *header)
 // Writes randomly generated data to unused/reserved header areas.
 // When bPrimaryOnly is TRUE, then only the primary header area (not the backup header area) is filled with random data.
 // When bBackupOnly is TRUE, only the backup header area (not the primary header area) is filled with random data.
-int WriteRandomDataToReservedHeaderAreas (HANDLE dev, CRYPTO_INFO *cryptoInfo, uint64 dataAreaSize, BOOL bPrimaryOnly, BOOL bBackupOnly)
+int WriteRandomDataToReservedHeaderAreas (HWND hwndDlg, HANDLE dev, CRYPTO_INFO *cryptoInfo, uint64 dataAreaSize, BOOL bPrimaryOnly, BOOL bBackupOnly)
 {
 	char temporaryKey[MASTER_KEYDATA_SIZE];
 	char originalK2[MASTER_KEYDATA_SIZE];
@@ -1091,8 +1169,8 @@ int WriteRandomDataToReservedHeaderAreas (HANDLE dev, CRYPTO_INFO *cryptoInfo, u
 	while (TRUE)
 	{
 		// Temporary keys
-		if (!RandgetBytes (temporaryKey, EAGetKeySize (cryptoInfo->ea), FALSE)
-			|| !RandgetBytes (cryptoInfo->k2, sizeof (cryptoInfo->k2), FALSE))
+		if (!RandgetBytes (hwndDlg, temporaryKey, EAGetKeySize (cryptoInfo->ea), FALSE)
+			|| !RandgetBytes (hwndDlg, cryptoInfo->k2, sizeof (cryptoInfo->k2), FALSE))
 		{
 			nStatus = ERR_PARAMETER_INCORRECT; 
 			goto final_seq;

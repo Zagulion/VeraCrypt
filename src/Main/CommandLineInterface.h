@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2008-2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #ifndef TC_HEADER_Main_CommandInterface
@@ -50,7 +54,7 @@ namespace VeraCrypt
 	struct CommandLineInterface
 	{
 	public:
-		CommandLineInterface (wxCmdLineParser &parser, UserInterfaceType::Enum interfaceType);
+		CommandLineInterface (int argc, wchar_t** argv, UserInterfaceType::Enum interfaceType);
 		virtual ~CommandLineInterface ();
 
 
@@ -64,16 +68,20 @@ namespace VeraCrypt
 		shared_ptr <KeyfileList> ArgKeyfiles;
 		MountOptions ArgMountOptions;
 		shared_ptr <DirectoryPath> ArgMountPoint;
+		shared_ptr <Hash> ArgNewHash;
 		shared_ptr <KeyfileList> ArgNewKeyfiles;
 		shared_ptr <VolumePassword> ArgNewPassword;
+		int ArgNewPim;
 		bool ArgNoHiddenVolumeProtection;
 		shared_ptr <VolumePassword> ArgPassword;
+		int ArgPim;
 		bool ArgQuick;
 		FilesystemPath ArgRandomSourcePath;
 		uint64 ArgSize;
 		shared_ptr <VolumePath> ArgVolumePath;
 		VolumeInfoList ArgVolumes;
 		VolumeType::Enum ArgVolumeType;
+		bool ArgTrueCryptMode;
 
 		bool StartBackgroundTask;
 		UserPreferences Preferences;

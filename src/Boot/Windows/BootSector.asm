@@ -1,9 +1,13 @@
 ;
-; Copyright (c) 2008-2009 TrueCrypt Developers Association. All rights reserved.
+; Derived from source code of TrueCrypt 7.1a, which is
+; Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+; by the TrueCrypt License 3.0.
 ;
-; Governed by the TrueCrypt License 3.0 the full text of which is contained in
-; the file License.txt included in TrueCrypt binary and source code distribution
-; packages.
+; Modifications and additions to the original source code (contained in this file) 
+; and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+; and are governed by the Apache License 2.0 the full text of which is
+; contained in the file License.txt included in VeraCrypt binary and source
+; code distribution packages.
 ;
 
 .MODEL tiny
@@ -102,7 +106,7 @@ non_backup:
 	call checksum
 	
 	; Verify checksum
-	cmp ebx, dword ptr [start + TC_BOOT_SECTOR_LOADER_CHECKSUM_OFFSET]
+	cmp ebx, dword ptr [start + TC_BOOT_SECTOR_LOADER_CHECKSUM_OFFSET]	
 	je checksum_ok
 
 	; Checksum incorrect - try using backup if available
@@ -135,6 +139,7 @@ checksum_ok:
 	
 	; Decompress boot loader
 	mov cx, word ptr [start + TC_BOOT_SECTOR_LOADER_LENGTH_OFFSET]
+	sub cx, TC_GZIP_HEADER_SIZE
 	push cx																		; Compressed data size
 	push TC_BOOT_LOADER_COMPRESSED_BUFFER_OFFSET + TC_GZIP_HEADER_SIZE			; Compressed data
 	push TC_MAX_BOOT_LOADER_DECOMPRESSED_SIZE									; Output buffer size
@@ -230,7 +235,7 @@ checksum:
 backup_loader_used		db 0
 	
 disk_error_msg			db 'Disk error', 13, 10, 7, 0
-loader_damaged_msg		db 7, 'Loader damaged! Use Rescue Disk: Repair Options > Restore', 0
+loader_damaged_msg		db 7, 'Loader damaged! Repair with Rescue Disk', 0
 
 ORG 7C00h + 510
 	dw 0AA55h			; Boot sector signature

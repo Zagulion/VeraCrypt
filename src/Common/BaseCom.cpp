@@ -1,9 +1,13 @@
 /*
- Copyright (c) 2007-2010 TrueCrypt Developers Association. All rights reserved.
+ Derived from source code of TrueCrypt 7.1a, which is
+ Copyright (c) 2008-2012 TrueCrypt Developers Association and which is governed
+ by the TrueCrypt License 3.0.
 
- Governed by the TrueCrypt License 3.0 the full text of which is contained in
- the file License.txt included in TrueCrypt binary and source code distribution
- packages.
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
+ code distribution packages.
 */
 
 #include <atlcomcli.h>
@@ -43,12 +47,27 @@ BOOL ComGetInstanceBase (HWND hWnd, REFCLSID clsid, REFIID iid, void **tcServer)
 	BOOL r;
 
 	if (IsUacSupported ())
-		r = CreateElevatedComObject (hWnd, clsid, iid, tcServer) == S_OK;
+	{
+		while (true)
+		{
+			r = CreateElevatedComObject (hWnd, clsid, iid, tcServer) == S_OK;
+			if (r)
+				break;
+			else
+			{
+				if (IDRETRY == ErrorRetryCancel ("UAC_INIT_ERROR", hWnd))
+					continue;
+				else
+					break;
+			}
+		}
+	}
 	else
+	{
 		r = CoCreateInstance (clsid, NULL, CLSCTX_LOCAL_SERVER, iid, tcServer) == S_OK;
-
-	if (!r)
-		Error ("UAC_INIT_ERROR");
+		if (!r)
+			Error ("UAC_INIT_ERROR", hWnd);
+	}
 
 	return r;
 }
@@ -119,6 +138,7 @@ DWORD BaseCom::ReadWriteFile (BOOL write, BOOL device, BSTR filePath, BSTR *buff
 	try
 	{
 		auto_ptr <File> file (device ? new Device (string (szFilePathA.m_psz), !write) : new File (string (szFilePathA.m_psz), !write));
+		file->CheckOpened (SRC_POS);
 		file->SeekAt (offset);
 
 		if (write)

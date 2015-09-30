@@ -1,12 +1,14 @@
 /*
  Legal Notice: Some portions of the source code contained in this file were
- derived from the source code of Encryption for the Masses 2.02a, which is
- Copyright (c) 1998-2000 Paul Le Roux and which is governed by the 'License
- Agreement for Encryption for the Masses'. Modifications and additions to
- the original source code (contained in this file) and all other portions
- of this file are Copyright (c) 2003-2010 TrueCrypt Developers Association
- and are governed by the TrueCrypt License 3.0 the full text of which is
- contained in the file License.txt included in TrueCrypt binary and source
+ derived from the source code of TrueCrypt 7.1a, which is 
+ Copyright (c) 2003-2012 TrueCrypt Developers Association and which is 
+ governed by the TrueCrypt License 3.0, also from the source code of
+ Encryption for the Masses 2.02a, which is Copyright (c) 1998-2000 Paul Le Roux
+ and which is governed by the 'License Agreement for Encryption for the Masses' 
+ Modifications and additions to the original source code (contained in this file) 
+ and all other portions of this file are Copyright (c) 2013-2015 IDRIX
+ and are governed by the Apache License 2.0 the full text of which is
+ contained in the file License.txt included in VeraCrypt binary and source
  code distribution packages. */
 
 #include "Tcdefs.h"
@@ -22,6 +24,10 @@
 
 #include <io.h>
 
+#ifndef SRC_POS
+#define SRC_POS (__FUNCTION__ ":" TC_TO_STRING(__LINE__))
+#endif
+
 void VerifyPasswordAndUpdate (HWND hwndDlg, HWND hButton, HWND hPassword,
 			 HWND hVerify, unsigned char *szPassword,
 			 char *szVerify,
@@ -32,7 +38,7 @@ void VerifyPasswordAndUpdate (HWND hwndDlg, HWND hButton, HWND hPassword,
 	int k = GetWindowTextLength (hPassword);
 	BOOL bEnable = FALSE;
 
-	if (hwndDlg);		/* Remove warning */
+	UNREFERENCED_PARAMETER (hwndDlg);		/* Remove warning */
 
 	GetWindowText (hPassword, szTmp1, sizeof (szTmp1));
 	GetWindowText (hVerify, szTmp2, sizeof (szTmp2));
@@ -107,19 +113,40 @@ BOOL CheckPasswordCharEncoding (HWND hPassword, Password *ptrPw)
 }
 
 
-BOOL CheckPasswordLength (HWND hwndDlg, HWND hwndItem)
+BOOL CheckPasswordLength (HWND hwndDlg, unsigned __int32 passwordLength, int pim, BOOL bForBoot, BOOL bSkipPasswordWarning, BOOL bSkipPimWarning)
 {
-	if (GetWindowTextLength (hwndItem) < PASSWORD_LEN_WARNING)
+	BOOL bCustomPimSmall = ((pim != 0) && (pim < (bForBoot? 98 : 485)))? TRUE : FALSE;
+	if (passwordLength < PASSWORD_LEN_WARNING)
 	{
+		if (bCustomPimSmall)
+		{
+			Error (bForBoot? "BOOT_PIM_REQUIRE_LONG_PASSWORD": "PIM_REQUIRE_LONG_PASSWORD", hwndDlg);
+			return FALSE;						
+		}
+
 #ifndef _DEBUG
-		if (MessageBoxW (hwndDlg, GetString ("PASSWORD_LENGTH_WARNING"), lpszTitle, MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2) != IDYES)
+		if (!bSkipPasswordWarning && (MessageBoxW (hwndDlg, GetString ("PASSWORD_LENGTH_WARNING"), lpszTitle, MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2) != IDYES))
 			return FALSE;
 #endif
+	}
+#ifndef _DEBUG
+	else if (bCustomPimSmall)
+	{
+		if (!bSkipPimWarning && AskWarnNoYes ("PIM_SMALL_WARNING", hwndDlg) != IDYES)
+			return FALSE;
+	}
+#endif
+
+	if ((pim != 0) && (pim > (bForBoot? 98 : 485)))
+	{
+		// warn that mount/boot will take more time
+		Warning ("PIM_LARGE_WARNING", hwndDlg);
+
 	}
 	return TRUE;
 }
 
-int ChangePwd (const char *lpszVolume, Password *oldPassword, Password *newPassword, int pkcs5, int wipePassCount, HWND hwndDlg)
+int ChangePwd (const char *lpszVolume, Password *oldPassword, int old_pkcs5, int old_pim, BOOL truecryptMode, Password *newPassword, int pkcs5, int pim, int wipePassCount, HWND hwndDlg)
 {
 	int nDosLinkCreated = 1, nStatus = ERR_OS_ERROR;
 	char szDiskFile[TC_MAX_PATH], szCFDevice[TC_MAX_PATH];
@@ -143,17 +170,17 @@ int ChangePwd (const char *lpszVolume, Password *oldPassword, Password *newPassw
 
 	if (oldPassword->Length == 0 || newPassword->Length == 0) return -1;
 
-	if (wipePassCount <= 0)
+	if ((wipePassCount <= 0) || (truecryptMode && (old_pkcs5 == SHA256)))
 	{
       nStatus = ERR_PARAMETER_INCORRECT;
-      handleError (hwndDlg, nStatus);
+      handleError (hwndDlg, nStatus, SRC_POS);
       return nStatus;
 	}
 
    if (!lpszVolume)
    {
       nStatus = ERR_OUTOFMEMORY;
-      handleError (hwndDlg, nStatus);
+      handleError (hwndDlg, nStatus, SRC_POS);
       return nStatus;
    }
 
@@ -230,7 +257,15 @@ int ChangePwd (const char *lpszVolume, Password *oldPassword, Password *newPassw
 	}
 
 	if (Randinit ())
+	{
+		if (CryptoAPILastError == ERROR_SUCCESS)
+			nStatus = ERR_RAND_INIT_FAILED;
+		else
+			nStatus = ERR_CAPI_INIT_FAILED;
 		goto error;
+	}
+
+	SetRandomPoolEnrichedByUserStatus (FALSE); /* force the display of the random enriching dialog */
 
 	if (!bDevice && bPreserveTimestamp)
 	{
@@ -256,12 +291,6 @@ int ChangePwd (const char *lpszVolume, Password *oldPassword, Password *newPassw
 			headerOffset.QuadPart = TC_HIDDEN_VOLUME_HEADER_OFFSET;
 			break;
 
-		case TC_VOLUME_TYPE_HIDDEN_LEGACY:
-			if (bDevice && driveInfo.BytesPerSector != TC_SECTOR_SIZE_LEGACY)
-				continue;
-
-			headerOffset.QuadPart = hostSize - TC_HIDDEN_VOLUME_HEADER_OFFSET_LEGACY;
-			break;
 		}
 
 		if (!SetFilePointerEx ((HANDLE) dev, headerOffset, NULL, FILE_BEGIN))
@@ -285,7 +314,7 @@ int ChangePwd (const char *lpszVolume, Password *oldPassword, Password *newPassw
 
 		/* Try to decrypt the header */
 
-		nStatus = ReadVolumeHeader (FALSE, buffer, oldPassword, &cryptoInfo, NULL);
+		nStatus = ReadVolumeHeader (FALSE, buffer, oldPassword, old_pkcs5, old_pim, truecryptMode, &cryptoInfo, NULL);
 		if (nStatus == ERR_CIPHER_INIT_WEAK_KEY)
 			nStatus = 0;	// We can ignore this error here
 
@@ -345,19 +374,20 @@ int ChangePwd (const char *lpszVolume, Password *oldPassword, Password *newPassw
 		for (wipePass = 0; wipePass < wipePassCount; wipePass++)
 		{
 			// Prepare new volume header
-			nStatus = CreateVolumeHeaderInMemory (FALSE,
+			nStatus = CreateVolumeHeaderInMemory (hwndDlg, FALSE,
 				buffer,
 				cryptoInfo->ea,
 				cryptoInfo->mode,
 				newPassword,
 				cryptoInfo->pkcs5,
+				pim,
 				cryptoInfo->master_keydata,
 				&ci,
 				cryptoInfo->VolumeSize.Value,
-				(volumeType == TC_VOLUME_TYPE_HIDDEN || volumeType == TC_VOLUME_TYPE_HIDDEN_LEGACY) ? cryptoInfo->hiddenVolumeSize : 0,
+				(volumeType == TC_VOLUME_TYPE_HIDDEN) ? cryptoInfo->hiddenVolumeSize : 0,
 				cryptoInfo->EncryptedAreaStart.Value,
 				cryptoInfo->EncryptedAreaLength.Value,
-				cryptoInfo->RequiredProgramVersion,
+				truecryptMode? 0 : cryptoInfo->RequiredProgramVersion,
 				cryptoInfo->HeaderFlags,
 				cryptoInfo->SectorSize,
 				wipePass < wipePassCount - 1);
@@ -387,7 +417,7 @@ int ChangePwd (const char *lpszVolume, Password *oldPassword, Password *newPassw
 				&& (cryptoInfo->HeaderFlags & TC_HEADER_FLAG_NONSYS_INPLACE_ENC) != 0
 				&& (cryptoInfo->HeaderFlags & ~TC_HEADER_FLAG_NONSYS_INPLACE_ENC) == 0)
 			{
-				nStatus = WriteRandomDataToReservedHeaderAreas (dev, cryptoInfo, cryptoInfo->VolumeSize.Value, !backupHeader, backupHeader);
+				nStatus = WriteRandomDataToReservedHeaderAreas (hwndDlg, dev, cryptoInfo, cryptoInfo->VolumeSize.Value, !backupHeader, backupHeader);
 				if (nStatus != ERR_SUCCESS)
 					goto error;
 			}
@@ -434,7 +464,7 @@ error:
 		return nStatus;
 
 	if (nStatus != 0)
-		handleError (hwndDlg, nStatus);
+		handleError (hwndDlg, nStatus, SRC_POS);
 
 	return nStatus;
 }
